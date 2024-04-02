@@ -15,24 +15,26 @@ class CalendarContainerBloc
     on<CalendarContainerInitialEvent>(_onInitialize);
   }
 
-  _onInitialize(
-    CalendarContainerInitialEvent event,
-    Emitter<CalendarContainerState> emit,
-  ) async {
-    emit(state.copyWith(
-        calendarContainerModelObj: state.calendarContainerModelObj?.copyWith(
-      calendarcontainerItemList: fillCalendarcontainerItemList(),
-    )));
-  }
+  _onInitialize(event, state) {}
 
-  List<CalendarcontainerItemModel> fillCalendarcontainerItemList() {
-    return [
-      CalendarcontainerItemModel(
-          ahmedEssam: "Ahmed Essam",
-          widget: "2",
-          sun: "Sun 20-5-2024",
-          th: "Th 26-5-2024"),
-      CalendarcontainerItemModel(ahmedEssam: "Marwa Ghaleb", widget: "1")
-    ];
-  }
+  // _onInitialize(
+  //   CalendarContainerInitialEvent event,
+  //   Emitter<CalendarContainerState> emit,
+  // ) async {
+  //   emit(state.copyWith(
+  //       calendarContainerModelObj: state.calendarContainerModelObj?.copyWith(
+  //     calendarcontainerItemList: fillCalendarcontainerItemList(),
+  //   )));
+  // }
+  //
+  // List<CalendarcontainerItemModel> fillCalendarcontainerItemList() {
+  //   return [
+  //     CalendarcontainerItemModel(
+  //         ahmedEssam: "Ahmed Essam",
+  //         widget: "2",
+  //         sun: "Sun 20-5-2024",
+  //         th: "Th 26-5-2024"),
+  //     CalendarcontainerItemModel(ahmedEssam: "Marwa Ghaleb", widget: "1")
+  //   ];
+  // }
 }

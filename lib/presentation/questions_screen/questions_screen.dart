@@ -1,3 +1,5 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/widgets/custom_icon_button.dart';
 import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
 import 'package:mina_s_application5/widgets/app_bar/appbar_leading_image.dart';
@@ -212,14 +214,14 @@ class QuestionsScreen extends StatelessWidget {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       leadingWidth: 40.h,
-      leading: AppbarLeadingImage(
-        imagePath: ImageConstant.imgArrowLeft,
-        margin: EdgeInsets.only(
-          left: 16.h,
-          top: 4.v,
-          bottom: 3.v,
-        ),
-      ),
+      // leading: AppbarLeadingImage(
+      //   imagePath: ImageConstant.imgArrowLeft,
+      //   margin: EdgeInsets.only(
+      //     left: 16.h,
+      //     top: 4.v,
+      //     bottom: 3.v,
+      //   ),
+      // ),
       centerTitle: true,
       title: AppbarTitle(
         text: "msg_medical_rep_s_name".tr,
@@ -351,65 +353,117 @@ class QuestionsScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildFriendlyGreeting(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 177.h,
-            child: Text(
-              "msg_friendly_greeting".tr,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
-          Spacer(),
-          SizedBox(
-            height: 35.adaptSize,
-            width: 35.adaptSize,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
+    bool? isTrue;
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 177.h,
+                child: Text(
+                  "msg_friendly_greeting".tr,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+              Spacer(),
+              GestureDetector(
+                onTap: () {
+                  isTrue = true;
+                  setState(() {});
+                },
+                child: CustomIconButton(
+                  height: 35.adaptSize,
+                  width: 35.adaptSize,
+                  padding: EdgeInsets.all(5.h),
+                  decoration: (isTrue == null || isTrue == false)
+                      ? IconButtonStyleHelper.outlineLightGreenATL8
+                      : IconButtonStyleHelper.outlineLightGreenA,
+                  child: CustomImageView(
+                    imagePath: (isTrue == null || isTrue == false)
+                        ? ImageConstant.imgCheckLightGreenA70002
+                        : ImageConstant.imgCheck,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  isTrue = false;
+                  setState(() {});
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 8.h,
+                    right: 3.h,
+                  ),
+                  child: CustomIconButton(
                     height: 35.adaptSize,
                     width: 35.adaptSize,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        8.h,
-                      ),
-                      border: Border.all(
-                        color: appTheme.lightGreenA70001,
-                        width: 1.h,
-                      ),
+                    padding: EdgeInsets.all(5.h),
+                    decoration: (isTrue == null || isTrue == true)
+                        ? IconButtonStyleHelper.outlineOnPrimaryContainer
+                        : IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                    // decoration:
+                    //     IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                    child: CustomImageView(
+                      // imagePath: ImageConstant.imgXOnprimary,
+                      imagePath: (isTrue == null || isTrue == true)
+                          ? ImageConstant.imgX
+                          : ImageConstant.imgXOnprimary,
                     ),
                   ),
                 ),
-                CustomImageView(
-                  imagePath: ImageConstant.imgCheckLightGreenA70002,
-                  height: 24.adaptSize,
-                  width: 24.adaptSize,
-                  alignment: Alignment.center,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8.h),
-            child: CustomIconButton(
-              height: 35.adaptSize,
-              width: 35.adaptSize,
-              padding: EdgeInsets.all(5.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgX,
               ),
-            ),
+              // SizedBox(
+              //   height: 35.adaptSize,
+              //   width: 35.adaptSize,
+              //   child: Stack(
+              //     alignment: Alignment.center,
+              //     children: [
+              //       Align(
+              //         alignment: Alignment.center,
+              //         child: Container(
+              //           height: 35.adaptSize,
+              //           width: 35.adaptSize,
+              //           decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(
+              //               8.h,
+              //             ),
+              //             border: Border.all(
+              //               color: appTheme.lightGreenA70001,
+              //               width: 1.h,
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //       CustomImageView(
+              //         imagePath: ImageConstant.imgCheckLightGreenA70002,
+              //         height: 24.adaptSize,
+              //         width: 24.adaptSize,
+              //         alignment: Alignment.center,
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 8.h),
+              //   child: CustomIconButton(
+              //     height: 35.adaptSize,
+              //     width: 35.adaptSize,
+              //     padding: EdgeInsets.all(5.h),
+              //     child: CustomImageView(
+              //       imagePath: ImageConstant.imgX,
+              //     ),
+              //   ),
+              // ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -433,39 +487,89 @@ class QuestionsScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildAskingInsightful(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 13.h,
-        right: 16.h,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 182.h,
-            child: Text(
-              "msg_asking_insightful".tr,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
+    bool? isTrue;
+    return StatefulBuilder(builder: (context, setState) {
+      return Padding(
+        padding: EdgeInsets.only(
+          left: 13.h,
+          right: 16.h,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 182.h,
+              child: Text(
+                "msg_asking_insightful".tr,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium,
+              ),
             ),
-          ),
-          Spacer(),
-          CustomIconButton(
-            height: 35.adaptSize,
-            width: 35.adaptSize,
-            padding: EdgeInsets.all(5.h),
-            child: CustomImageView(
-              imagePath: ImageConstant.imgCheckLightGreenA70002,
+            Spacer(),
+            GestureDetector(
+              onTap: () {
+                isTrue = true;
+                setState(() {});
+              },
+              child: CustomIconButton(
+                height: 35.adaptSize,
+                width: 35.adaptSize,
+                padding: EdgeInsets.all(5.h),
+                decoration: (isTrue == null || isTrue == false)
+                    ? IconButtonStyleHelper.outlineLightGreenATL8
+                    : IconButtonStyleHelper.outlineLightGreenA,
+                child: CustomImageView(
+                  imagePath: (isTrue == null || isTrue == false)
+                      ? ImageConstant.imgCheckLightGreenA70002
+                      : ImageConstant.imgCheck,
+                ),
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8.h),
-            child: _buildX(context),
-          ),
-        ],
-      ),
-    );
+            GestureDetector(
+              onTap: () {
+                isTrue = false;
+                setState(() {});
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 8.h,
+                  right: 3.h,
+                ),
+                child: CustomIconButton(
+                  height: 35.adaptSize,
+                  width: 35.adaptSize,
+                  padding: EdgeInsets.all(5.h),
+                  decoration: (isTrue == null || isTrue == true)
+                      ? IconButtonStyleHelper.outlineOnPrimaryContainer
+                      : IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                  // decoration:
+                  //     IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                  child: CustomImageView(
+                    // imagePath: ImageConstant.imgXOnprimary,
+                    imagePath: (isTrue == null || isTrue == true)
+                        ? ImageConstant.imgX
+                        : ImageConstant.imgXOnprimary,
+                  ),
+                ),
+              ),
+            ),
+            // CustomIconButton(
+            //   height: 35.adaptSize,
+            //   width: 35.adaptSize,
+            //   padding: EdgeInsets.all(5.h),
+            //   child: CustomImageView(
+            //     imagePath: ImageConstant.imgCheckLightGreenA70002,
+            //   ),
+            // ),
+            // Padding(
+            //   padding: EdgeInsets.only(left: 8.h),
+            //   child: _buildX(context),
+            // ),
+          ],
+        ),
+      );
+    });
   }
 
   /// Section Widget
@@ -513,130 +617,232 @@ class QuestionsScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildLinkProductFeatureS(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 178.h,
-            child: Text(
-              "msg_link_product_feature_s".tr,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
-          Spacer(),
-          SizedBox(
-            height: 35.adaptSize,
-            width: 35.adaptSize,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
+    bool? isTrue;
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 178.h,
+                child: Text(
+                  "msg_link_product_feature_s".tr,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+              Spacer(),
+              GestureDetector(
+                onTap: () {
+                  isTrue = true;
+                  setState(() {});
+                },
+                child: CustomIconButton(
+                  height: 35.adaptSize,
+                  width: 35.adaptSize,
+                  padding: EdgeInsets.all(5.h),
+                  decoration: (isTrue == null || isTrue == false)
+                      ? IconButtonStyleHelper.outlineLightGreenATL8
+                      : IconButtonStyleHelper.outlineLightGreenA,
+                  child: CustomImageView(
+                    imagePath: (isTrue == null || isTrue == false)
+                        ? ImageConstant.imgCheckLightGreenA70002
+                        : ImageConstant.imgCheck,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  isTrue = false;
+                  setState(() {});
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 8.h,
+                    right: 3.h,
+                  ),
+                  child: CustomIconButton(
                     height: 35.adaptSize,
                     width: 35.adaptSize,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        8.h,
-                      ),
-                      border: Border.all(
-                        color: appTheme.lightGreenA70001,
-                        width: 1.h,
-                      ),
+                    padding: EdgeInsets.all(5.h),
+                    decoration: (isTrue == null || isTrue == true)
+                        ? IconButtonStyleHelper.outlineOnPrimaryContainer
+                        : IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                    // decoration:
+                    //     IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                    child: CustomImageView(
+                      // imagePath: ImageConstant.imgXOnprimary,
+                      imagePath: (isTrue == null || isTrue == true)
+                          ? ImageConstant.imgX
+                          : ImageConstant.imgXOnprimary,
                     ),
                   ),
                 ),
-                CustomImageView(
-                  imagePath: ImageConstant.imgCheckLightGreenA70002,
-                  height: 24.adaptSize,
-                  width: 24.adaptSize,
-                  alignment: Alignment.center,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8.h),
-            child: CustomIconButton(
-              height: 35.adaptSize,
-              width: 35.adaptSize,
-              padding: EdgeInsets.all(5.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgX,
               ),
-            ),
+              // SizedBox(
+              //   height: 35.adaptSize,
+              //   width: 35.adaptSize,
+              //   child: Stack(
+              //     alignment: Alignment.center,
+              //     children: [
+              //       Align(
+              //         alignment: Alignment.center,
+              //         child: Container(
+              //           height: 35.adaptSize,
+              //           width: 35.adaptSize,
+              //           decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(
+              //               8.h,
+              //             ),
+              //             border: Border.all(
+              //               color: appTheme.lightGreenA70001,
+              //               width: 1.h,
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //       CustomImageView(
+              //         imagePath: ImageConstant.imgCheckLightGreenA70002,
+              //         height: 24.adaptSize,
+              //         width: 24.adaptSize,
+              //         alignment: Alignment.center,
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 8.h),
+              //   child: CustomIconButton(
+              //     height: 35.adaptSize,
+              //     width: 35.adaptSize,
+              //     padding: EdgeInsets.all(5.h),
+              //     child: CustomImageView(
+              //       imagePath: ImageConstant.imgX,
+              //     ),
+              //   ),
+              // ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   /// Section Widget
   Widget _buildHighlightEmotional(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 142.h,
-            child: Text(
-              "msg_highlight_emotional".tr,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
-          Spacer(),
-          SizedBox(
-            height: 35.adaptSize,
-            width: 35.adaptSize,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: 35.adaptSize,
-                    width: 35.adaptSize,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        8.h,
-                      ),
-                      border: Border.all(
-                        color: appTheme.lightGreenA70001,
-                        width: 1.h,
-                      ),
-                    ),
-                  ),
-                ),
-                CustomImageView(
-                  imagePath: ImageConstant.imgCheckLightGreenA70002,
-                  height: 24.adaptSize,
-                  width: 24.adaptSize,
-                  alignment: Alignment.center,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8.h),
-            child: CustomIconButton(
-              height: 35.adaptSize,
-              width: 35.adaptSize,
-              padding: EdgeInsets.all(5.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgX,
+    bool? isTrue;
+    return StatefulBuilder(builder: (context, setState) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 142.h,
+              child: Text(
+                "msg_highlight_emotional".tr,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium,
               ),
             ),
-          ),
-        ],
-      ),
-    );
+            Spacer(),
+            GestureDetector(
+              onTap: () {
+                isTrue = true;
+                setState(() {});
+              },
+              child: CustomIconButton(
+                height: 35.adaptSize,
+                width: 35.adaptSize,
+                padding: EdgeInsets.all(5.h),
+                decoration: (isTrue == null || isTrue == false)
+                    ? IconButtonStyleHelper.outlineLightGreenATL8
+                    : IconButtonStyleHelper.outlineLightGreenA,
+                child: CustomImageView(
+                  imagePath: (isTrue == null || isTrue == false)
+                      ? ImageConstant.imgCheckLightGreenA70002
+                      : ImageConstant.imgCheck,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                isTrue = false;
+                setState(() {});
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 8.h,
+                  right: 3.h,
+                ),
+                child: CustomIconButton(
+                  height: 35.adaptSize,
+                  width: 35.adaptSize,
+                  padding: EdgeInsets.all(5.h),
+                  decoration: (isTrue == null || isTrue == true)
+                      ? IconButtonStyleHelper.outlineOnPrimaryContainer
+                      : IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                  // decoration:
+                  //     IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                  child: CustomImageView(
+                    // imagePath: ImageConstant.imgXOnprimary,
+                    imagePath: (isTrue == null || isTrue == true)
+                        ? ImageConstant.imgX
+                        : ImageConstant.imgXOnprimary,
+                  ),
+                ),
+              ),
+            ),
+            // SizedBox(
+            //   height: 35.adaptSize,
+            //   width: 35.adaptSize,
+            //   child: Stack(
+            //     alignment: Alignment.center,
+            //     children: [
+            //       Align(
+            //         alignment: Alignment.center,
+            //         child: Container(
+            //           height: 35.adaptSize,
+            //           width: 35.adaptSize,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(
+            //               8.h,
+            //             ),
+            //             border: Border.all(
+            //               color: appTheme.lightGreenA70001,
+            //               width: 1.h,
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //       CustomImageView(
+            //         imagePath: ImageConstant.imgCheckLightGreenA70002,
+            //         height: 24.adaptSize,
+            //         width: 24.adaptSize,
+            //         alignment: Alignment.center,
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // Padding(
+            //   padding: EdgeInsets.only(left: 8.h),
+            //   child: CustomIconButton(
+            //     height: 35.adaptSize,
+            //     width: 35.adaptSize,
+            //     padding: EdgeInsets.all(5.h),
+            //     child: CustomImageView(
+            //       imagePath: ImageConstant.imgX,
+            //     ),
+            //   ),
+            // ),
+          ],
+        ),
+      );
+    });
   }
 
   /// Section Widget
@@ -665,66 +871,116 @@ class QuestionsScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildSummarizeOnThe(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 180.h,
-            child: Text(
-              "msg_summarize_on_the".tr,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
-          Spacer(),
-          SizedBox(
-            height: 35.adaptSize,
-            width: 35.adaptSize,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: 35.adaptSize,
-                    width: 35.adaptSize,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        8.h,
-                      ),
-                      border: Border.all(
-                        color: appTheme.lightGreenA70001,
-                        width: 1.h,
-                      ),
-                    ),
-                  ),
-                ),
-                CustomImageView(
-                  imagePath: ImageConstant.imgCheckLightGreenA70002,
-                  height: 24.adaptSize,
-                  width: 24.adaptSize,
-                  alignment: Alignment.center,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8.h),
-            child: CustomIconButton(
-              height: 35.adaptSize,
-              width: 35.adaptSize,
-              padding: EdgeInsets.all(5.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgX,
+    bool? isTrue;
+    return StatefulBuilder(builder: (context, setState) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 180.h,
+              child: Text(
+                "msg_summarize_on_the".tr,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium,
               ),
             ),
-          ),
-        ],
-      ),
-    );
+            Spacer(),
+            GestureDetector(
+              onTap: () {
+                isTrue = true;
+                setState(() {});
+              },
+              child: CustomIconButton(
+                height: 35.adaptSize,
+                width: 35.adaptSize,
+                padding: EdgeInsets.all(5.h),
+                decoration: (isTrue == null || isTrue == false)
+                    ? IconButtonStyleHelper.outlineLightGreenATL8
+                    : IconButtonStyleHelper.outlineLightGreenA,
+                child: CustomImageView(
+                  imagePath: (isTrue == null || isTrue == false)
+                      ? ImageConstant.imgCheckLightGreenA70002
+                      : ImageConstant.imgCheck,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                isTrue = false;
+                setState(() {});
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 8.h,
+                  right: 3.h,
+                ),
+                child: CustomIconButton(
+                  height: 35.adaptSize,
+                  width: 35.adaptSize,
+                  padding: EdgeInsets.all(5.h),
+                  decoration: (isTrue == null || isTrue == true)
+                      ? IconButtonStyleHelper.outlineOnPrimaryContainer
+                      : IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                  // decoration:
+                  //     IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                  child: CustomImageView(
+                    // imagePath: ImageConstant.imgXOnprimary,
+                    imagePath: (isTrue == null || isTrue == true)
+                        ? ImageConstant.imgX
+                        : ImageConstant.imgXOnprimary,
+                  ),
+                ),
+              ),
+            ),
+            // SizedBox(
+            //   height: 35.adaptSize,
+            //   width: 35.adaptSize,
+            //   child: Stack(
+            //     alignment: Alignment.center,
+            //     children: [
+            //       Align(
+            //         alignment: Alignment.center,
+            //         child: Container(
+            //           height: 35.adaptSize,
+            //           width: 35.adaptSize,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(
+            //               8.h,
+            //             ),
+            //             border: Border.all(
+            //               color: appTheme.lightGreenA70001,
+            //               width: 1.h,
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //       CustomImageView(
+            //         imagePath: ImageConstant.imgCheckLightGreenA70002,
+            //         height: 24.adaptSize,
+            //         width: 24.adaptSize,
+            //         alignment: Alignment.center,
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // Padding(
+            //   padding: EdgeInsets.only(left: 8.h),
+            //   child: CustomIconButton(
+            //     height: 35.adaptSize,
+            //     width: 35.adaptSize,
+            //     padding: EdgeInsets.all(5.h),
+            //     child: CustomImageView(
+            //       imagePath: ImageConstant.imgX,
+            //     ),
+            //   ),
+            // ),
+          ],
+        ),
+      );
+    });
   }
 
   /// Section Widget
@@ -754,67 +1010,117 @@ class QuestionsScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildPatientProfile(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 9.v,
-              bottom: 8.v,
-            ),
-            child: Text(
-              "lbl_patient_profile".tr,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
-          Spacer(),
-          SizedBox(
-            height: 35.adaptSize,
-            width: 35.adaptSize,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: 35.adaptSize,
-                    width: 35.adaptSize,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        8.h,
-                      ),
-                      border: Border.all(
-                        color: appTheme.lightGreenA70001,
-                        width: 1.h,
-                      ),
-                    ),
-                  ),
-                ),
-                CustomImageView(
-                  imagePath: ImageConstant.imgCheckLightGreenA70002,
-                  height: 24.adaptSize,
-                  width: 24.adaptSize,
-                  alignment: Alignment.center,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8.h),
-            child: CustomIconButton(
-              height: 35.adaptSize,
-              width: 35.adaptSize,
-              padding: EdgeInsets.all(5.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgX,
+    bool? isTrue;
+    return StatefulBuilder(builder: (context, setState) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 9.v,
+                bottom: 8.v,
+              ),
+              child: Text(
+                "lbl_patient_profile".tr,
+                style: theme.textTheme.bodyMedium,
               ),
             ),
-          ),
-        ],
-      ),
-    );
+            Spacer(),
+            GestureDetector(
+              onTap: () {
+                isTrue = true;
+                setState(() {});
+              },
+              child: CustomIconButton(
+                height: 35.adaptSize,
+                width: 35.adaptSize,
+                padding: EdgeInsets.all(5.h),
+                decoration: (isTrue == null || isTrue == false)
+                    ? IconButtonStyleHelper.outlineLightGreenATL8
+                    : IconButtonStyleHelper.outlineLightGreenA,
+                child: CustomImageView(
+                  imagePath: (isTrue == null || isTrue == false)
+                      ? ImageConstant.imgCheckLightGreenA70002
+                      : ImageConstant.imgCheck,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                isTrue = false;
+                setState(() {});
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 8.h,
+                  right: 3.h,
+                ),
+                child: CustomIconButton(
+                  height: 35.adaptSize,
+                  width: 35.adaptSize,
+                  padding: EdgeInsets.all(5.h),
+                  decoration: (isTrue == null || isTrue == true)
+                      ? IconButtonStyleHelper.outlineOnPrimaryContainer
+                      : IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                  // decoration:
+                  //     IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                  child: CustomImageView(
+                    // imagePath: ImageConstant.imgXOnprimary,
+                    imagePath: (isTrue == null || isTrue == true)
+                        ? ImageConstant.imgX
+                        : ImageConstant.imgXOnprimary,
+                  ),
+                ),
+              ),
+            ),
+            // SizedBox(
+            //   height: 35.adaptSize,
+            //   width: 35.adaptSize,
+            //   child: Stack(
+            //     alignment: Alignment.center,
+            //     children: [
+            //       Align(
+            //         alignment: Alignment.center,
+            //         child: Container(
+            //           height: 35.adaptSize,
+            //           width: 35.adaptSize,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(
+            //               8.h,
+            //             ),
+            //             border: Border.all(
+            //               color: appTheme.lightGreenA70001,
+            //               width: 1.h,
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //       CustomImageView(
+            //         imagePath: ImageConstant.imgCheckLightGreenA70002,
+            //         height: 24.adaptSize,
+            //         width: 24.adaptSize,
+            //         alignment: Alignment.center,
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // Padding(
+            //   padding: EdgeInsets.only(left: 8.h),
+            //   child: CustomIconButton(
+            //     height: 35.adaptSize,
+            //     width: 35.adaptSize,
+            //     padding: EdgeInsets.all(5.h),
+            //     child: CustomImageView(
+            //       imagePath: ImageConstant.imgX,
+            //     ),
+            //   ),
+            // ),
+          ],
+        ),
+      );
+    });
   }
 
   /// Section Widget
@@ -857,6 +1163,12 @@ class QuestionsScreen extends StatelessWidget {
   Widget _buildSubmit(BuildContext context) {
     return CustomElevatedButton(
       text: "lbl_submit".tr,
+      onPressed: () async {
+        ProgressDialogUtils.showProgressDialog(isCancellable: false);
+        await Future.delayed(const Duration(seconds: 3));
+        ProgressDialogUtils.hideProgressDialog();
+        ProgressDialogUtils.showErrorDialog(context);
+      },
     );
   }
 
@@ -865,56 +1177,145 @@ class QuestionsScreen extends StatelessWidget {
     BuildContext context, {
     required String setsmartcallobjectives,
   }) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 12.h,
-        vertical: 7.v,
-      ),
-      decoration: AppDecoration.fillBlue.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder10,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 9.v,
-              bottom: 8.v,
-            ),
-            child: Text(
-              setsmartcallobjectives,
-              style: theme.textTheme.bodyMedium!.copyWith(
-                color: appTheme.blueGray900,
+    bool? isTrue;
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 12.h,
+            vertical: 7.v,
+          ),
+          decoration: AppDecoration.fillBlue.copyWith(
+            borderRadius: BorderRadiusStyle.roundedBorder10,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: 9.v,
+                    bottom: 8.v,
+                  ),
+                  child: Text(
+                    setsmartcallobjectives,
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: appTheme.blueGray900,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Spacer(),
-          CustomIconButton(
-            height: 35.adaptSize,
-            width: 35.adaptSize,
-            padding: EdgeInsets.all(5.h),
-            decoration: IconButtonStyleHelper.outlineLightGreenATL8,
-            child: CustomImageView(
-              imagePath: ImageConstant.imgCheckLightGreenA70002,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 8.h,
-              right: 3.h,
-            ),
-            child: CustomIconButton(
-              height: 35.adaptSize,
-              width: 35.adaptSize,
-              padding: EdgeInsets.all(5.h),
-              decoration: IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
-              child: CustomImageView(
-                imagePath: ImageConstant.imgXOnprimary,
+              // Spacer(),
+              //////////////////////////////////////////////
+              GestureDetector(
+                onTap: () {
+                  isTrue = true;
+                  setState(() {});
+                },
+                child: CustomIconButton(
+                  height: 35.adaptSize,
+                  width: 35.adaptSize,
+                  padding: EdgeInsets.all(5.h),
+                  decoration: (isTrue == null || isTrue == false)
+                      ? IconButtonStyleHelper.outlineLightGreenATL8
+                      : IconButtonStyleHelper.outlineLightGreenA,
+                  child: CustomImageView(
+                    imagePath: (isTrue == null || isTrue == false)
+                        ? ImageConstant.imgCheckLightGreenA70002
+                        : ImageConstant.imgCheck,
+                  ),
+                ),
               ),
-            ),
+              GestureDetector(
+                onTap: () {
+                  isTrue = false;
+                  setState(() {});
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 8.h,
+                    right: 3.h,
+                  ),
+                  child: CustomIconButton(
+                    height: 35.adaptSize,
+                    width: 35.adaptSize,
+                    padding: EdgeInsets.all(5.h),
+                    decoration: (isTrue == null || isTrue == true)
+                        ? IconButtonStyleHelper.outlineOnPrimaryContainer
+                        : IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                    // decoration:
+                    //     IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                    child: CustomImageView(
+                      // imagePath: ImageConstant.imgXOnprimary,
+                      imagePath: (isTrue == null || isTrue == true)
+                          ? ImageConstant.imgX
+                          : ImageConstant.imgXOnprimary,
+                    ),
+                  ),
+                ),
+              ),
+              //////////////////////////////////////////////
+            ],
           ),
-        ],
-      ),
+        );
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 12.h,
+            vertical: 7.v,
+          ),
+          decoration: AppDecoration.fillBlue.copyWith(
+            borderRadius: BorderRadiusStyle.roundedBorder10,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: 9.v,
+                    bottom: 8.v,
+                  ),
+                  child: Text(
+                    setsmartcallobjectives,
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: appTheme.blueGray900,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              // Spacer(),
+              CustomIconButton(
+                height: 35.adaptSize,
+                width: 35.adaptSize,
+                padding: EdgeInsets.all(5.h),
+                decoration: IconButtonStyleHelper.outlineLightGreenATL8,
+                child: CustomImageView(
+                  imagePath: ImageConstant.imgCheckLightGreenA70002,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 8.h,
+                  right: 3.h,
+                ),
+                child: CustomIconButton(
+                  height: 35.adaptSize,
+                  width: 35.adaptSize,
+                  padding: EdgeInsets.all(5.h),
+                  ///////////////////////////////////////////////////////////////
+                  decoration:
+                      IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                  child: CustomImageView(
+                    imagePath: ImageConstant.imgXOnprimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -948,52 +1349,102 @@ class QuestionsScreen extends StatelessWidget {
     BuildContext context, {
     required String askForSpecific,
   }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 184.h,
-          child: Text(
-            askForSpecific,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodyMedium!.copyWith(
-              color: appTheme.blueGray900,
+    bool? isTrue;
+    return StatefulBuilder(builder: (context, setState) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 184.h,
+            child: Text(
+              askForSpecific,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyMedium!.copyWith(
+                color: appTheme.blueGray900,
+              ),
             ),
           ),
-        ),
-        Spacer(),
-        CustomIconButton(
-          height: 35.adaptSize,
-          width: 35.adaptSize,
-          padding: EdgeInsets.all(5.h),
-          child: CustomImageView(
-            imagePath: ImageConstant.imgCheckLightGreenA70002,
+          Spacer(),
+          GestureDetector(
+            onTap: () {
+              isTrue = true;
+              setState(() {});
+            },
+            child: CustomIconButton(
+              height: 35.adaptSize,
+              width: 35.adaptSize,
+              padding: EdgeInsets.all(5.h),
+              decoration: (isTrue == null || isTrue == false)
+                  ? IconButtonStyleHelper.outlineLightGreenATL8
+                  : IconButtonStyleHelper.outlineLightGreenA,
+              child: CustomImageView(
+                imagePath: (isTrue == null || isTrue == false)
+                    ? ImageConstant.imgCheckLightGreenA70002
+                    : ImageConstant.imgCheck,
+              ),
+            ),
           ),
-        ),
-        Container(
-          height: 35.adaptSize,
-          width: 35.adaptSize,
-          margin: EdgeInsets.only(left: 8.h),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              CustomIconButton(
+          GestureDetector(
+            onTap: () {
+              isTrue = false;
+              setState(() {});
+            },
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 8.h,
+                right: 3.h,
+              ),
+              child: CustomIconButton(
                 height: 35.adaptSize,
                 width: 35.adaptSize,
-                alignment: Alignment.center,
-                child: CustomImageView(),
+                padding: EdgeInsets.all(5.h),
+                decoration: (isTrue == null || isTrue == true)
+                    ? IconButtonStyleHelper.outlineOnPrimaryContainer
+                    : IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                // decoration:
+                //     IconButtonStyleHelper.outlineOnPrimaryContainerTL8,
+                child: CustomImageView(
+                  // imagePath: ImageConstant.imgXOnprimary,
+                  imagePath: (isTrue == null || isTrue == true)
+                      ? ImageConstant.imgX
+                      : ImageConstant.imgXOnprimary,
+                ),
               ),
-              CustomImageView(
-                imagePath: ImageConstant.imgX,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-                alignment: Alignment.center,
-              ),
-            ],
+            ),
           ),
-        ),
-      ],
-    );
+          // CustomIconButton(
+          //   height: 35.adaptSize,
+          //   width: 35.adaptSize,
+          //   padding: EdgeInsets.all(5.h),
+          //   child: CustomImageView(
+          //     imagePath: ImageConstant.imgCheckLightGreenA70002,
+          //   ),
+          // ),
+          // Container(
+          //   height: 35.adaptSize,
+          //   width: 35.adaptSize,
+          //   margin: EdgeInsets.only(left: 8.h),
+          //   child: Stack(
+          //     alignment: Alignment.center,
+          //     children: [
+          //       CustomIconButton(
+          //         height: 35.adaptSize,
+          //         width: 35.adaptSize,
+          //         alignment: Alignment.center,
+          //         child: CustomImageView(),
+          //       ),
+          //       CustomImageView(
+          //         imagePath: ImageConstant.imgX,
+          //         height: 24.adaptSize,
+          //         width: 24.adaptSize,
+          //         alignment: Alignment.center,
+          //       ),
+          //     ],
+          //   ),
+          // ),
+        ],
+      );
+    });
   }
 }

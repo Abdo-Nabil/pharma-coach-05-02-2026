@@ -1,3 +1,4 @@
+import 'package:mina_s_application5/presentation/list_tab_container_screen/cubit/list_tap_container_cubit.dart';
 import 'package:mina_s_application5/widgets/custom_search_view.dart';
 import 'widgets/list_item_widget.dart';
 import 'models/list_item_model.dart';
@@ -41,7 +42,7 @@ class ListPageState extends State<ListPage>
           child: Column(
             children: [
               SizedBox(height: 8.v),
-              _buildFlash(context),
+              Expanded(child: _buildFlash(context)),
             ],
           ),
         ),
@@ -55,41 +56,65 @@ class ListPageState extends State<ListPage>
       padding: EdgeInsets.symmetric(horizontal: 15.h),
       child: Column(
         children: [
-          BlocSelector<ListBloc, ListState, TextEditingController?>(
-            selector: (state) => state.searchController,
-            builder: (context, searchController) {
-              return CustomSearchView(
-                controller: searchController,
-                hintText: "lbl_search".tr,
-              );
-            },
-          ),
+          // BlocSelector<ListBloc, ListState, TextEditingController?>(
+          //   selector: (state) => state.searchController,
+          //   builder: (context, searchController) {
+          //     return CustomSearchView(
+          //       controller: searchController,
+          //       hintText: "lbl_search".tr,
+          //     );
+          //   },
+          // ),
           SizedBox(height: 8.v),
-          BlocSelector<ListBloc, ListState, ListModel?>(
-            selector: (state) => state.listModelObj,
-            builder: (context, listModelObj) {
-              return ListView.separated(
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                separatorBuilder: (
-                  context,
-                  index,
-                ) {
-                  return SizedBox(
-                    height: 4.v,
-                  );
-                },
-                itemCount: listModelObj?.listItemList.length ?? 0,
-                itemBuilder: (context, index) {
-                  ListItemModel model =
-                      listModelObj?.listItemList[index] ?? ListItemModel();
-                  return ListItemWidget(
-                    model,
-                  );
-                },
-              );
-            },
+          Expanded(
+            child: ListView.separated(
+              physics: BouncingScrollPhysics(),
+              shrinkWrap: true,
+              separatorBuilder: (
+                context,
+                index,
+              ) {
+                return SizedBox(
+                  height: 4.v,
+                );
+              },
+              itemCount: BlocProvider.of<ListTabContainerCubit>(context)
+                  .amVisits
+                  .length,
+              itemBuilder: (context, index) {
+                final visits =
+                    BlocProvider.of<ListTabContainerCubit>(context).amVisits;
+                return ListItemWidget(
+                  visits[index],
+                );
+              },
+            ),
           ),
+          // BlocSelector<ListBloc, ListState, ListModel?>(
+          //   selector: (state) => state.listModelObj,
+          //   builder: (context, listModelObj) {
+          //     return ListView.separated(
+          //       physics: BouncingScrollPhysics(),
+          //       shrinkWrap: true,
+          //       separatorBuilder: (
+          //         context,
+          //         index,
+          //       ) {
+          //         return SizedBox(
+          //           height: 4.v,
+          //         );
+          //       },
+          //       itemCount: listModelObj?.listItemList.length ?? 0,
+          //       itemBuilder: (context, index) {
+          //         ListItemModel model =
+          //             listModelObj?.listItemList[index] ?? ListItemModel();
+          //         return ListItemWidget(
+          //           model,
+          //         );
+          //       },
+          //     );
+          //   },
+          // ),
         ],
       ),
     );

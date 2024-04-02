@@ -1,9 +1,16 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/data/models/getLocations/get_get_locations_resp.dart';
 import 'package:mina_s_application5/data/models/loginUser/post_login_user_resp.dart';
+import 'package:mina_s_application5/general_data.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
 
+import '../../presentation/calendar_container_screen/models/vsit_model.dart';
 import 'network_interceptor.dart';
 
 class ApiClient {
@@ -53,7 +60,7 @@ class ApiClient {
     Map<String, String> headers = const {},
     Map<String, dynamic> queryParams = const {},
   }) async {
-    ProgressDialogUtils.showProgressDialog();
+    // ProgressDialogUtils.showProgressDialog();
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
@@ -85,10 +92,13 @@ class ApiClient {
   /// with the provided headers and request data
   /// Returns a [PostLoginUserResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
-  Future<PostLoginUserResp> loginUser(  String us , String pass,
-      {
-    Map<String, String> headers = const {'Content-Type': 'application/json',
-      'Accept':'Accept'},
+  Future<PostLoginUserResp> loginUser(
+    String us,
+    String pass, {
+    Map<String, String> headers = const {
+      'Content-Type': 'application/json',
+      'Accept': 'Accept'
+    },
     Map requestData = const {},
   }) async {
     ProgressDialogUtils.showProgressDialog();
@@ -96,20 +106,178 @@ class ApiClient {
       await isNetworkConnected();
       var response = await _dio.post(
         '$url/login?email=$us@pharcoo.com&password=$pass',
-       // data: requestData,
+        // '$url/login?email=$us@gmail.com&password=$pass',
+        // data: requestData,
 
         options: Options(headers: headers),
       );
       ProgressDialogUtils.hideProgressDialog();
+
       if (_isSuccessCall(response)) {
+        final temp = PostLoginUserResp.fromJson(response.data);
+        GeneralData.userName = temp.data!.email!.split("@").first;
+        GeneralData.token = temp.data!.authToken;
         NavigatorService.popAndPushNamed(
           AppRoutes.homeContainerScreen,
+          arguments: temp,
         );
 
-        return PostLoginUserResp.fromJson(response.data);
+        return temp;
       } else {
         throw response.data != null
             ? PostLoginUserResp.fromJson(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<List<VisitModel>> getVisits(String param, String date) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+    Map<String, dynamic> queryParams = {
+      "date": date,
+      // "date": "02-04-2024",
+      "date_scope": param,
+    };
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/visits/today',
+        queryParameters: queryParams,
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        List<VisitModel> visits = [];
+        for (int i = 0; i < response.data["data"].length; i++) {
+          visits.add(VisitModel.fromMap(response.data["data"][i]));
+        }
+        return visits;
+      } else {
+        throw response.data != null
+            ? VisitModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<List<RepModel>> getMedicalReps() async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+    Map<String, dynamic> queryParams = const {};
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/reps',
+        queryParameters: queryParams,
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        List<RepModel> reps = [];
+        for (int i = 0; i < response.data["data"].length; i++) {
+          reps.add(RepModel.fromMap(response.data["data"][i]));
+        }
+        return reps;
+      } else {
+        throw response.data != null
+            ? RepModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<List<LocationModel>> getRepLocations(int repId) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+    Map<String, dynamic> queryParams = {
+      "rep_id": repId,
+      "per_page": 50,
+    };
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/locations',
+        queryParameters: queryParams,
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        List<LocationModel> locations = [];
+        for (int i = 0; i < response.data["data"]["data"].length; i++) {
+          locations
+              .add(LocationModel.fromMap(response.data["data"]["data"][i]));
+        }
+        return locations;
+      } else {
+        throw response.data != null
+            ? RepModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future createVisit(
+      int repId, int locationId, String visitTime, String shift) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+    Map<String, dynamic> queryParams = {
+      "rep_id": repId,
+      "location_id": locationId,
+      "shift": shift,
+      "visit_time": visitTime,
+      "name": "eg.visit name",
+    };
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/visits/create',
+        queryParameters: queryParams,
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        //
+        debugPrint("Visit created successfully");
+      } else {
+        throw response.data != null
+            ? RepModel.fromMap(response.data)
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {

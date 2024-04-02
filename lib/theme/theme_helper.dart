@@ -170,6 +170,8 @@ class PrimaryColors {
 
   // Teal
   Color get teal50 => Color(0XFFDEEBF2);
+
+  //
 }
 
 PrimaryColors get appTheme => ThemeHelper().themeColor();

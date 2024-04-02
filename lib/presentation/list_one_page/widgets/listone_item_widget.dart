@@ -1,3 +1,5 @@
+import 'package:mina_s_application5/presentation/calendar_container_screen/models/vsit_model.dart';
+
 import '../models/listone_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
@@ -5,13 +7,13 @@ import 'package:mina_s_application5/core/app_export.dart';
 // ignore: must_be_immutable
 class ListoneItemWidget extends StatelessWidget {
   ListoneItemWidget(
-    this.listoneItemModelObj, {
+    this.visitModel, {
     Key? key,
   }) : super(
           key: key,
         );
 
-  ListoneItemModel listoneItemModelObj;
+  VisitModel visitModel;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,9 @@ class ListoneItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  listoneItemModelObj.elgawyHospital!,
+                  "${visitModel.rep.firstName} ${visitModel.rep.lastName}",
+
+                  // listoneItemModelObj.elgawyHospital!,
                   style: CustomTextStyles.labelLargeSFProTextBluegray900,
                 ),
                 SizedBox(height: 3.v),
@@ -48,7 +52,8 @@ class ListoneItemWidget extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 4.h),
                       child: Text(
-                        listoneItemModelObj.nasrCityOne!,
+                        "${visitModel.location.address}",
+                        // listoneItemModelObj.nasrCityOne!,
                         style: theme.textTheme.bodySmall,
                       ),
                     ),
@@ -80,7 +85,8 @@ class ListoneItemWidget extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 5.h),
                         child: Text(
-                          listoneItemModelObj.normal!,
+                          "Normal",
+                          // listoneItemModelObj.normal!,
                           style: theme.textTheme.bodySmall,
                         ),
                       ),
@@ -115,7 +121,8 @@ class ListoneItemWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 5.h),
                   child: Text(
-                    listoneItemModelObj.flash!,
+                    "Flash",
+                    // listoneItemModelObj.flash!,
                     style: theme.textTheme.bodySmall,
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:mina_s_application5/presentation/home_page/home_page.dart';
 import 'package:mina_s_application5/presentation/list_one_page/list_one_page.dart';
 import 'package:mina_s_application5/presentation/list_page/list_page.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/team_analytics_screen.dart';
 import 'package:mina_s_application5/widgets/custom_bottom_bar.dart';
 import '../calendar_container_screen/calendar_container_screen.dart';
 import '../list_tab_container_screen/list_tab_container_screen.dart';
@@ -68,9 +69,9 @@ class HomeContainerScreen extends StatelessWidget {
       case BottomBarEnum.List:
         return AppRoutes.listTabContainerScreen;
       case BottomBarEnum.Calendar:
-          return AppRoutes.calendarContainerScreen;
+        return AppRoutes.calendarContainerScreen;
       case BottomBarEnum.Analytics:
-        return "/";
+        return AppRoutes.teamAnalyticsScreen;
       default:
         return "/";
     }
@@ -88,6 +89,8 @@ class HomeContainerScreen extends StatelessWidget {
         return ListTabContainerScreen.builder(context);
       case AppRoutes.calendarContainerScreen:
         return CalendarContainerScreen.builder(context);
+      case AppRoutes.teamAnalyticsScreen:
+        return TeamAnalyticsScreen.builder(context);
       default:
         return DefaultWidget();
     }

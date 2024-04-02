@@ -1,26 +1,56 @@
+import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
+import 'package:mina_s_application5/data/apiClient/api_client.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/cubit/calendar_cubit.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
 import 'package:mina_s_application5/widgets/custom_search_view.dart';
+import '../../general_data.dart';
+import 'cubit/add_medical_rep_cubit.dart';
 import 'models/add_medical_rep_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'bloc/add_medical_rep_bloc.dart';
 
 // ignore_for_file: must_be_immutable
-class AddMedicalRepDialog extends StatelessWidget {
+class AddMedicalRepDialog extends StatefulWidget {
   const AddMedicalRepDialog({Key? key})
       : super(
           key: key,
         );
 
+  // static Widget builder(BuildContext context) {
+  //   return BlocProvider<AddMedicalRepBloc>(
+  //     create: (context) => AddMedicalRepBloc(AddMedicalRepState(
+  //       addMedicalRepModelObj: AddMedicalRepModel(),
+  //     ))
+  //       ..add(AddMedicalRepInitialEvent()),
+  //     child: AddMedicalRepDialog(),
+  //   );
+  // }
   static Widget builder(BuildContext context) {
-    return BlocProvider<AddMedicalRepBloc>(
-      create: (context) => AddMedicalRepBloc(AddMedicalRepState(
-        addMedicalRepModelObj: AddMedicalRepModel(),
-      ))
-        ..add(AddMedicalRepInitialEvent()),
+    return BlocProvider<AddMedicalRepCubit>(
+      create: (context) => AddMedicalRepCubit(
+        apiClient: ApiClient(),
+        calendarCubit: GeneralData.calendarCubit,
+      ),
       child: AddMedicalRepDialog(),
     );
   }
 
+  @override
+  State<AddMedicalRepDialog> createState() => _AddMedicalRepDialogState();
+}
+
+class _AddMedicalRepDialogState extends State<AddMedicalRepDialog> {
+  //
+  // bool isLoading = true;
+  @override
+  void initState() {
+    BlocProvider.of<AddMedicalRepCubit>(context).getMedicalReps();
+    super.initState();
+  }
+
+  //
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -38,7 +68,7 @@ class AddMedicalRepDialog extends StatelessWidget {
           ),
           child: Material(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              // mainAxisSize: MainAxisSize.min,
               children: [
                 Align(
                   alignment: Alignment.centerRight,
@@ -63,127 +93,159 @@ class AddMedicalRepDialog extends StatelessWidget {
                             left: 59.h,
                             bottom: 2.v,
                           ),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
                         ),
                       ],
                     ),
                   ),
                 ),
                 SizedBox(height: 10.v),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 16.h,
-                    right: 8.h,
-                  ),
-                  child: BlocSelector<AddMedicalRepBloc, AddMedicalRepState,
-                      TextEditingController?>(
-                    selector: (state) => state.searchController,
-                    builder: (context, searchController) {
-                      return CustomSearchView(
-                        controller: searchController,
-                        hintText: "lbl_search".tr,
-                        borderDecoration: SearchViewStyleHelper.fillGray,
-                        fillColor: appTheme.gray100,
-                      );
-                    },
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.only(
+                //     left: 16.h,
+                //     right: 8.h,
+                //   ),
+                //   child: BlocSelector<AddMedicalRepBloc, AddMedicalRepState,
+                //       TextEditingController?>(
+                //     selector: (state) => state.searchController,
+                //     builder: (context, searchController) {
+                //       return CustomSearchView(
+                //         controller: searchController,
+                //         hintText: "lbl_search".tr,
+                //         borderDecoration: SearchViewStyleHelper.fillGray,
+                //         fillColor: appTheme.gray100,
+                //       );
+                //     },
+                //   ),
+                // ),
                 SizedBox(height: 8.v),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 16.h),
-                    child: Text(
-                      "lbl_recent".tr,
-                      style: CustomTextStyles.bodySmallPrimary,
-                    ),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Padding(
+                //     padding: EdgeInsets.only(left: 16.h),
+                //     child: Text(
+                //       "lbl_recent".tr,
+                //       style: CustomTextStyles.bodySmallPrimary,
+                //     ),
+                //   ),
+                // ),
                 SizedBox(height: 3.v),
-                Container(
-                  margin: EdgeInsets.only(
-                    left: 16.h,
-                    right: 10.h,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 6.h,
-                    vertical: 4.v,
-                  ),
-                  decoration: AppDecoration.fillGray.copyWith(
-                    borderRadius: BorderRadiusStyle.roundedBorder3,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 6.h),
+
+                BlocBuilder<AddMedicalRepCubit, AddMedicalRepState>(
+                  builder: (context, state) {
+                    if (state is AddMedicalRepLoading) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (state is GetRepsSuccessState) {
+                      final repList = BlocProvider.of<AddMedicalRepCubit>(
+                        context,
+                      ).reps;
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.30,
+                        child: ListView.separated(
+                          itemCount: repList.length,
+                          separatorBuilder: (context, index) {
+                            return SizedBox(height: 5.v);
+                          },
+                          itemBuilder: (context, index) {
+                            return RepDialogItem(repModel: repList[index]);
+                          },
+                        ),
+                      );
+                    } else if (state is GetLocationsSuccessState) {
+                      final locations = BlocProvider.of<AddMedicalRepCubit>(
+                        context,
+                      ).locations;
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.30,
+                        child: ListView.separated(
+                          itemCount: locations.length,
+                          separatorBuilder: (context, index) {
+                            return SizedBox(height: 5.v);
+                          },
+                          itemBuilder: (context, index) {
+                            return LocationDialogItem(
+                                locationModel: locations[index]);
+                          },
+                        ),
+                      );
+                    } else if (state is ShowSubmitState) {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.30,
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "lbl_ahmed_essam".tr,
-                              style: CustomTextStyles.bodySmallBlack90012,
+                          children: <Widget>[
+                            ListTile(
+                              title: const Text('AM'),
+                              leading: Radio<String>(
+                                value: "am",
+                                groupValue:
+                                    BlocProvider.of<AddMedicalRepCubit>(context)
+                                        .shift,
+                                onChanged: (value) {
+                                  setState(() {
+                                    BlocProvider.of<AddMedicalRepCubit>(context)
+                                        .shift = value!;
+                                  });
+                                },
+                              ),
                             ),
-                            SizedBox(height: 4.v),
-                            Text(
-                              "lbl_sun_20_5_2024".tr,
-                              style: CustomTextStyles.bodySmallGray500,
+                            ListTile(
+                              title: const Text('PM'),
+                              leading: Radio<String>(
+                                value: "pm",
+                                groupValue:
+                                    BlocProvider.of<AddMedicalRepCubit>(context)
+                                        .shift,
+                                onChanged: (value) {
+                                  setState(() {
+                                    BlocProvider.of<AddMedicalRepCubit>(context)
+                                        .shift = value!;
+                                  });
+                                },
+                              ),
                             ),
+                            Spacer(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.30,
+                              child: ElevatedButton(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Text(
+                                    "Add",
+                                    style: TextStyle(
+                                      fontSize: 18.fSize,
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  await BlocProvider.of<AddMedicalRepCubit>(
+                                          context)
+                                      .createVisit();
+                                },
+                              ),
+                            ),
+                            // RadioListTile<String>(
+                            //   value: "PM",
+                            //   groupValue:
+                            //       BlocProvider.of<AddMedicalRepCubit>(context)
+                            //           .shift,
+                            //   onChanged: (value) {
+                            //     setState(() {
+                            //       BlocProvider.of<AddMedicalRepCubit>(context)
+                            //           .shift = value!;
+                            //     });
+                            //   },
+                            // ),
                           ],
                         ),
-                      ),
-                      CustomImageView(
-                        imagePath: ImageConstant.imgCheckedBox,
-                        height: 24.adaptSize,
-                        width: 24.adaptSize,
-                        margin: EdgeInsets.symmetric(vertical: 3.v),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 2.v),
-                Container(
-                  margin: EdgeInsets.only(
-                    left: 16.h,
-                    right: 10.h,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 6.h,
-                    vertical: 4.v,
-                  ),
-                  decoration: AppDecoration.fillGray.copyWith(
-                    borderRadius: BorderRadiusStyle.roundedBorder3,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 6.h),
-                        child: Column(
-                          children: [
-                            Text(
-                              "lbl_mona_ahmed".tr,
-                              style: CustomTextStyles.bodySmallBlack90012,
-                            ),
-                            SizedBox(height: 4.v),
-                            Text(
-                              "lbl_sun_20_5_2024".tr,
-                              style: CustomTextStyles.bodySmallGray500,
-                            ),
-                          ],
-                        ),
-                      ),
-                      CustomImageView(
-                        imagePath: ImageConstant.imgCheckedBox,
-                        height: 24.adaptSize,
-                        width: 24.adaptSize,
-                        margin: EdgeInsets.only(
-                          top: 2.v,
-                          bottom: 4.v,
-                        ),
-                      ),
-                    ],
-                  ),
+                      );
+                    } else if (state is FinishSubmitState) {
+                      Navigator.pop(context);
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
                 ),
                 SizedBox(height: 13.v),
               ],
@@ -191,6 +253,130 @@ class AddMedicalRepDialog extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class RepDialogItem extends StatelessWidget {
+  final RepModel repModel;
+  const RepDialogItem({required this.repModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        await BlocProvider.of<AddMedicalRepCubit>(context)
+            .getRepLocations(repModel.id!);
+      },
+      child: Container(
+        margin: EdgeInsets.only(
+          left: 16.h,
+          right: 10.h,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: 6.h,
+          vertical: 4.v,
+        ),
+        decoration: AppDecoration.fillGray.copyWith(
+          borderRadius: BorderRadiusStyle.roundedBorder3,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              // padding: EdgeInsets.only(left: 6.h),
+              padding: EdgeInsets.symmetric(vertical: 10.v, horizontal: 6.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${repModel.firstName} ${repModel.lastName}",
+                    // "lbl_ahmed_essam".tr,
+                    style: CustomTextStyles.bodySmallBlack90012,
+                  ),
+                  // SizedBox(height: 4.v),
+                  // Text(
+                  //   "lbl_sun_20_5_2024".tr,
+                  //   style: CustomTextStyles.bodySmallGray500,
+                  // ),
+                ],
+              ),
+            ),
+            // CustomImageView(
+            //   imagePath: ImageConstant.imgCheckedBox,
+            //   height: 24.adaptSize,
+            //   width: 24.adaptSize,
+            //   margin: EdgeInsets.symmetric(vertical: 3.v),
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LocationDialogItem extends StatelessWidget {
+  final LocationModel locationModel;
+  const LocationDialogItem({
+    required this.locationModel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        BlocProvider.of<AddMedicalRepCubit>(context)
+            .setLocationIdAndShowSubmit(locationModel.id!);
+      },
+      child: Container(
+        margin: EdgeInsets.only(
+          left: 16.h,
+          right: 10.h,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: 6.h,
+          vertical: 4.v,
+        ),
+        decoration: AppDecoration.fillGray.copyWith(
+          borderRadius: BorderRadiusStyle.roundedBorder3,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              // padding: EdgeInsets.only(left: 6.h),
+              padding: EdgeInsets.symmetric(vertical: 10.v, horizontal: 6.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    locationModel.address,
+                    // "lbl_ahmed_essam".tr,
+                    style: CustomTextStyles.bodySmallBlack90012,
+                  ),
+                  SizedBox(height: 6.v),
+                  Text(
+                    locationModel.type,
+                    // "lbl_ahmed_essam".tr,
+                    style: CustomTextStyles.bodySmallGray500,
+                  ),
+                  // SizedBox(height: 4.v),
+                  // Text(
+                  //   "lbl_sun_20_5_2024".tr,
+                  //   style: CustomTextStyles.bodySmallGray500,
+                  // ),
+                ],
+              ),
+            ),
+            // CustomImageView(
+            //   imagePath: ImageConstant.imgCheckedBox,
+            //   height: 24.adaptSize,
+            //   width: 24.adaptSize,
+            //   margin: EdgeInsets.symmetric(vertical: 3.v),
+            // ),
+          ],
+        ),
+      ),
     );
   }
 }

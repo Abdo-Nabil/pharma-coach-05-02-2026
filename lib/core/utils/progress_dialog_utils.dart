@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 
@@ -32,5 +33,26 @@ class ProgressDialogUtils {
       Navigator.pop(
           NavigatorService.navigatorKey.currentState!.overlay!.context);
     isProgressVisible = false;
+  }
+
+  static showErrorDialog(BuildContext context) {
+    AwesomeDialog(
+        context: context,
+        dialogType: DialogType.warning,
+        animType: AnimType.rightSlide,
+        title: 'Ohh Sorry!',
+        desc: 'Some thing went wrong, please contact us.',
+        // btnCancelOnPress: () {},
+        btnOkOnPress: () {},
+        btnOk: SizedBox(
+          height: 35,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("OK"),
+          ),
+        ))
+      ..show();
   }
 }

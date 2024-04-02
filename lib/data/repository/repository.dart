@@ -24,7 +24,9 @@ class Repository {
     Map<String, String> headers = const {},
     Map requestData = const {},
   }) async {
-    return await _apiClient.loginUser( "","",
+    return await _apiClient.loginUser(
+      "",
+      "",
       headers: headers,
       requestData: requestData,
     );

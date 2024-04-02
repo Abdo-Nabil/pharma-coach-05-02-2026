@@ -1,7 +1,15 @@
+import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
+import 'package:mina_s_application5/data/apiClient/api_client.dart';
+import 'package:mina_s_application5/general_data.dart';
+import 'package:mina_s_application5/general_helper.dart';
+import 'package:mina_s_application5/presentation/add_medical_rep_dialog/add_medical_rep_dialog.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/cubit/calendar_cubit.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/widgets/calendar_widget.dart';
 import 'package:mina_s_application5/presentation/home_page/home_page.dart';
 import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
 import 'package:mina_s_application5/widgets/app_bar/appbar_title.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'widgets/calendarcontainer_item_widget.dart';
 import 'models/calendarcontainer_item_model.dart';
 import 'models/calendar_container_model.dart';
@@ -11,50 +19,60 @@ import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'bloc/calendar_container_bloc.dart';
 
-class CalendarContainerScreen extends StatelessWidget {
+class CalendarContainerScreen extends StatefulWidget {
   CalendarContainerScreen({Key? key})
       : super(
           key: key,
         );
 
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-
   static Widget builder(BuildContext context) {
-    return BlocProvider<CalendarContainerBloc>(
-      create: (context) => CalendarContainerBloc(CalendarContainerState(
-        calendarContainerModelObj: CalendarContainerModel(),
-      ))
-        ..add(CalendarContainerInitialEvent()),
+    return BlocProvider<CalendarCubit>(
+      create: (context) => GeneralData.calendarCubit,
       child: CalendarContainerScreen(),
     );
   }
 
   @override
+  State<CalendarContainerScreen> createState() =>
+      _CalendarContainerScreenState();
+}
+
+class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
+  @override
+  void initState() {
+    BlocProvider.of<CalendarCubit>(context)
+        .getMonthlyVisits(GeneralHelper.formatDateForApi(DateTime.now()));
+    super.initState();
+  }
+
+  // static Widget builder(BuildContext context) {
+  @override
   Widget build(BuildContext context) {
+    Future(ProgressDialogUtils.showProgressDialog);
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: 8.v),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.h),
-                child: Column(
-                  children: [
-                    _buildCalendar(context),
-                    SizedBox(height: 11.v),
-                    _buildCalendarContainer(context),
-                  ],
-                ),
+        body: BlocListener<CalendarCubit, CalendarState>(
+          listener: (context, state) {
+            if (state is CalendarSuccess) {
+              ProgressDialogUtils.hideProgressDialog();
+            }
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.h),
+            child: SingleChildScrollView(
+              child: Column(
+                // mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 8.v),
+                  CalendarWidget(),
+                ],
               ),
-              Spacer(),
-            ],
+            ),
           ),
         ),
-
         floatingActionButton: _buildFloatingActionButton(context),
       ),
     );
@@ -165,11 +183,18 @@ class CalendarContainerScreen extends StatelessWidget {
       height: 50,
       width: 50,
       backgroundColor: appTheme.amber700,
-      child: CustomImageView(
-        imagePath: ImageConstant.imgXOnprimary,
-        height: 25.0.v,
-        width: 25.0.h,
+      child: Icon(
+        Icons.add,
+        color: Colors.white,
       ),
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AddMedicalRepDialog.builder(context);
+          },
+        );
+      },
     );
   }
 

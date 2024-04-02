@@ -1,3 +1,5 @@
+import 'package:mina_s_application5/presentation/calendar_container_screen/models/vsit_model.dart';
+
 import '../models/list_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
@@ -5,13 +7,13 @@ import 'package:mina_s_application5/core/app_export.dart';
 // ignore: must_be_immutable
 class ListItemWidget extends StatelessWidget {
   ListItemWidget(
-    this.listItemModelObj, {
+    this.visitModel, {
     Key? key,
   }) : super(
           key: key,
         );
 
-  ListItemModel listItemModelObj;
+  VisitModel visitModel;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,8 @@ class ListItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  listItemModelObj.marwaMohamedEldeeb!,
+                  // listItemModelObj.marwaMohamedEldeeb!,
+                  "${visitModel.rep.firstName} ${visitModel.rep.lastName}",
                   style: CustomTextStyles.bodySmallBlack900,
                 ),
                 SizedBox(height: 4.v),
@@ -47,7 +50,8 @@ class ListItemWidget extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 4.h),
                       child: Text(
-                        listItemModelObj.brickNasrCity!,
+                        // listItemModelObj.brickNasrCity!,
+                        "${visitModel.location.address}",
                         style: theme.textTheme.bodySmall,
                       ),
                     ),
@@ -77,17 +81,19 @@ class ListItemWidget extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 5.h),
-                        child: InkWell(child: Text(
-                          listItemModelObj.normal!,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                            onTap: (){
-                              NavigatorService.popAndPushNamed(
+                          padding: EdgeInsets.only(left: 5.h),
+                          child: InkWell(
+                            child: Text(
+                              "Normal",
+                              // listItemModelObj.normal!,
+                              style: theme.textTheme.bodySmall,
+                            ),
+                            onTap: () {
+                              NavigatorService.pushNamed(
                                 AppRoutes.questionsScreen,
                               );
-                            },)
-                      ),
+                            },
+                          )),
                     ],
                   ),
                 ),
@@ -98,13 +104,13 @@ class ListItemWidget extends StatelessWidget {
             padding: EdgeInsets.only(top: 2.v),
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    listItemModelObj.paediatrics!,
-                    style: CustomTextStyles.bodySmallAmber700,
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.centerRight,
+                //   child: Text(
+                //     listItemModelObj.paediatrics!,
+                //     style: CustomTextStyles.bodySmallAmber700,
+                //   ),
+                // ),
                 SizedBox(height: 19.v),
                 Container(
                   padding: EdgeInsets.symmetric(
@@ -131,7 +137,8 @@ class ListItemWidget extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 5.h),
                         child: Text(
-                          listItemModelObj.flash!,
+                          "Flash",
+                          // listItemModelObj.flash!,
                           style: theme.textTheme.bodySmall,
                         ),
                       ),

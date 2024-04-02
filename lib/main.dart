@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
+import 'presentation/calendar_container_screen/widgets/calendar_widget.dart';
 import 'core/app_export.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Future.wait([
@@ -22,34 +25,38 @@ class MyApp extends StatelessWidget {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return BlocProvider(
-          create: (context) => ThemeBloc(
-            ThemeState(
-              themeType: PrefUtils().getThemeData(),
+          create: (context) => GeneralCubit(),
+          child: BlocProvider(
+            create: (context) => ThemeBloc(
+              ThemeState(
+                themeType: PrefUtils().getThemeData(),
+              ),
             ),
-          ),
-          child: BlocBuilder<ThemeBloc, ThemeState>(
-            builder: (context, state) {
-              return MaterialApp(
-                theme: theme,
-                title: 'mina_s_application5',
-                navigatorKey: NavigatorService.navigatorKey,
-                debugShowCheckedModeBanner: false,
-                localizationsDelegates: [
-                  AppLocalizationDelegate(),
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: [
-                  Locale(
-                    'en',
-                    '',
-                  ),
-                ],
-                initialRoute: AppRoutes.initialRoute,
-                routes: AppRoutes.routes,
-              );
-            },
+            child: BlocBuilder<ThemeBloc, ThemeState>(
+              builder: (context, state) {
+                return MaterialApp(
+                  theme: theme,
+                  title: 'mina_s_application5',
+                  navigatorKey: NavigatorService.navigatorKey,
+                  debugShowCheckedModeBanner: false,
+                  localizationsDelegates: [
+                    AppLocalizationDelegate(),
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: [
+                    Locale(
+                      'en',
+                      '',
+                    ),
+                  ],
+                  initialRoute: AppRoutes.initialRoute,
+                  routes: AppRoutes.routes,
+                  // home: CalendarScreen(),
+                );
+              },
+            ),
           ),
         );
       },

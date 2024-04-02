@@ -87,7 +87,7 @@ class TeamAnalyticsScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: _buildBottomBar(context),
+        // bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
