@@ -14,6 +14,7 @@ import 'package:mina_s_application5/presentation/questions_screen/models/answer_
 import 'package:mina_s_application5/presentation/questions_screen/models/category_model.dart';
 
 import '../../presentation/calendar_container_screen/models/vsit_model.dart';
+import '../../presentation/team_analytics_screen/models/analysis_model.dart';
 import 'network_interceptor.dart';
 
 class ApiClient {
@@ -108,9 +109,9 @@ class ApiClient {
     try {
       await isNetworkConnected();
       var response = await _dio.post(
-        '$url/login?email=a@b.com&password=adminadmin',
+        // '$url/login?email=a@b.com&password=adminadmin',
         // '$url/login?email=$us@pharcoo.com&password=$pass',
-        // '$url/login?email=$us@gmail.com&password=$pass',
+        '$url/login?email=$us@gmail.com&password=$pass',
         // data: requestData,
 
         options: Options(headers: headers),
@@ -401,5 +402,40 @@ class ApiClient {
       rethrow;
     }
     return isSend;
+  }
+
+  Future<List<AnalysisModel>> getAnalysis() async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+    Map<String, dynamic> queryParams = {};
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/feedback',
+        queryParameters: queryParams,
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        List<AnalysisModel> models = [];
+        for (int i = 0; i < response.data["data"].length; i++) {
+          models.add(AnalysisModel.fromMap(response.data["data"][i]));
+        }
+        return models;
+      } else {
+        throw response.data != null
+            ? RepModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      // ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
   }
 }
