@@ -1,3 +1,4 @@
+import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/vsit_model.dart';
 
 import '../models/list_item_model.dart';
@@ -58,43 +59,47 @@ class ListItemWidget extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 3.v),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 7.h,
-                    vertical: 3.v,
-                  ),
-                  decoration: AppDecoration.fillGray.copyWith(
-                    borderRadius: BorderRadiusStyle.roundedBorder3,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                        height: 9.adaptSize,
-                        width: 9.adaptSize,
-                        margin: EdgeInsets.symmetric(vertical: 1.v),
-                        decoration: BoxDecoration(
-                          color: appTheme.lightGreenA700,
-                          borderRadius: BorderRadius.circular(
-                            4.h,
+                InkWell(
+                  onTap: () {
+                    GeneralData.selectedRepId = visitModel.rep.id!;
+                    GeneralData.selectedVisitId = visitModel.id;
+                    NavigatorService.pushNamed(
+                      AppRoutes.questionsScreen,
+                      arguments: {'type': 'normal'},
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 7.h,
+                      vertical: 3.v,
+                    ),
+                    decoration: AppDecoration.fillGray.copyWith(
+                      borderRadius: BorderRadiusStyle.roundedBorder3,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          height: 9.adaptSize,
+                          width: 9.adaptSize,
+                          margin: EdgeInsets.symmetric(vertical: 1.v),
+                          decoration: BoxDecoration(
+                            color: appTheme.lightGreenA700,
+                            borderRadius: BorderRadius.circular(
+                              4.h,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
+                        Padding(
                           padding: EdgeInsets.only(left: 5.h),
-                          child: InkWell(
-                            child: Text(
-                              "Normal",
-                              // listItemModelObj.normal!,
-                              style: theme.textTheme.bodySmall,
-                            ),
-                            onTap: () {
-                              NavigatorService.pushNamed(
-                                AppRoutes.questionsScreen,
-                              );
-                            },
-                          )),
-                    ],
+                          child: Text(
+                            "Normal",
+                            // listItemModelObj.normal!,
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -111,38 +116,50 @@ class ListItemWidget extends StatelessWidget {
                 //     style: CustomTextStyles.bodySmallAmber700,
                 //   ),
                 // ),
-                SizedBox(height: 19.v),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 7.h,
-                    vertical: 3.v,
-                  ),
-                  decoration: AppDecoration.fillGray.copyWith(
-                    borderRadius: BorderRadiusStyle.roundedBorder3,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                        height: 9.adaptSize,
-                        width: 9.adaptSize,
-                        margin: EdgeInsets.symmetric(vertical: 1.v),
-                        decoration: BoxDecoration(
-                          color: appTheme.blueGray100,
-                          borderRadius: BorderRadius.circular(
-                            4.h,
+                // SizedBox(height: 19.v),
+                InkWell(
+                  onTap: () {
+                    GeneralData.selectedRepId = visitModel.rep.id!;
+                    GeneralData.selectedVisitId = visitModel.id;
+                    NavigatorService.pushNamed(
+                      AppRoutes.questionsScreen,
+                      arguments: {'type': 'flash'},
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(top: 37.v),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 7.h,
+                      vertical: 3.v,
+                    ),
+                    decoration: AppDecoration.fillGray.copyWith(
+                      borderRadius: BorderRadiusStyle.roundedBorder3,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          height: 9.adaptSize,
+                          width: 9.adaptSize,
+                          margin: EdgeInsets.symmetric(vertical: 1.v),
+                          decoration: BoxDecoration(
+                            color: appTheme.orange300,
+                            // color: appTheme.blueGray100,
+                            borderRadius: BorderRadius.circular(
+                              4.h,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.h),
-                        child: Text(
-                          "Flash",
-                          // listItemModelObj.flash!,
-                          style: theme.textTheme.bodySmall,
+                        Padding(
+                          padding: EdgeInsets.only(left: 5.h),
+                          child: Text(
+                            "Flash",
+                            // listItemModelObj.flash!,
+                            style: theme.textTheme.bodySmall,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],

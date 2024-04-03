@@ -16,7 +16,8 @@ class AddMedicalRepCubit extends Cubit<AddMedicalRepState> {
   AddMedicalRepCubit({required this.apiClient, required this.calendarCubit})
       : super(AddMedicalRepInitial());
 
-  List<RepModel> reps = [];
+  // List<RepModel> reps = [];
+  List<TinyRepModel> reps = [];
   List<LocationModel> locations = [];
   //
   late int selectedRepId;

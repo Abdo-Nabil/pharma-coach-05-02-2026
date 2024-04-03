@@ -55,4 +55,47 @@ class ProgressDialogUtils {
         ))
       ..show();
   }
+
+  static showSuccessDialog(BuildContext context) {
+    AwesomeDialog(
+        context: context,
+        dialogType: DialogType.success,
+        animType: AnimType.rightSlide,
+        title: 'Thank You',
+        desc: 'Your feedback has been submitted successfully',
+        // btnCancelOnPress: () {},
+        btnOkOnPress: () {},
+        btnOk: SizedBox(
+          height: 35,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: Text("OK"),
+          ),
+        ))
+      ..show();
+  }
+
+  static showWarningDialog(BuildContext context) {
+    AwesomeDialog(
+        context: context,
+        dialogType: DialogType.warning,
+        animType: AnimType.rightSlide,
+        title: 'Keep Note!',
+        desc: 'Some questions were not answered',
+        // btnCancelOnPress: () {},
+        btnOkOnPress: () {},
+        btnOk: SizedBox(
+          height: 35,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("OK"),
+          ),
+        ))
+      ..show();
+  }
 }

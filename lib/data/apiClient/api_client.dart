@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -9,6 +10,8 @@ import 'package:mina_s_application5/data/models/loginUser/post_login_user_resp.d
 import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
+import 'package:mina_s_application5/presentation/questions_screen/models/answer_model.dart';
+import 'package:mina_s_application5/presentation/questions_screen/models/category_model.dart';
 
 import '../../presentation/calendar_container_screen/models/vsit_model.dart';
 import 'network_interceptor.dart';
@@ -105,7 +108,8 @@ class ApiClient {
     try {
       await isNetworkConnected();
       var response = await _dio.post(
-        '$url/login?email=$us@pharcoo.com&password=$pass',
+        '$url/login?email=a@b.com&password=adminadmin',
+        // '$url/login?email=$us@pharcoo.com&password=$pass',
         // '$url/login?email=$us@gmail.com&password=$pass',
         // data: requestData,
 
@@ -168,7 +172,7 @@ class ApiClient {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog();
       Logger.log(
         error,
         stackTrace: stackTrace,
@@ -177,7 +181,7 @@ class ApiClient {
     }
   }
 
-  Future<List<RepModel>> getMedicalReps() async {
+  Future<List<TinyRepModel>> getMedicalReps() async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -192,9 +196,9 @@ class ApiClient {
         options: Options(headers: headers),
       );
       if (_isSuccessCall(response)) {
-        List<RepModel> reps = [];
+        List<TinyRepModel> reps = [];
         for (int i = 0; i < response.data["data"].length; i++) {
-          reps.add(RepModel.fromMap(response.data["data"][i]));
+          reps.add(TinyRepModel.fromMap(response.data["data"][i]));
         }
         return reps;
       } else {
@@ -203,7 +207,7 @@ class ApiClient {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog();
       Logger.log(
         error,
         stackTrace: stackTrace,
@@ -211,6 +215,40 @@ class ApiClient {
       rethrow;
     }
   }
+  // Future<List<RepModel>> getMedicalReps() async {
+  //   Map<String, String> headers = {
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json',
+  //     'Authorization': 'Bearer ${GeneralData.token!}',
+  //   };
+  //   Map<String, dynamic> queryParams = const {};
+  //   try {
+  //     await isNetworkConnected();
+  //     Response response = await _dio.get(
+  //       '$url/reps',
+  //       queryParameters: queryParams,
+  //       options: Options(headers: headers),
+  //     );
+  //     if (_isSuccessCall(response)) {
+  //       List<RepModel> reps = [];
+  //       for (int i = 0; i < response.data["data"].length; i++) {
+  //         reps.add(RepModel.fromMap(response.data["data"][i]));
+  //       }
+  //       return reps;
+  //     } else {
+  //       throw response.data != null
+  //           ? RepModel.fromMap(response.data)
+  //           : 'Something Went Wrong!';
+  //     }
+  //   } catch (error, stackTrace) {
+  //     // ProgressDialogUtils.hideProgressDialog();
+  //     Logger.log(
+  //       error,
+  //       stackTrace: stackTrace,
+  //     );
+  //     rethrow;
+  //   }
+  // }
 
   Future<List<LocationModel>> getRepLocations(int repId) async {
     Map<String, String> headers = {
@@ -242,7 +280,7 @@ class ApiClient {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog();
       Logger.log(
         error,
         stackTrace: stackTrace,
@@ -281,12 +319,87 @@ class ApiClient {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog();
       Logger.log(
         error,
         stackTrace: stackTrace,
       );
       rethrow;
     }
+  }
+
+  Future<List<CategoryModel>> getQuestionCategories(
+      String questionsType) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+    Map<String, dynamic> queryParams = {
+      "type": questionsType,
+    };
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/questions/all',
+        queryParameters: queryParams,
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        List<CategoryModel> categories = [];
+        for (int i = 0; i < response.data["data"].length; i++) {
+          categories.add(CategoryModel.fromMap(response.data["data"][i]));
+        }
+
+        return categories;
+      } else {
+        throw response.data != null
+            ? RepModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      // ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<bool> submitQuestionAnswers(AnswerModel answerModel) async {
+    bool isSend = false;
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+    Map<String, dynamic> queryParams = {};
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/questions/answer',
+        queryParameters: queryParams,
+        options: Options(headers: headers),
+        data: json.encode(
+          answerModel.toMap(),
+        ),
+      );
+      if (_isSuccessCall(response)) {
+        isSend = true;
+      } else {
+        throw response.data != null
+            ? RepModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      // ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+    return isSend;
   }
 }

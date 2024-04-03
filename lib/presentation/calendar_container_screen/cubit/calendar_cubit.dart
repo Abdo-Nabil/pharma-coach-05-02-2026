@@ -19,10 +19,16 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   List<Meeting> meetings = <Meeting>[];
 
+  // getMedicalReps() async {
+  //   // await Future.delayed(const Duration(seconds: 3));
+  //   // await apiClient.getLocations();
+  //   List<RepModel> reps = await apiClient.getMedicalReps();
+  // }
+
   getMedicalReps() async {
     // await Future.delayed(const Duration(seconds: 3));
     // await apiClient.getLocations();
-    List<RepModel> reps = await apiClient.getMedicalReps();
+    List<TinyRepModel> reps = await apiClient.getMedicalReps();
   }
 
   getMonthlyVisits(String date) async {

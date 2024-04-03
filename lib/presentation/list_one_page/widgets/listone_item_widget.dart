@@ -1,5 +1,6 @@
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/vsit_model.dart';
 
+import '../../../general_data.dart';
 import '../models/listone_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
@@ -60,73 +61,93 @@ class ListoneItemWidget extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 3.v),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 7.h,
-                    vertical: 3.v,
-                  ),
-                  decoration: AppDecoration.fillOnPrimary.copyWith(
-                    borderRadius: BorderRadiusStyle.roundedBorder3,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                        height: 9.adaptSize,
-                        width: 9.adaptSize,
-                        margin: EdgeInsets.symmetric(vertical: 1.v),
-                        decoration: BoxDecoration(
-                          color: appTheme.lightGreenA700,
-                          borderRadius: BorderRadius.circular(
-                            4.h,
+                InkWell(
+                  onTap: () {
+                    GeneralData.selectedRepId = visitModel.rep.id!;
+                    GeneralData.selectedVisitId = visitModel.id;
+                    NavigatorService.pushNamed(
+                      AppRoutes.questionsScreen,
+                      arguments: {'type': 'normal'},
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 7.h,
+                      vertical: 3.v,
+                    ),
+                    decoration: AppDecoration.fillOnPrimary.copyWith(
+                      borderRadius: BorderRadiusStyle.roundedBorder3,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          height: 9.adaptSize,
+                          width: 9.adaptSize,
+                          margin: EdgeInsets.symmetric(vertical: 1.v),
+                          decoration: BoxDecoration(
+                            color: appTheme.lightGreenA700,
+                            borderRadius: BorderRadius.circular(
+                              4.h,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.h),
-                        child: Text(
-                          "Normal",
-                          // listoneItemModelObj.normal!,
-                          style: theme.textTheme.bodySmall,
+                        Padding(
+                          padding: EdgeInsets.only(left: 5.h),
+                          child: Text(
+                            "Normal",
+                            // listoneItemModelObj.normal!,
+                            style: theme.textTheme.bodySmall,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 37.v),
-            padding: EdgeInsets.symmetric(
-              horizontal: 7.h,
-              vertical: 3.v,
-            ),
-            decoration: AppDecoration.fillOnPrimary.copyWith(
-              borderRadius: BorderRadiusStyle.roundedBorder3,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  height: 9.adaptSize,
-                  width: 9.adaptSize,
-                  margin: EdgeInsets.symmetric(vertical: 1.v),
-                  decoration: BoxDecoration(
-                    color: appTheme.blueGray100,
-                    borderRadius: BorderRadius.circular(
-                      4.h,
+          InkWell(
+            onTap: () {
+              GeneralData.selectedRepId = visitModel.rep.id!;
+              GeneralData.selectedVisitId = visitModel.id;
+              NavigatorService.pushNamed(
+                AppRoutes.questionsScreen,
+                arguments: {'type': 'flash'},
+              );
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: 37.v),
+              padding: EdgeInsets.symmetric(
+                horizontal: 7.h,
+                vertical: 3.v,
+              ),
+              decoration: AppDecoration.fillOnPrimary.copyWith(
+                borderRadius: BorderRadiusStyle.roundedBorder3,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    height: 9.adaptSize,
+                    width: 9.adaptSize,
+                    margin: EdgeInsets.symmetric(vertical: 1.v),
+                    decoration: BoxDecoration(
+                      color: appTheme.orange300,
+                      borderRadius: BorderRadius.circular(
+                        4.h,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 5.h),
-                  child: Text(
-                    "Flash",
-                    // listoneItemModelObj.flash!,
-                    style: theme.textTheme.bodySmall,
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.h),
+                    child: Text(
+                      "Flash",
+                      // listoneItemModelObj.flash!,
+                      style: theme.textTheme.bodySmall,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

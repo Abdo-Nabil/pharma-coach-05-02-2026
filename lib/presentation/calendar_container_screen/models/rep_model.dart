@@ -29,3 +29,20 @@ class RepModel {
     );
   }
 }
+
+class TinyRepModel {
+  final int id;
+  final String username;
+
+  const TinyRepModel({
+    required this.id,
+    required this.username,
+  });
+
+  factory TinyRepModel.fromMap(Map<String, dynamic> map) {
+    return TinyRepModel(
+      id: map['id'] as int,
+      username: map['username'] as String,
+    );
+  }
+}

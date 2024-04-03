@@ -258,7 +258,7 @@ class _AddMedicalRepDialogState extends State<AddMedicalRepDialog> {
 }
 
 class RepDialogItem extends StatelessWidget {
-  final RepModel repModel;
+  final TinyRepModel repModel;
   const RepDialogItem({required this.repModel});
 
   @override
@@ -266,7 +266,7 @@ class RepDialogItem extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         await BlocProvider.of<AddMedicalRepCubit>(context)
-            .getRepLocations(repModel.id!);
+            .getRepLocations(repModel.id);
       },
       child: Container(
         margin: EdgeInsets.only(
@@ -290,7 +290,7 @@ class RepDialogItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${repModel.firstName} ${repModel.lastName}",
+                    "${repModel.username}",
                     // "lbl_ahmed_essam".tr,
                     style: CustomTextStyles.bodySmallBlack90012,
                   ),
