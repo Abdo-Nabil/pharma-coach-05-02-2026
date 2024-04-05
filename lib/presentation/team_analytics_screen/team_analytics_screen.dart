@@ -232,24 +232,24 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
         text: "lbl_analytics".tr,
         margin: EdgeInsets.only(left: 16.h),
       ),
-      actions: [
-        AppbarTrailingIconbuttonOne(
-          imagePath: ImageConstant.imgGoogleAnalyticsDeepOrange50,
-          margin: EdgeInsets.only(
-            left: 16.h,
-            top: 2.v,
-            right: 1.h,
-          ),
-        ),
-        AppbarTrailingIconbutton(
-          imagePath: ImageConstant.imgUsersOnprimary,
-          margin: EdgeInsets.only(
-            left: 6.h,
-            top: 2.v,
-            right: 17.h,
-          ),
-        ),
-      ],
+      // actions: [
+      //   AppbarTrailingIconbuttonOne(
+      //     imagePath: ImageConstant.imgGoogleAnalyticsDeepOrange50,
+      //     margin: EdgeInsets.only(
+      //       left: 16.h,
+      //       top: 2.v,
+      //       right: 1.h,
+      //     ),
+      //   ),
+      //   AppbarTrailingIconbutton(
+      //     imagePath: ImageConstant.imgUsersOnprimary,
+      //     margin: EdgeInsets.only(
+      //       left: 6.h,
+      //       top: 2.v,
+      //       right: 17.h,
+      //     ),
+      //   ),
+      // ],
     );
   }
 
