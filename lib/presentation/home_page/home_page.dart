@@ -82,6 +82,7 @@ class _HomePageState extends State<HomePage> {
   /// Section Widget
   Widget _buildPharcoCorpLogo(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 16.v),
       decoration: AppDecoration.fillOnPrimary.copyWith(
         borderRadius: BorderRadiusStyle.roundedBorder30,
       ),
@@ -89,13 +90,12 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomAppBar(
+          /*CustomAppBar(
             title: AppbarTitleImage(
               imagePath: ImageConstant.imgPharcoCorpLogo,
               margin: EdgeInsets.only(left: 17.h),
             ),
             actions: [
-              // AhmedHassib
               AppbarTrailingIconbutton(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -110,6 +110,50 @@ class _HomePageState extends State<HomePage> {
                   bottom: 3.v,
                 ),
               )
+            ],
+          ),*/
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AppbarTitleImage(
+                imagePath: ImageConstant.imgPharcoCorpLogo,
+                margin: EdgeInsets.only(left: 17.h),
+              ),
+              Spacer(),
+              AppbarTrailingIconbutton(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return CalendarContainerScreen.builder(context);
+                  }));
+                  // NavigatorService.pushNamed(AppRoutes.calendarCotainerScreen);
+                },
+                imagePath: ImageConstant.imgCalendarText,
+                margin: EdgeInsets.only(
+                  left: 16.h,
+                  right: 16.h,
+                  bottom: 3.v,
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  final shared = PrefUtils();
+                  await shared.clearToken();
+                  NavigatorService.popAndPushNamed(
+                    AppRoutes.signInPropsalOneScreen,
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(16.v),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.logout,
+                      ),
+                      Text("LogOut"),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
           SizedBox(height: 11.v),

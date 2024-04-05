@@ -12,6 +12,7 @@ import 'package:mina_s_application5/presentation/calendar_container_screen/model
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/answer_model.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/category_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/calendar_container_screen/models/vsit_model.dart';
 import '../../presentation/team_analytics_screen/models/analysis_model.dart';
@@ -116,12 +117,18 @@ class ApiClient {
 
         options: Options(headers: headers),
       );
-      ProgressDialogUtils.hideProgressDialog();
+      // ProgressDialogUtils.hideProgressDialog();
 
       if (_isSuccessCall(response)) {
         final temp = PostLoginUserResp.fromJson(response.data);
         GeneralData.userName = temp.data!.email!.split("@").first;
         GeneralData.token = temp.data!.authToken;
+        //
+        final sharedPref = await PrefUtils();
+        await sharedPref.setLoginToken(GeneralData.token!);
+        await sharedPref.setUserName(GeneralData.userName!);
+        //
+        ProgressDialogUtils.hideProgressDialog();
         NavigatorService.popAndPushNamed(
           AppRoutes.homeContainerScreen,
           arguments: temp,

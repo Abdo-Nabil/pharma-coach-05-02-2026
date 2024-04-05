@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:mina_s_application5/general_data.dart';
 import '/core/app_export.dart';
 import 'package:mina_s_application5/presentation/on_boarding_screen/models/on_boarding_model.dart';
 part 'on_boarding_event.dart';
@@ -16,9 +17,22 @@ class OnBoardingBloc extends Bloc<OnBoardingEvent, OnBoardingState> {
     Emitter<OnBoardingState> emit,
   ) async {
     Future.delayed(const Duration(milliseconds: 3000), () {
-      NavigatorService.popAndPushNamed(
-        AppRoutes.signInPropsalOneScreen,
-      );
+      //
+      final pref = PrefUtils();
+      final token = pref.getLoginToken();
+      //
+      if (token == null) {
+        NavigatorService.popAndPushNamed(
+          AppRoutes.signInPropsalOneScreen,
+        );
+      } else {
+        final username = pref.getUsername();
+        GeneralData.token = token;
+        GeneralData.userName = username;
+        NavigatorService.popAndPushNamed(
+          AppRoutes.homeContainerScreen,
+        );
+      }
     });
   }
 }

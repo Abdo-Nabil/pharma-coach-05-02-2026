@@ -35,4 +35,32 @@ class PrefUtils {
       return 'primary';
     }
   }
+
+  setLoginToken(String token) {
+    return _sharedPreferences!.setString("token", token);
+  }
+
+  String? getLoginToken() {
+    try {
+      return _sharedPreferences!.getString("token");
+    } catch (e) {
+      return null;
+    }
+  }
+
+  setUserName(String username) {
+    return _sharedPreferences!.setString("username", username);
+  }
+
+  String getUsername() {
+    try {
+      return _sharedPreferences!.getString("username")!;
+    } catch (e) {
+      return "My name";
+    }
+  }
+
+  clearToken() async {
+    await _sharedPreferences!.remove("token");
+  }
 }
