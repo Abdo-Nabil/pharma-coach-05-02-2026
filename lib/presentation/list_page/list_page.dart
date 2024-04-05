@@ -1,3 +1,4 @@
+import 'package:mina_s_application5/presentation/list_one_page/widgets/listone_item_widget.dart';
 import 'package:mina_s_application5/presentation/list_tab_container_screen/cubit/list_tap_container_cubit.dart';
 import 'package:mina_s_application5/widgets/custom_search_view.dart';
 import 'widgets/list_item_widget.dart';
@@ -84,9 +85,13 @@ class ListPageState extends State<ListPage>
               itemBuilder: (context, index) {
                 final visits =
                     BlocProvider.of<ListTabContainerCubit>(context).amVisits;
-                return ListItemWidget(
+                return ListoneItemWidget(
                   visits[index],
+                  isPm: false,
                 );
+                // return ListItemWidget(
+                //   visits[index],
+                // );
               },
             ),
           ),

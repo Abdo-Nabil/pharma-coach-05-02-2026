@@ -178,36 +178,47 @@ class _AddMedicalRepDialogState extends State<AddMedicalRepDialog> {
                         height: MediaQuery.of(context).size.height * 0.30,
                         child: Column(
                           children: <Widget>[
-                            ListTile(
+                            RadioListTile<String>(
                               title: const Text('AM'),
-                              leading: Radio<String>(
-                                value: "am",
-                                groupValue:
-                                    BlocProvider.of<AddMedicalRepCubit>(context)
-                                        .shift,
-                                onChanged: (value) {
-                                  setState(() {
-                                    BlocProvider.of<AddMedicalRepCubit>(context)
-                                        .shift = value!;
-                                  });
-                                },
-                              ),
+                              value: "am",
+                              groupValue:
+                                  BlocProvider.of<AddMedicalRepCubit>(context)
+                                      .shift,
+                              onChanged: (value) {
+                                setState(() {
+                                  BlocProvider.of<AddMedicalRepCubit>(context)
+                                      .shift = value!;
+                                });
+                              },
                             ),
-                            ListTile(
+                            RadioListTile<String>(
                               title: const Text('PM'),
-                              leading: Radio<String>(
-                                value: "pm",
-                                groupValue:
-                                    BlocProvider.of<AddMedicalRepCubit>(context)
-                                        .shift,
-                                onChanged: (value) {
-                                  setState(() {
-                                    BlocProvider.of<AddMedicalRepCubit>(context)
-                                        .shift = value!;
-                                  });
-                                },
-                              ),
+                              value: "pm",
+                              groupValue:
+                                  BlocProvider.of<AddMedicalRepCubit>(context)
+                                      .shift,
+                              onChanged: (value) {
+                                setState(() {
+                                  BlocProvider.of<AddMedicalRepCubit>(context)
+                                      .shift = value!;
+                                });
+                              },
                             ),
+                            // ListTile(
+                            //   title: const Text('PM'),
+                            //   leading: Radio<String>(
+                            //     value: "pm",
+                            //     groupValue:
+                            //         BlocProvider.of<AddMedicalRepCubit>(context)
+                            //             .shift,
+                            //     onChanged: (value) {
+                            //       setState(() {
+                            //         BlocProvider.of<AddMedicalRepCubit>(context)
+                            //             .shift = value!;
+                            //       });
+                            //     },
+                            //   ),
+                            // ),
                             Spacer(),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.30,

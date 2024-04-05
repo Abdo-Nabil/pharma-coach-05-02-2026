@@ -47,12 +47,14 @@ class QuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<QuestionsScreen> {
   //
   late String questionType;
+  late String medicalRepName;
 
   //
   @override
   void didChangeDependencies() {
     final routeArgs = ModalRoute.of(context)!.settings.arguments as Map;
     questionType = routeArgs['type'];
+    medicalRepName = routeArgs['medicalRepName'];
     BlocProvider.of<QuestionsCubit>(context)
         .getQuestionCategories(questionType);
     super.didChangeDependencies();
@@ -170,9 +172,13 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       //   ),
       // ),
       centerTitle: true,
-      title: AppbarTitle(
-        text: "msg_medical_rep_s_name".tr,
+      title: Text(
+        "$medicalRepName - $questionType",
+        style: CustomTextStyles.titleSmallBlack900,
       ),
+      // title: AppbarTitle(
+      //   text: "msg_medical_rep_s_name".tr,
+      // ),
     );
   }
 

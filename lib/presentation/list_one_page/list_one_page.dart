@@ -86,6 +86,7 @@ class ListOnePageState extends State<ListOnePage>
                     BlocProvider.of<ListTabContainerCubit>(context).pmVisits;
                 return ListoneItemWidget(
                   visits[index],
+                  isPm: true,
                 );
               },
             ),
