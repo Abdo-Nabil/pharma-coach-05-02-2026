@@ -148,8 +148,11 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Icon(
                         Icons.logout,
+                        color: Colors.red,
                       ),
-                      Text("LogOut"),
+                      Text(
+                        "LogOut",
+                      ),
                     ],
                   ),
                 ),
