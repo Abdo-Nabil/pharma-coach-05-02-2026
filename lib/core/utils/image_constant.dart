@@ -3,16 +3,16 @@ class ImageConstant {
   static String imagePath = 'assets/images';
 
   // On boarding images
-  static String imgAmriya = '$imagePath/img_amriya.svg';
+  // static String imgAmriya = '$imagePath/img_amriya.svg';
 
-  static String imgEuropean = '$imagePath/img_european.svg';
+  // static String imgEuropean = '$imagePath/img_european.svg';
 
-  static String imgPharcoPharmaceutical =
-      '$imagePath/img_pharco_pharmaceutical.svg';
+  // static String imgPharcoPharmaceutical =
+  //     '$imagePath/img_pharco_pharmaceutical.svg';
+  //
+  // static String imgTechno = '$imagePath/img_techno.svg';
 
-  static String imgTechno = '$imagePath/img_techno.svg';
-
-  static String imgPharcoB = '$imagePath/img_pharco_b.svg';
+  // static String imgPharcoB = '$imagePath/img_pharco_b.svg';
 
   // Sign in propsal One images
   static String imgEye = '$imagePath/img_eye.svg';
@@ -95,4 +95,5 @@ class ImageConstant {
       '$imagePath/img_nav_analytics_amber_700.svg';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+  static String onboardingFooter = 'assets/images/onboarding_footer.png';
 }

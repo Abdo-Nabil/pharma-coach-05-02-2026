@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mina_s_application5/widgets/custom_icon_button.dart';
 import 'models/on_boarding_model.dart';
 import 'package:flutter/material.dart';
@@ -47,66 +48,71 @@ class OnBoardingScreen extends StatelessWidget {
                   Spacer(
                     flex: 65,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 26.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomIconButton(
-                          height: 40.adaptSize,
-                          width: 40.adaptSize,
-                          padding: EdgeInsets.all(6.h),
-                          child: CustomImageView(
-                            imagePath: ImageConstant.imgAmriya,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8.h),
-                          child: CustomIconButton(
-                            height: 40.adaptSize,
-                            width: 40.adaptSize,
-                            padding: EdgeInsets.all(6.h),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgEuropean,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8.h),
-                          child: CustomIconButton(
-                            height: 40.adaptSize,
-                            width: 40.adaptSize,
-                            padding: EdgeInsets.all(6.h),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgPharcoPharmaceutical,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8.h),
-                          child: CustomIconButton(
-                            height: 40.adaptSize,
-                            width: 40.adaptSize,
-                            padding: EdgeInsets.all(6.h),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgTechno,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8.h),
-                          child: CustomIconButton(
-                            height: 40.adaptSize,
-                            width: 40.adaptSize,
-                            padding: EdgeInsets.all(6.h),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgPharcoB,
-                            ),
-                          ),
-                        )
-                      ],
+                  Image.asset(ImageConstant.onboardingFooter),
+
+                  ///I have removed these assets from image folder and replace it with single svg
+/*
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 26.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomIconButton(
+                      height: 40.adaptSize,
+                      width: 40.adaptSize,
+                      padding: EdgeInsets.all(6.h),
+                      child: CustomImageView(
+                        imagePath: ImageConstant.imgAmriya,
+                      ),
                     ),
-                  )
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.h),
+                      child: CustomIconButton(
+                        height: 40.adaptSize,
+                        width: 40.adaptSize,
+                        padding: EdgeInsets.all(6.h),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgEuropean,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.h),
+                      child: CustomIconButton(
+                        height: 40.adaptSize,
+                        width: 40.adaptSize,
+                        padding: EdgeInsets.all(6.h),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgPharcoPharmaceutical,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.h),
+                      child: CustomIconButton(
+                        height: 40.adaptSize,
+                        width: 40.adaptSize,
+                        padding: EdgeInsets.all(6.h),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgTechno,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.h),
+                      child: CustomIconButton(
+                        height: 40.adaptSize,
+                        width: 40.adaptSize,
+                        padding: EdgeInsets.all(6.h),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgPharcoB,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+*/
                 ],
               ),
             ),
