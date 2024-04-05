@@ -33,6 +33,7 @@ class VisitModel {
   final String visitTime;
   final LocationModel location;
   final RepModel rep;
+  final bool isQuestionSubmitted;
 
   const VisitModel({
     required this.id,
@@ -40,17 +41,8 @@ class VisitModel {
     required this.visitTime,
     required this.location,
     required this.rep,
+    required this.isQuestionSubmitted,
   });
-
-  // Map<String, dynamic> toMap() {
-  //   return {
-  //     'id': this.id,
-  //     'shift': this.shift,
-  //     'visit_time': this.visitTime,
-  //     'location': this.location.toMap(),
-  //     'rep': this.rep.toMap(),
-  //   };
-  // }
 
   factory VisitModel.fromMap(Map<String, dynamic> map) {
     return VisitModel(
@@ -59,6 +51,25 @@ class VisitModel {
       visitTime: map['visit_time'] as String,
       location: LocationModel.fromMap(map['location']),
       rep: RepModel.fromMap(map['rep']),
+      isQuestionSubmitted: false,
+    );
+  }
+
+  VisitModel copyWith({
+    int? id,
+    String? shift,
+    String? visitTime,
+    LocationModel? location,
+    RepModel? rep,
+    bool? isQuestionSubmitted,
+  }) {
+    return VisitModel(
+      id: id ?? this.id,
+      shift: shift ?? this.shift,
+      visitTime: visitTime ?? this.visitTime,
+      location: location ?? this.location,
+      rep: rep ?? this.rep,
+      isQuestionSubmitted: isQuestionSubmitted ?? this.isQuestionSubmitted,
     );
   }
 }

@@ -70,7 +70,7 @@ class ProgressDialogUtils {
           child: ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pop(context);
+              // Navigator.pop(context);
             },
             child: Text("OK"),
           ),

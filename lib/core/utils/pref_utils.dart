@@ -63,4 +63,37 @@ class PrefUtils {
   clearToken() async {
     await _sharedPreferences!.remove("token");
   }
+
+  // the list is something like that ["52","iso8601Sate","77","iso8601Sate",....]
+  saveSubmittedVisitId(int visitId) async {
+    List<String>? result = _sharedPreferences!.getStringList("visitIdsList");
+    if (result == null) {
+      await _sharedPreferences!.setStringList(
+        "visitIdsList",
+        [
+          "$visitId",
+          DateTime.now().toIso8601String(),
+        ],
+      );
+    } else {
+      DateTime theLastModifiedDate = DateTime.parse(result.last);
+      if (theLastModifiedDate.add(Duration(days: 2)).isBefore(DateTime.now())) {
+        result = [];
+      }
+      result.addAll([
+        "$visitId",
+        DateTime.now().toIso8601String(),
+      ]);
+      await _sharedPreferences!.setStringList("visitIdsList", result);
+    }
+  }
+
+  bool isVisitSubmittedBefore(String visitId) {
+    List<String>? result = _sharedPreferences!.getStringList("visitIdsList");
+    if (result == null) {
+      return false;
+    } else {
+      return result.contains(visitId);
+    }
+  }
 }

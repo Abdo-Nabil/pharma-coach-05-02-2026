@@ -171,7 +171,11 @@ class ApiClient {
       if (_isSuccessCall(response)) {
         List<VisitModel> visits = [];
         for (int i = 0; i < response.data["data"].length; i++) {
-          visits.add(VisitModel.fromMap(response.data["data"][i]));
+          final visit = VisitModel.fromMap(response.data["data"][i]);
+          final pref = PrefUtils();
+          final isQuestionSubmitted =
+              pref.isVisitSubmittedBefore("${visit.id}");
+          visits.add(visit.copyWith(isQuestionSubmitted: isQuestionSubmitted));
         }
         return visits;
       } else {
@@ -409,6 +413,10 @@ class ApiClient {
       );
       rethrow;
     }
+    //
+    final pref = PrefUtils();
+    await pref.saveSubmittedVisitId(answerModel.visitId);
+    //
     return isSend;
   }
 
