@@ -78,13 +78,13 @@ class ProgressDialogUtils {
       ..show();
   }
 
-  static showWarningDialog(BuildContext context) {
+  static showWarningDialog(BuildContext context, String title, String body) {
     AwesomeDialog(
         context: context,
         dialogType: DialogType.warning,
         animType: AnimType.rightSlide,
-        title: 'Keep Note!',
-        desc: 'Some questions were not answered',
+        title: title,
+        desc: body,
         // btnCancelOnPress: () {},
         btnOkOnPress: () {},
         btnOk: SizedBox(

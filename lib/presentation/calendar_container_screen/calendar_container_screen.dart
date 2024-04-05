@@ -188,6 +188,16 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
         color: Colors.white,
       ),
       onTap: () {
+        if (GeneralData.selectedDate.weekday == DateTime.thursday) {
+          ProgressDialogUtils.showWarningDialog(
+              context, "Sorry!", "You can't create visits in Thursday");
+          return;
+        } else if (GeneralData.selectedDate.weekday == DateTime.friday) {
+          ProgressDialogUtils.showWarningDialog(
+              context, "Sorry!", "You can't create visits in Friday");
+          return;
+        }
+
         showDialog(
           context: context,
           builder: (context) {

@@ -183,7 +183,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       onPressed: () async {
         if (!BlocProvider.of<QuestionsCubit>(context)
             .areAllQuestionsAnswered()) {
-          ProgressDialogUtils.showWarningDialog(context);
+          ProgressDialogUtils.showWarningDialog(
+              context, 'Keep Note!', 'Some questions were not answered');
           return;
         }
         ProgressDialogUtils.showProgressDialog(isCancellable: false);
