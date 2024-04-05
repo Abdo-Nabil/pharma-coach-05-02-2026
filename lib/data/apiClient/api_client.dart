@@ -387,6 +387,7 @@ class ApiClient {
         ),
       );
       if (_isSuccessCall(response)) {
+        log(response.data.toString());
         isSend = true;
       } else {
         throw response.data != null

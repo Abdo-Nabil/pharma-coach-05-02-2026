@@ -1,3 +1,4 @@
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 import 'package:mina_s_application5/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
@@ -23,7 +24,8 @@ class AppbarTrailingIconbutton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        onTap?.call();
+        BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(2);
+        onTap != null ? onTap!() : null;
       },
       child: Padding(
         padding: margin ?? EdgeInsets.zero,

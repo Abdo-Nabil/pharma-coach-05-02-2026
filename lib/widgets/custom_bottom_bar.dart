@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 
+import '../general_cubit/general_cubit.dart';
+
 class CustomBottomBar extends StatefulWidget {
   CustomBottomBar({this.onChanged});
 
@@ -11,8 +13,7 @@ class CustomBottomBar extends StatefulWidget {
 }
 
 class CustomBottomBarState extends State<CustomBottomBar> {
-  int selectedIndex = 0;
-
+  // int selectedIndex = 0;
   List<BottomMenuModel> bottomMenuList = [
     BottomMenuModel(
       icon: ImageConstant.imgNavHome,
@@ -53,7 +54,9 @@ class CustomBottomBarState extends State<CustomBottomBar> {
         showUnselectedLabels: false,
         selectedFontSize: 0,
         elevation: 0,
-        currentIndex: selectedIndex,
+        // currentIndex: selectedIndex,
+        currentIndex:
+            BlocProvider.of<GeneralCubit>(context, listen: true).bottomNavIndex,
         type: BottomNavigationBarType.fixed,
         items: List.generate(bottomMenuList.length, (index) {
           return BottomNavigationBarItem(
@@ -103,7 +106,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
           );
         }),
         onTap: (index) {
-          selectedIndex = index;
+          BlocProvider.of<GeneralCubit>(context).bottomNavIndex = index;
           widget.onChanged?.call(bottomMenuList[index].type);
           setState(() {});
         },

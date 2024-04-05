@@ -36,8 +36,8 @@ class ListoneItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${visitModel.rep.firstName} ${visitModel.rep.lastName}",
-
+                  "${visitModel.rep.firstName}",
+                  // "${visitModel.rep.firstName} ${visitModel.rep.lastName}",
                   // listoneItemModelObj.elgawyHospital!,
                   style: CustomTextStyles.labelLargeSFProTextBluegray900,
                 ),

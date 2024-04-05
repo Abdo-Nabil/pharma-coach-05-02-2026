@@ -40,7 +40,8 @@ class HomeItemWidget extends StatelessWidget {
             // SizedBox(height: 300.v),
             Text(
               // homeItemModelObj.tareqFares!,
-              "${visitModel.rep.firstName} ${visitModel.rep.lastName}",
+              "${visitModel.rep.firstName}",
+              // "${visitModel.rep.firstName} ${visitModel.rep.lastName}",
               style: CustomTextStyles.labelLargeSFProTextBluegray900,
             ),
             SizedBox(height: 3.v),

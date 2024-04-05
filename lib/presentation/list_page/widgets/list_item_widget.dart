@@ -36,7 +36,8 @@ class ListItemWidget extends StatelessWidget {
               children: [
                 Text(
                   // listItemModelObj.marwaMohamedEldeeb!,
-                  "${visitModel.rep.firstName} ${visitModel.rep.lastName}",
+                  "${visitModel.rep.firstName}",
+                  // "${visitModel.rep.firstName} ${visitModel.rep.lastName}",
                   style: CustomTextStyles.bodySmallBlack900,
                 ),
                 SizedBox(height: 4.v),

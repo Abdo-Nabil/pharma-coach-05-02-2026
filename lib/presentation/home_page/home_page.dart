@@ -95,8 +95,14 @@ class _HomePageState extends State<HomePage> {
               margin: EdgeInsets.only(left: 17.h),
             ),
             actions: [
+              // AhmedHassib
               AppbarTrailingIconbutton(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return CalendarContainerScreen.builder(context);
+                  }));
+                  // NavigatorService.pushNamed(AppRoutes.calendarCotainerScreen);
+                },
                 imagePath: ImageConstant.imgCalendarText,
                 margin: EdgeInsets.only(
                   left: 16.h,

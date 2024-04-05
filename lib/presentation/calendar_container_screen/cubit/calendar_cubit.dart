@@ -36,7 +36,8 @@ class CalendarCubit extends Cubit<CalendarState> {
     meetings = <Meeting>[];
     for (int i = 0; i < visits.length; i++) {
       meetings.add(Meeting(
-          "${visits[i].rep.firstName}${visits[i].rep.lastName}",
+          "${visits[i].rep.firstName}",
+          // "${visits[i].rep.firstName} ${visits[i].rep.lastName}",
           GeneralHelper.getDateTimeFromApiVisitTime(visits[i].visitTime),
           GeneralHelper.getDateTimeFromApiVisitTime(visits[i].visitTime),
           // DateTime.now(),
