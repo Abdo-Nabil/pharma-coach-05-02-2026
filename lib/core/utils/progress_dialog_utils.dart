@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:mina_s_application5/categories_data.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/general_data.dart';
 
@@ -138,5 +139,63 @@ class ProgressDialogUtils {
           ),
         ))
       ..show();
+  }
+
+  static showCategoryInfo(BuildContext context, int categoryId) {
+    debugPrint("cat id: $categoryId");
+    if (categoryId > 12) {
+      categoryId = categoryId - 12;
+    }
+    List body = categoriesData["$categoryId"];
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      animType: AnimType.rightSlide,
+      body: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0.v, horizontal: 16.h),
+        child: Column(
+          children: List.generate(
+            body.length,
+            (index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 3.v),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "● ",
+                      style: TextStyle(
+                        fontSize: 16.fSize,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        "${body[index]}",
+                        style: TextStyle(
+                          fontSize: 16.fSize,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+      // title: title,
+      // desc: body,
+      // // btnCancelOnPress: () {},
+      // btnOkOnPress: () {},
+      // btnOk: SizedBox(
+      //   height: 35,
+      //   child: ElevatedButton(
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //     child: Text("OK"),
+      //   ),
+      // ),
+    )..show();
   }
 }

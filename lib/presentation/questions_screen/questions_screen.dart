@@ -152,6 +152,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                 ),
               );
             }
+
             return Center(child: CircularProgressIndicator());
           },
         ),
@@ -351,7 +352,9 @@ class BuildCategoryWithQuestions extends StatelessWidget {
     return Column(
       children: [
         CustomElevatedButton(
-          onPressed: null,
+          onPressed: () {
+            ProgressDialogUtils.showCategoryInfo(context, categoryModel.id);
+          },
           height: 40.v,
           text: categoryModel.title,
           rightIcon: Container(
