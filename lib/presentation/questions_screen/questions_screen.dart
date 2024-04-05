@@ -199,13 +199,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             .submitQuestionAnswers();
         //
         if (isSuccess) {
-          //########################################################
           ProgressDialogUtils.hideProgressDialog();
-          NavigatorService.popAndPushNamed(
-            AppRoutes.listTabContainerScreen,
-          );
-          // ProgressDialogUtils.showSuccessDialog(context);
-          //########################################################
+          ProgressDialogUtils.showSubmitSuccessDialog(context);
         } else {
           ProgressDialogUtils.hideProgressDialog();
           ProgressDialogUtils.showErrorDialog(context);
