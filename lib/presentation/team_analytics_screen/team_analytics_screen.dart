@@ -47,176 +47,181 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
-        body: BlocBuilder<AnalysisCubit, AnalysisState>(
-          builder: (context, state) {
-            if (state is AnalysisLoading) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is NoAnalysisState) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.info,
-                      color: appTheme.orange300,
-                      size: 50,
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "No Analysis found!",
-                      style: TextStyle(fontSize: 20.fSize),
-                    ),
-                  ],
+        body: Container(
+          width: double.maxFinite,
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.h,
+            vertical: 4.v,
+          ),
+          child: Column(
+            children: [
+              CustomElevatedButton(
+                height: 40.v,
+                text: "lbl_team".tr,
+                buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+                buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
+              ),
+              SizedBox(height: 8.v),
+              SizedBox(
+                width: double.infinity,
+                child: DropdownButton<int>(
+                  hint: Text("Chose medical rep"),
+                  isExpanded: true,
+                  value: null,
+                  onChanged: (int? newValue) {
+                    setState(() {
+                      selectedRepId = newValue!;
+                    });
+                  },
+                  items: BlocProvider.of<AnalysisCubit>(context, listen: true)
+                      .reps
+                      .map<DropdownMenuItem<int>>((option) {
+                    return DropdownMenuItem<int>(
+                      value: option.id,
+                      child: Text(option.username),
+                    );
+                  }).toList(),
                 ),
-              );
-            } else if (state is AnalysisSuccess) {
-              //
-              // double repScore = 20;
-              // double teamScore = 20;
-              final temp = BlocProvider.of<AnalysisCubit>(context).analysis;
-              //
-              double repScore = 0;
-              int repCounter = 0;
-              //
-              double teamScore = 0;
-              int teamCounter = 0;
-              //
-              for (int i = 0; i < temp.length; i++) {
-                temp[i].reps.forEach((key, value) {
-                  if (key != "$selectedRepId") {
-                    teamScore += value;
-                    teamCounter++;
-                  } else {
-                    repScore += value;
-                    repCounter++;
+              ),
+              Expanded(
+                child: BlocBuilder<AnalysisCubit, AnalysisState>(
+                    builder: (context, state) {
+                  //
+                  if (state is AnalysisLoading) {
+                    return Center(child: CircularProgressIndicator());
                   }
-                });
-              }
-              double avgTeamScore = teamScore / teamCounter;
-              double avgRepScore = repScore / repCounter;
-              //
-              return Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16.h,
-                  vertical: 4.v,
-                ),
-                child: Column(
-                  children: [
-                    CustomElevatedButton(
-                      height: 40.v,
-                      text: "lbl_team".tr,
-                      buttonStyle: CustomButtonStyles.fillPrimaryTL12,
-                      buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
-                    ),
-                    SizedBox(height: 8.v),
-                    SizedBox(
-                      width: double.infinity,
-                      child: DropdownButton<int>(
-                        hint: Text("Chose medical rep"),
-                        isExpanded: true,
-                        value: null,
-                        onChanged: (int? newValue) {
-                          setState(() {
-                            selectedRepId = newValue!;
-                          });
-                        },
-                        items: BlocProvider.of<AnalysisCubit>(context)
-                            .reps
-                            .map<DropdownMenuItem<int>>((option) {
-                          return DropdownMenuItem<int>(
-                            value: option.id,
-                            child: Text(option.username),
-                          );
-                        }).toList(),
+                  //
+                  else if (state is NoAnalysisState) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.info,
+                            color: appTheme.orange300,
+                            size: 50,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "No Analysis found!",
+                            style: TextStyle(fontSize: 20.fSize),
+                          ),
+                        ],
                       ),
-                    ),
-                    // BlocSelector<TeamAnalyticsBloc, TeamAnalyticsState,
-                    //     TeamAnalyticsModel?>(
-                    //   selector: (state) => state.teamAnalyticsModelObj,
-                    //   builder: (context, teamAnalyticsModelObj) {
-                    //     return CustomDropDown(
-                    //       icon: Container(
-                    //         margin: EdgeInsets.fromLTRB(30.h, 8.v, 14.h, 9.v),
-                    //         child: CustomImageView(
-                    //           imagePath: ImageConstant.imgArrowdown,
-                    //           height: 24.adaptSize,
-                    //           width: 24.adaptSize,
-                    //         ),
-                    //       ),
-                    //       hintText: "msg_choose_medical_rep".tr,
-                    //       items: teamAnalyticsModelObj?.dropdownItemList ?? [],
-                    //     );
-                    //   },
-                    // ),
-                    SizedBox(height: 8.v),
-                    selectedRepId == null
-                        ? Container()
-                        : Expanded(
-                            child: ListView.separated(
-                                itemCount:
-                                    BlocProvider.of<AnalysisCubit>(context)
-                                        .analysis
-                                        .length,
-                                separatorBuilder: (context, index) {
-                                  return SizedBox(height: 10.v);
-                                },
-                                itemBuilder: (context, index) {
-                                  //
-                                  final analysis =
-                                      BlocProvider.of<AnalysisCubit>(context)
-                                          .analysis[index];
-                                  //
-                                  if (!analysis.reps
-                                      .containsKey("$selectedRepId")) {
-                                    BlocProvider.of<AnalysisCubit>(context)
-                                        .emit(NoAnalysisState());
-                                  }
-                                  //
-                                  final double repPercentage =
-                                      analysis.reps["$selectedRepId"];
-                                  double sum = 0;
-                                  analysis.reps.forEach((key, value) {
-                                    sum += value;
-                                  });
-                                  final double avgTeamPercentage =
-                                      (sum - repPercentage) /
-                                          (analysis.reps.length - 1);
-                                  //
-                                  return BuildTeamAnalysisView(
-                                    title: analysis.category,
-                                    repPercentage: repPercentage,
-                                    teamPercentage: avgTeamPercentage,
-                                  );
-                                }),
-                          ),
-                    SizedBox(height: 8.v),
-                    selectedRepId == null
-                        ? Container()
-                        : BuildTeamAnalysisView(
-                            title: "Score",
-                            repPercentage: avgRepScore,
-                            teamPercentage: avgTeamScore,
-                          ),
-                    SizedBox(height: 12.v),
-                    // CustomElevatedButton(
-                    //   text: "lbl_save_as_svg".tr,
-                    //   rightIcon: Container(
-                    //     margin: EdgeInsets.only(left: 4.h),
-                    //     child: CustomImageView(
-                    //       imagePath: ImageConstant.imgDownload,
-                    //       height: 24.adaptSize,
-                    //       width: 24.adaptSize,
-                    //     ),
-                    //   ),
-                    // ),
-                    // SizedBox(height: 5.v),
-                  ],
-                ),
-              );
-            }
-            return Center(child: CircularProgressIndicator());
-          },
+                    );
+                  }
+                  //
+                  else if (state is AnalysisSuccess) {
+                    //
+                    final temp =
+                        BlocProvider.of<AnalysisCubit>(context).analysis;
+                    //
+                    double repScore = 0;
+                    int repCounter = 0;
+                    //
+                    double teamScore = 0;
+                    int teamCounter = 0;
+                    //
+                    for (int i = 0; i < temp.length; i++) {
+                      temp[i].reps.forEach((key, value) {
+                        if (key != "$selectedRepId") {
+                          teamScore += value;
+                          teamCounter++;
+                        } else {
+                          repScore += value;
+                          repCounter++;
+                        }
+                      });
+                    }
+                    double avgTeamScore = 0;
+                    double avgRepScore = 0;
+
+                    avgTeamScore =
+                        teamCounter == 0 ? 0.0 : (teamScore / teamCounter);
+                    avgRepScore = repCounter == 0 ? 0.0 : repScore / repCounter;
+                    //
+                    return Column(
+                      children: [
+                        SizedBox(height: 8.v),
+                        selectedRepId == null
+                            ? Container()
+                            : Expanded(
+                                child: ListView.separated(
+                                    itemCount:
+                                        BlocProvider.of<AnalysisCubit>(context)
+                                            .analysis
+                                            .length,
+                                    separatorBuilder: (context, index) {
+                                      return SizedBox(height: 10.v);
+                                    },
+                                    itemBuilder: (context, index) {
+                                      //
+                                      final analysis =
+                                          BlocProvider.of<AnalysisCubit>(
+                                                  context)
+                                              .analysis[index];
+                                      //
+                                      /* if (!analysis.reps
+                                          .containsKey("$selectedRepId")) {
+                                        BlocProvider.of<AnalysisCubit>(context)
+                                            .emit(NoAnalysisState());
+                                      }*/
+                                      //
+                                      final double repPercentage =
+                                          analysis.reps["$selectedRepId"] ==
+                                                  null
+                                              ? 0.0
+                                              : analysis.reps["$selectedRepId"];
+                                      //
+                                      //
+                                      double teamTotal = 0;
+                                      double teamAvg = 0;
+                                      //
+                                      analysis.reps.forEach((key, value) {
+                                        teamTotal += value;
+                                      });
+                                      //
+                                      if (analysis.reps.length > 1) {
+                                        teamAvg = (teamTotal - repPercentage) /
+                                            (analysis.reps.length - 1);
+                                      }
+                                      //
+                                      return BuildTeamAnalysisView(
+                                        title: analysis.category,
+                                        repPercentage: repPercentage,
+                                        teamPercentage: teamAvg,
+                                      );
+                                    }),
+                              ),
+                        SizedBox(height: 8.v),
+                        selectedRepId == null
+                            ? Container()
+                            : BuildTeamAnalysisView(
+                                title: "Score",
+                                repPercentage: avgRepScore,
+                                teamPercentage: avgTeamScore,
+                              ),
+                        SizedBox(height: 12.v),
+                      ],
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                }),
+              ),
+              // CustomElevatedButton(
+              //   text: "lbl_save_as_svg".tr,
+              //   rightIcon: Container(
+              //     margin: EdgeInsets.only(left: 4.h),
+              //     child: CustomImageView(
+              //       imagePath: ImageConstant.imgDownload,
+              //       height: 24.adaptSize,
+              //       width: 24.adaptSize,
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 5.v),
+            ],
+          ),
         ),
         bottomNavigationBar:
             widget.isManualNav ? _buildBottomBar(context) : null,
@@ -390,6 +395,10 @@ class BuildTeamAnalysisView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // width: (MediaQuery.of(context).size.width - 60.h) *
+    //     (teamPercentage / 100),
+    // debugPrint("ssssssssss ${teamPercentage / 100}");
+    debugPrint("################ ${teamPercentage}");
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 13.h,
@@ -467,6 +476,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
                       height: 16.v,
                       width: (MediaQuery.of(context).size.width - 60.h) *
                           (teamPercentage / 100),
+                      // width: 200,
                       decoration: BoxDecoration(
                         color: appTheme.purple300,
                         borderRadius: BorderRadius.circular(
