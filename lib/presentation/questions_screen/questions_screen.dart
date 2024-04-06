@@ -199,13 +199,16 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         final isSuccess = await BlocProvider.of<QuestionsCubit>(context)
             .submitQuestionAnswers();
         //
-        if (isSuccess) {
-          ProgressDialogUtils.hideProgressDialog();
-          ProgressDialogUtils.showSubmitSuccessDialog(context);
-        } else {
-          ProgressDialogUtils.hideProgressDialog();
-          ProgressDialogUtils.showErrorDialog(context);
-        }
+        ProgressDialogUtils.hideProgressDialog();
+        ProgressDialogUtils.showSubmitSuccessDialog(context);
+        //
+        // if (isSuccess) {
+        //   ProgressDialogUtils.hideProgressDialog();
+        //   ProgressDialogUtils.showSubmitSuccessDialog(context);
+        // } else {
+        //   ProgressDialogUtils.hideProgressDialog();
+        //   ProgressDialogUtils.showErrorDialog(context);
+        // }
       },
     );
   }

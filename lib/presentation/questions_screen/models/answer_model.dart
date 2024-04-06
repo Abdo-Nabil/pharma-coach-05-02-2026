@@ -10,6 +10,7 @@
 // ]
 // }
 
+import 'package:flutter/cupertino.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/question_answer_model.dart';
 
 class AnswerModel {
@@ -33,5 +34,17 @@ class AnswerModel {
       'rep_id': this.repId,
       'answers': answersAsMaps,
     };
+  }
+
+  factory AnswerModel.fromMap(Map<String, dynamic> map) {
+    List<QuestionAnswerModel> answersAsModels = [];
+    for (int i = 0; i < map['answers'].length; i++) {
+      answersAsModels.add(QuestionAnswerModel.fromMap(map['answers'][i]));
+    }
+    return AnswerModel(
+      visitId: map['visit_id'] as int,
+      repId: map['rep_id'] as int,
+      answers: answersAsModels,
+    );
   }
 }

@@ -137,7 +137,8 @@ class _HomePageState extends State<HomePage> {
               InkWell(
                 onTap: () async {
                   final shared = PrefUtils();
-                  await shared.clearToken();
+                  // await shared.clearToken();
+                  shared.clearPreferencesData();
                   NavigatorService.popAndPushNamed(
                     AppRoutes.signInPropsalOneScreen,
                   );

@@ -96,4 +96,37 @@ class PrefUtils {
       return result.contains(visitId);
     }
   }
+
+  List getSubmittedQuestionsToBeExecuted() {
+    final list =
+        _sharedPreferences!.getStringList("submittedAnswersFailureList");
+    if (list == null || list.isEmpty) {
+      return [];
+    } else {
+      return list;
+    }
+  }
+
+  saveSubmittedQuestionsForTheNextLaunchIfErrorHappen(
+      String encodedData) async {
+    List<String>? list =
+        _sharedPreferences!.getStringList("submittedAnswersFailureList");
+    if (list == null || list.isEmpty) {
+      await _sharedPreferences!
+          .setStringList("submittedAnswersFailureList", [encodedData]);
+    } else {
+      list.add(encodedData);
+      await _sharedPreferences!
+          .setStringList("submittedAnswersFailureList", list);
+    }
+  }
+
+  removeSubmittedQuestion(String encodedData) async {
+    List<String> list =
+        _sharedPreferences!.getStringList("submittedAnswersFailureList")!;
+    list.remove(encodedData);
+    await _sharedPreferences!
+        .setStringList("submittedAnswersFailureList", list);
+  }
+  //
 }

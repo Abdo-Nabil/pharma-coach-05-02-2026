@@ -30,7 +30,8 @@ class ApiClient {
   static final ApiClient _apiClient = ApiClient._internal();
 
   final _dio = Dio(BaseOptions(
-      connectTimeout: const Duration(seconds: 60),
+      // connectTimeout: const Duration(seconds: 60),
+      connectTimeout: const Duration(seconds: 5),
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json"
@@ -150,6 +151,34 @@ class ApiClient {
     }
   }
 
+  _uploadSubmittedQuestionThatSavedLocallyPreviously() async {
+    debugPrint('################### 1 Resend submitted QS');
+    final shared = PrefUtils();
+    final list = shared.getSubmittedQuestionsToBeExecuted();
+    if (list.isEmpty) {
+      debugPrint('################### 2 Resend submitted QS');
+      return;
+    } else {
+      debugPrint('################### 3 Resend submitted QS');
+      list.forEach(
+        (encodedElement) async {
+          final decodedElement = json.decode(encodedElement);
+          final answerModel = AnswerModel.fromMap(decodedElement);
+          debugPrint(
+              "################### 4 Resend submitted QS ${decodedElement}");
+          final isSend = await submitQuestionAnswers(answerModel,
+              saveFailedTransaction: false);
+          if (isSend) {
+            debugPrint('################### 5 Resend submitted QS');
+            shared.removeSubmittedQuestion(encodedElement);
+          } else {
+            debugPrint('################### 6 Resend submitted QS');
+          }
+        },
+      );
+    }
+  }
+
   Future<List<VisitModel>> getVisits(String param, String date) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -163,6 +192,9 @@ class ApiClient {
     };
     try {
       await isNetworkConnected();
+      //
+      await _uploadSubmittedQuestionThatSavedLocallyPreviously();
+      //
       Response response = await _dio.get(
         '$url/visits/today',
         queryParameters: queryParams,
@@ -379,7 +411,8 @@ class ApiClient {
     }
   }
 
-  Future<bool> submitQuestionAnswers(AnswerModel answerModel) async {
+  Future<bool> submitQuestionAnswers(AnswerModel answerModel,
+      {bool saveFailedTransaction = true}) async {
     bool isSend = false;
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -387,15 +420,17 @@ class ApiClient {
       'Authorization': 'Bearer ${GeneralData.token!}',
     };
     Map<String, dynamic> queryParams = {};
+    final pref = PrefUtils();
+    final encodedData = json.encode(
+      answerModel.toMap(),
+    );
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
         '$url/questions/answer',
         queryParameters: queryParams,
         options: Options(headers: headers),
-        data: json.encode(
-          answerModel.toMap(),
-        ),
+        data: encodedData,
       );
       if (_isSuccessCall(response)) {
         log(response.data.toString());
@@ -406,15 +441,18 @@ class ApiClient {
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      // ProgressDialogUtils.hideProgressDialog();
+      if (saveFailedTransaction) {
+        //save the request in sharedpref to next launch
+        await pref
+            .saveSubmittedQuestionsForTheNextLaunchIfErrorHappen(encodedData);
+      }
       Logger.log(
         error,
         stackTrace: stackTrace,
       );
-      rethrow;
+      // rethrow;
     }
     //
-    final pref = PrefUtils();
     await pref.saveSubmittedVisitId(answerModel.visitId);
     //
     return isSend;
