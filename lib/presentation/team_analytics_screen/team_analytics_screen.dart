@@ -1,4 +1,5 @@
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
+import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/home_page/home_page.dart';
 import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
 import 'package:mina_s_application5/widgets/app_bar/appbar_title.dart';
@@ -34,10 +35,20 @@ class TeamAnalyticsScreen extends StatefulWidget {
 class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   int? selectedRepId;
+  DateTime selectedDate = DateTime.now();
+  late final dateController = TextEditingController(
+      text: GeneralHelper.formatDateForDisplay1(selectedDate));
+  //
+  @override
+  void dispose() {
+    dateController.dispose();
+    super.dispose();
+  }
+
   //
   @override
   void initState() {
-    BlocProvider.of<AnalysisCubit>(context).getAnalysis();
+    BlocProvider.of<AnalysisCubit>(context).getAnalysis(DateTime.now());
     super.initState();
   }
 
@@ -56,12 +67,36 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
           child: Column(
             children: [
               CustomElevatedButton(
-                height: 40.v,
+                height: 45.v,
                 text: "lbl_team".tr,
                 buttonStyle: CustomButtonStyles.fillPrimaryTL12,
                 buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
               ),
-              SizedBox(height: 8.v),
+              SizedBox(height: 16.v),
+              TextField(
+                controller: dateController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.h),
+                  ),
+                ),
+                onTap: () async {
+                  final pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now().subtract(
+                        Duration(days: 365),
+                      ),
+                      lastDate: DateTime(2080));
+                  if (pickedDate != null) {
+                    selectedDate = pickedDate;
+                    BlocProvider.of<AnalysisCubit>(context)
+                        .getAnalysis(selectedDate);
+                  }
+                },
+              ),
+              SizedBox(height: 16.v),
               SizedBox(
                 width: double.infinity,
                 child: DropdownButton<int>(
@@ -415,6 +450,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
             title,
             style: CustomTextStyles.bodySmallStylishSecondaryContainer,
           ),
+          SizedBox(height: 6.v),
           Stack(
             alignment: Alignment.centerRight,
             children: [

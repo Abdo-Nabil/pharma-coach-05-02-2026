@@ -420,13 +420,13 @@ class ApiClient {
     return isSend;
   }
 
-  Future<List<AnalysisModel>> getAnalysis() async {
+  Future<List<AnalysisModel>> getAnalysis(String date) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer ${GeneralData.token!}',
     };
-    Map<String, dynamic> queryParams = {};
+    Map<String, dynamic> queryParams = {"date": date};
     try {
       await isNetworkConnected();
       Response response = await _dio.get(

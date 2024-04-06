@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/models/analysis_model.dart';
 
@@ -14,9 +15,10 @@ class AnalysisCubit extends Cubit<AnalysisState> {
   List<AnalysisModel> analysis = [];
   List<TinyRepModel> reps = [];
   //
-  getAnalysis() async {
+  getAnalysis(DateTime date) async {
+    String dateAsString = GeneralHelper.formatDateForApi(date);
     emit(AnalysisLoading());
-    analysis = await apiClient.getAnalysis();
+    analysis = await apiClient.getAnalysis(dateAsString);
     reps = await apiClient.getMedicalReps();
     emit(AnalysisSuccess());
   }
