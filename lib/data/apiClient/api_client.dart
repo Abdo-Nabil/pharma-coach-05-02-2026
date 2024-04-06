@@ -302,7 +302,7 @@ class ApiClient {
     };
     Map<String, dynamic> queryParams = {
       "rep_id": repId,
-      "per_page": 50,
+      "per_page": 200,
     };
     try {
       await isNetworkConnected();
