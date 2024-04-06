@@ -35,6 +35,7 @@ class TeamAnalyticsScreen extends StatefulWidget {
 class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   int? selectedRepId;
+  bool isTeamToggled = true;
   DateTime selectedDate = DateTime.now();
   late final dateController = TextEditingController(
       text: GeneralHelper.formatDateForDisplay1(selectedDate));
@@ -68,9 +69,13 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
             children: [
               CustomElevatedButton(
                 height: 45.v,
-                text: "lbl_team".tr,
+                text: isTeamToggled ? "lbl_team".tr : "Medical rep",
                 buttonStyle: CustomButtonStyles.fillPrimaryTL12,
                 buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
+                onPressed: () {
+                  isTeamToggled = !isTeamToggled;
+                  setState(() {});
+                },
               ),
               SizedBox(height: 16.v),
               TextField(
@@ -225,6 +230,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                         title: analysis.category,
                                         repPercentage: repPercentage,
                                         teamPercentage: teamAvg,
+                                        isTeamToggled: isTeamToggled,
                                       );
                                     }),
                               ),
@@ -235,6 +241,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                 title: "Score",
                                 repPercentage: avgRepScore,
                                 teamPercentage: avgTeamScore,
+                                isTeamToggled: isTeamToggled,
                               ),
                         SizedBox(height: 12.v),
                       ],
@@ -422,10 +429,12 @@ class BuildTeamAnalysisView extends StatelessWidget {
   final String title;
   final double repPercentage;
   final double teamPercentage;
+  final bool isTeamToggled;
   const BuildTeamAnalysisView({
     required this.title,
     required this.repPercentage,
     required this.teamPercentage,
+    required this.isTeamToggled,
   });
 
   @override
@@ -497,52 +506,55 @@ class BuildTeamAnalysisView extends StatelessWidget {
             ],
           ),
           SizedBox(height: 5.v),
-          Stack(
-            alignment: Alignment.centerRight,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width - 60.h,
-                decoration: AppDecoration.fillPurple.copyWith(
-                  borderRadius: BorderRadiusStyle.roundedBorder7,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      height: 16.v,
-                      width: (MediaQuery.of(context).size.width - 60.h) *
-                          (teamPercentage / 100),
-                      // width: 200,
-                      decoration: BoxDecoration(
-                        color: appTheme.purple300,
-                        borderRadius: BorderRadius.circular(
-                          8.h,
+          Visibility(
+            visible: isTeamToggled,
+            child: Stack(
+              alignment: Alignment.centerRight,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width - 60.h,
+                  decoration: AppDecoration.fillPurple.copyWith(
+                    borderRadius: BorderRadiusStyle.roundedBorder7,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 16.v,
+                        width: (MediaQuery.of(context).size.width - 60.h) *
+                            (teamPercentage / 100),
+                        // width: 200,
+                        decoration: BoxDecoration(
+                          color: appTheme.purple300,
+                          borderRadius: BorderRadius.circular(
+                            8.h,
+                          ),
                         ),
                       ),
-                    ),
-                    // Padding(
-                    //   padding: EdgeInsets.only(
-                    //     top: 2.v,
-                    //     right: 6.h,
-                    //   ),
-                    //   child: Text(
-                    //     "${teamPercentage.toStringAsFixed(2)}%",
-                    //     style: theme.textTheme.labelLarge,
-                    //   ),
-                    // ),
-                  ],
+                      // Padding(
+                      //   padding: EdgeInsets.only(
+                      //     top: 2.v,
+                      //     right: 6.h,
+                      //   ),
+                      //   child: Text(
+                      //     "${teamPercentage.toStringAsFixed(2)}%",
+                      //     style: theme.textTheme.labelLarge,
+                      //   ),
+                      // ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0.h),
-                child: Text(
-                  "${teamPercentage.toStringAsFixed(2)}%",
-                  style: theme.textTheme.labelLarge,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0.h),
+                  child: Text(
+                    "${teamPercentage.toStringAsFixed(2)}%",
+                    style: theme.textTheme.labelLarge,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          SizedBox(height: 12.v),
+          Visibility(visible: isTeamToggled, child: SizedBox(height: 3.v)),
         ],
       ),
     );
