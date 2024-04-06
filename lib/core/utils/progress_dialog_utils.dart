@@ -107,12 +107,15 @@ class ProgressDialogUtils {
           onPressed: () {
             Navigator.pop(context);
             BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(3);
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) {
-                return TeamAnalyticsScreen.builder(context, isManualNav: true);
-              }),
-              (route) => false,
+            NavigatorService.popAndPushNamed(
+              AppRoutes.teamAnalyticsScreen,
             );
+            // Navigator.of(context).pushAndRemoveUntil(
+            //   MaterialPageRoute(builder: (context) {
+            //     return TeamAnalyticsScreen.builder(context, isManualNav: true);
+            //   }),
+            //   (route) => false,
+            // );
           },
           child: Text("End of the day"),
         ),

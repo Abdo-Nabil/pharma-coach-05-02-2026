@@ -15,8 +15,7 @@ import 'package:mina_s_application5/core/app_export.dart';
 import 'bloc/team_analytics_bloc.dart';
 
 class TeamAnalyticsScreen extends StatefulWidget {
-  final bool isManualNav;
-  TeamAnalyticsScreen({required this.isManualNav, Key? key})
+  TeamAnalyticsScreen({Key? key})
       : super(
           key: key,
         );
@@ -24,7 +23,7 @@ class TeamAnalyticsScreen extends StatefulWidget {
   static Widget builder(BuildContext context, {bool isManualNav = false}) {
     return BlocProvider<AnalysisCubit>(
       create: (context) => AnalysisCubit(ApiClient()),
-      child: TeamAnalyticsScreen(isManualNav: isManualNav),
+      child: TeamAnalyticsScreen(),
     );
   }
 
@@ -265,8 +264,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
             ],
           ),
         ),
-        bottomNavigationBar:
-            widget.isManualNav ? _buildBottomBar(context) : null,
+        // bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
