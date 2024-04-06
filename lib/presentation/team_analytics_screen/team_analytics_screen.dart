@@ -35,9 +35,8 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   int? selectedRepId;
   bool isTeamToggled = true;
-  DateTime selectedDate = DateTime.now();
   late final dateController = TextEditingController(
-      text: GeneralHelper.formatDateForDisplay1(selectedDate));
+      text: GeneralHelper.formatDateForDisplay1(DateTime.now()));
   //
   @override
   void dispose() {
@@ -94,9 +93,10 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                       ),
                       lastDate: DateTime(2080));
                   if (pickedDate != null) {
-                    selectedDate = pickedDate;
+                    dateController.text =
+                        GeneralHelper.formatDateForDisplay1(pickedDate);
                     BlocProvider.of<AnalysisCubit>(context)
-                        .getAnalysis(selectedDate);
+                        .getAnalysis(pickedDate);
                   }
                 },
               ),
@@ -154,6 +154,12 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                     //
                     final temp =
                         BlocProvider.of<AnalysisCubit>(context).analysis;
+                    if (BlocProvider.of<AnalysisCubit>(context)
+                        .analysis
+                        .isEmpty) {
+                      BlocProvider.of<AnalysisCubit>(context)
+                          .emit(NoAnalysisState());
+                    }
                     //
                     double repScore = 0;
                     int repCounter = 0;
