@@ -93,6 +93,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                       ),
                       lastDate: DateTime(2080));
                   if (pickedDate != null) {
+                    //
                     dateController.text =
                         GeneralHelper.formatDateForDisplay1(pickedDate);
                     BlocProvider.of<AnalysisCubit>(context)
