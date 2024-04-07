@@ -1,12 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/apiClient/api_client.dart';
 import '../../../general_data.dart';
 import '../../calendar_container_screen/cubit/calendar_cubit.dart';
+import '../../calendar_container_screen/intended_visit_model.dart';
 
 part 'add_medical_rep_state.dart';
 
@@ -51,6 +54,14 @@ class AddMedicalRepCubit extends Cubit<AddMedicalRepState> {
         selectedRepId, selectedLocationId, visitTime, shift);
     await calendarCubit
         .getMonthlyVisits(GeneralHelper.formatDateForApi(DateTime.now()));
+    emit(FinishSubmitState());
+  }
+
+  addIntendedVisit(IntendedVisitModel intendedVisitModel) async {
+    emit(AddMedicalRepLoading());
+    final sharedPref = PrefUtils();
+    await sharedPref.addNewIntendedVisit(intendedVisitModel);
+    await calendarCubit.getMonthlyIntendedVisits();
     emit(FinishSubmitState());
   }
 }

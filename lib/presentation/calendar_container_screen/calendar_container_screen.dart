@@ -42,8 +42,9 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
 
   @override
   void initState() {
-    BlocProvider.of<CalendarCubit>(context)
-        .getMonthlyVisits(GeneralHelper.formatDateForApi(DateTime.now()));
+    // BlocProvider.of<CalendarCubit>(context)
+    //     .getMonthlyVisits(GeneralHelper.formatDateForApi(DateTime.now()));
+    BlocProvider.of<CalendarCubit>(context).getMonthlyIntendedVisits();
     super.initState();
   }
 
@@ -56,7 +57,9 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
         appBar: _buildAppBar(context),
         body: BlocListener<CalendarCubit, CalendarState>(
           listener: (context, state) {
-            if (state is CalendarSuccess) {
+            if (state is CalendarLoading) {
+              ProgressDialogUtils.showProgressDialog();
+            } else if (state is CalendarSuccess) {
               ProgressDialogUtils.hideProgressDialog();
             }
           },

@@ -178,7 +178,7 @@ class CalendarWidget extends StatelessWidget {
                 dateTextStyle: Theme.of(context).textTheme.titleLarge,
               ),
               // agendaViewHeight: MediaQuery.of(context).size.height * 0.250,
-              agendaItemHeight: 70.v,
+              agendaItemHeight: 90.v,
               showTrailingAndLeadingDates: true,
               monthCellStyle: MonthCellStyle(
                 trailingDatesBackgroundColor: appTheme.gray300,
@@ -201,27 +201,43 @@ class CalendarWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.h),
                 ),
                 // child: Text(details.appointments.first.eventName.toString()),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    Text(
-                      details.appointments.first.eventName,
-                      style: TextStyle(
-                        fontSize: 17.fSize,
-                        color: appTheme.black900,
-                      ),
-                    ),
-                    SizedBox(height: 4.v),
-                    Text(
-                      GeneralHelper.formatDateForDisplay1(details.date),
-                      style: TextStyle(
-                        fontSize: 15.fSize,
-                        color: appTheme.gray500,
-                      ),
-                    ),
-                    // .toString()
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            details.appointments.first.eventName,
+                            style: TextStyle(
+                              fontSize: 17.fSize,
+                              color: appTheme.black900,
+                            ),
+                          ),
+                          SizedBox(height: 4.v),
+                          Text(
+                            GeneralHelper.formatDateForDisplay1(details.date),
+                            style: TextStyle(
+                              fontSize: 15.fSize,
+                              color: appTheme.gray500,
+                            ),
+                          ),
+                          // .toString()
 
-                    // Text(DateFormat.yMd('ar').  .toString()),
+                          // Text(DateFormat.yMd('ar').  .toString()),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        BlocProvider.of<CalendarCubit>(context)
+                            .removeIntendedVisit(details.date);
+                      },
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                    ),
                   ],
                 ),
               );

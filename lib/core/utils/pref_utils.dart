@@ -1,7 +1,9 @@
 //ignore: unused_import
 import 'dart:convert';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefUtils {
@@ -128,5 +130,50 @@ class PrefUtils {
     await _sharedPreferences!
         .setStringList("submittedAnswersFailureList", list);
   }
+
   //
+  List<IntendedVisitModel> getMonthlyIntendedVisits() {
+    List<String>? list =
+        _sharedPreferences!.getStringList("monthlyIntendedVisits");
+    if (list == null) {
+      return [];
+    } else {
+      List<IntendedVisitModel> temp = [];
+      for (int i = 0; i < list.length; i++) {
+        temp.add(IntendedVisitModel.fromMap(json.decode(list[i])));
+      }
+      return temp;
+    }
+  }
+
+  //
+  addNewIntendedVisit(IntendedVisitModel intendedVisitModel) async {
+    List<IntendedVisitModel> list = getMonthlyIntendedVisits();
+    int index = list.indexWhere((item) {
+      return intendedVisitModel.isoDate == item.isoDate;
+    });
+    //not found
+    if (index == -1) {
+      list.add(intendedVisitModel);
+    } else {
+      list[index] = intendedVisitModel;
+    }
+    await _saveIntendedVisitsLocally(list);
+  }
+
+  _saveIntendedVisitsLocally(List<IntendedVisitModel> list) async {
+    List<String> temp = [];
+    for (int i = 0; i < list.length; i++) {
+      temp.add(json.encode(list[i].toMap()));
+    }
+    await _sharedPreferences!.setStringList("monthlyIntendedVisits", temp);
+  }
+
+  removeIntendedVisit(String isoDate) async {
+    List<IntendedVisitModel> list = getMonthlyIntendedVisits();
+    list.removeWhere((item) {
+      return item.isoDate == isoDate;
+    });
+    await _saveIntendedVisitsLocally(list);
+  }
 }

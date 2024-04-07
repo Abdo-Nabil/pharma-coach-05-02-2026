@@ -10,6 +10,10 @@ class GeneralHelper {
     return DateFormat("EEE d-M-yyyy").format(date);
   }
 
+  static getDateOnly(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
   static getDateTimeFromApiVisitTime(String visitTime) {
     return DateTime.parse(visitTime.split(' ').first);
   }
