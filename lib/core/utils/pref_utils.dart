@@ -150,7 +150,7 @@ class PrefUtils {
   addNewIntendedVisit(IntendedVisitModel intendedVisitModel) async {
     List<IntendedVisitModel> list = getMonthlyIntendedVisits();
     int index = list.indexWhere((item) {
-      return intendedVisitModel.isoDate == item.isoDate;
+      return intendedVisitModel.stringDate == item.stringDate;
     });
     //not found
     if (index == -1) {
@@ -172,7 +172,7 @@ class PrefUtils {
   removeIntendedVisit(String isoDate) async {
     List<IntendedVisitModel> list = getMonthlyIntendedVisits();
     list.removeWhere((item) {
-      return item.isoDate == isoDate;
+      return item.stringDate == isoDate;
     });
     await _saveIntendedVisitsLocally(list);
   }

@@ -47,15 +47,15 @@ class AddMedicalRepCubit extends Cubit<AddMedicalRepState> {
     emit(ShowSubmitState());
   }
 
-  createVisit() async {
-    emit(AddMedicalRepLoading());
-    final visitTime = GeneralHelper.formatDateForApi(GeneralData.selectedDate);
-    await apiClient.createVisit(
-        selectedRepId, selectedLocationId, visitTime, shift);
-    await calendarCubit
-        .getMonthlyVisits(GeneralHelper.formatDateForApi(DateTime.now()));
-    emit(FinishSubmitState());
-  }
+  // createVisit() async {
+  //   emit(AddMedicalRepLoading());
+  //   final visitTime = GeneralHelper.formatDateForApi(GeneralData.selectedDate);
+  //   await apiClient.createVisit(
+  //       selectedRepId, selectedLocationId, visitTime, shift);
+  //   await calendarCubit
+  //       .getMonthlyVisits(GeneralHelper.formatDateForApi(DateTime.now()));
+  //   emit(FinishSubmitState());
+  // }
 
   addIntendedVisit(IntendedVisitModel intendedVisitModel) async {
     emit(AddMedicalRepLoading());

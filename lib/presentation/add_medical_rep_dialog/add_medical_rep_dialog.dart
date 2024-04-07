@@ -233,9 +233,9 @@ class _AddMedicalRepDialogState extends State<AddMedicalRepDialog> {
                                   ),
                                 ),
                                 onPressed: () async {
-                                  await BlocProvider.of<AddMedicalRepCubit>(
-                                          context)
-                                      .createVisit();
+                                  // await BlocProvider.of<AddMedicalRepCubit>(
+                                  //         context)
+                                  //     .createVisit();
                                 },
                               ),
                             ),

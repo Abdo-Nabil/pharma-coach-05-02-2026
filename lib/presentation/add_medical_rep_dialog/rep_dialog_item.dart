@@ -20,8 +20,7 @@ class RepDialogItem extends StatelessWidget {
         await BlocProvider.of<AddMedicalRepCubit>(context)
             .addIntendedVisit(IntendedVisitModel(
           repName: repModel.username,
-          isoDate: GeneralHelper.getDateOnly(GeneralData.selectedDate)
-              .toIso8601String(),
+          stringDate: GeneralHelper.formatDateForApi(GeneralData.selectedDate),
           repId: repModel.id,
         ));
       },
