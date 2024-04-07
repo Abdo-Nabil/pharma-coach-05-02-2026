@@ -43,7 +43,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    BlocProvider.of<HomeCubit>(context).getTodayVisits();
+    // BlocProvider.of<HomeCubit>(context).getTodayVisits();
+    BlocProvider.of<HomeCubit>(context).getThisWeekVisits();
     super.initState();
   }
 

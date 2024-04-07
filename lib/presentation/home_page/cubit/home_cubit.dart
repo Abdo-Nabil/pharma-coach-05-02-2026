@@ -19,4 +19,31 @@ class HomeCubit extends Cubit<HomeState> {
         "day", GeneralHelper.formatDateForApi(DateTime.now()));
     emit(HomeGetVisitsSuccess());
   }
+
+  getThisWeekVisits() async {
+    emit(HomeLoadingState());
+    visits = [];
+    final temp = DateTime.now();
+    final dateNow = DateTime(temp.year, temp.month, temp.day);
+    final dateAfter8Days = dateNow.add(Duration(days: 8));
+    //
+    final thisMonth = await apiClient.getVisits(
+        "month", GeneralHelper.formatDateForApi(dateNow));
+    visits = thisMonth;
+    if (dateNow.month != dateAfter8Days.month) {
+      final nextMonth = await apiClient.getVisits(
+          "month", GeneralHelper.formatDateForApi(dateAfter8Days));
+      visits.addAll(nextMonth);
+    }
+    visits = visits.where((visit) {
+      final visitDate = GeneralHelper.formatDateFromApi(visit.visitTime);
+      if (visitDate.isAtSameMomentAs(dateNow) ||
+          (visitDate.isBefore(dateAfter8Days) && visitDate.isAfter(dateNow))) {
+        return true;
+      }
+      return false;
+    }).toList();
+
+    emit(HomeGetVisitsSuccess());
+  }
 }

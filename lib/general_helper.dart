@@ -6,6 +6,10 @@ class GeneralHelper {
     return DateFormat("yyyy-MM-dd").format(date);
   }
 
+  static DateTime formatDateFromApi(String date) {
+    return DateFormat("yyyy-MM-dd").parse(date);
+  }
+
   static String formatDateForDisplay1(DateTime date) {
     return DateFormat("EEE d-M-yyyy").format(date);
   }
