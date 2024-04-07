@@ -23,9 +23,9 @@ class AddMedicalRepCubit extends Cubit<AddMedicalRepState> {
   List<TinyRepModel> reps = [];
   List<LocationModel> locations = [];
   //
-  late int selectedRepId;
-  late int selectedLocationId;
-  String shift = 'am';
+  // late int selectedRepId;
+  // late int selectedLocationId;
+  // String shift = 'am';
 
   //
 
@@ -35,17 +35,17 @@ class AddMedicalRepCubit extends Cubit<AddMedicalRepState> {
     emit(GetRepsSuccessState());
   }
 
-  getRepLocations(int repId) async {
-    emit(AddMedicalRepLoading());
-    selectedRepId = repId;
-    locations = await apiClient.getRepLocations(repId);
-    emit(GetLocationsSuccessState());
-  }
-
-  setLocationIdAndShowSubmit(int locationId) {
-    selectedLocationId = locationId;
-    emit(ShowSubmitState());
-  }
+  // getRepLocations(int repId) async {
+  //   emit(AddMedicalRepLoading());
+  //   selectedRepId = repId;
+  //   locations = await apiClient.getRepLocations(repId);
+  //   emit(GetLocationsSuccessState());
+  // }
+  //
+  // setLocationIdAndShowSubmit(int locationId) {
+  //   selectedLocationId = locationId;
+  //   emit(ShowSubmitState());
+  // }
 
   // createVisit() async {
   //   emit(AddMedicalRepLoading());

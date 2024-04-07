@@ -156,105 +156,108 @@ class _AddMedicalRepDialogState extends State<AddMedicalRepDialog> {
                           },
                         ),
                       );
-                    } else if (state is GetLocationsSuccessState) {
-                      final locations = BlocProvider.of<AddMedicalRepCubit>(
-                        context,
-                      ).locations;
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.30,
-                        child: ListView.separated(
-                          itemCount: locations.length,
-                          separatorBuilder: (context, index) {
-                            return SizedBox(height: 5.v);
-                          },
-                          itemBuilder: (context, index) {
-                            return LocationDialogItem(
-                                locationModel: locations[index]);
-                          },
-                        ),
-                      );
-                    } else if (state is ShowSubmitState) {
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.30,
-                        child: Column(
-                          children: <Widget>[
-                            RadioListTile<String>(
-                              title: const Text('AM'),
-                              value: "am",
-                              groupValue:
-                                  BlocProvider.of<AddMedicalRepCubit>(context)
-                                      .shift,
-                              onChanged: (value) {
-                                setState(() {
-                                  BlocProvider.of<AddMedicalRepCubit>(context)
-                                      .shift = value!;
-                                });
-                              },
-                            ),
-                            RadioListTile<String>(
-                              title: const Text('PM'),
-                              value: "pm",
-                              groupValue:
-                                  BlocProvider.of<AddMedicalRepCubit>(context)
-                                      .shift,
-                              onChanged: (value) {
-                                setState(() {
-                                  BlocProvider.of<AddMedicalRepCubit>(context)
-                                      .shift = value!;
-                                });
-                              },
-                            ),
-                            // ListTile(
-                            //   title: const Text('PM'),
-                            //   leading: Radio<String>(
-                            //     value: "pm",
-                            //     groupValue:
-                            //         BlocProvider.of<AddMedicalRepCubit>(context)
-                            //             .shift,
-                            //     onChanged: (value) {
-                            //       setState(() {
-                            //         BlocProvider.of<AddMedicalRepCubit>(context)
-                            //             .shift = value!;
-                            //       });
-                            //     },
-                            //   ),
-                            // ),
-                            Spacer(),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.30,
-                              child: ElevatedButton(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(6.0),
-                                  child: Text(
-                                    "Add",
-                                    style: TextStyle(
-                                      fontSize: 18.fSize,
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  // await BlocProvider.of<AddMedicalRepCubit>(
-                                  //         context)
-                                  //     .createVisit();
-                                },
-                              ),
-                            ),
-                            // RadioListTile<String>(
-                            //   value: "PM",
-                            //   groupValue:
-                            //       BlocProvider.of<AddMedicalRepCubit>(context)
-                            //           .shift,
-                            //   onChanged: (value) {
-                            //     setState(() {
-                            //       BlocProvider.of<AddMedicalRepCubit>(context)
-                            //           .shift = value!;
-                            //     });
-                            //   },
-                            // ),
-                          ],
-                        ),
-                      );
-                    } else if (state is FinishSubmitState) {
+                    }
+                    // else if (state is GetLocationsSuccessState) {
+                    //   final locations = BlocProvider.of<AddMedicalRepCubit>(
+                    //     context,
+                    //   ).locations;
+                    //   return SizedBox(
+                    //     height: MediaQuery.of(context).size.height * 0.30,
+                    //     child: ListView.separated(
+                    //       itemCount: locations.length,
+                    //       separatorBuilder: (context, index) {
+                    //         return SizedBox(height: 5.v);
+                    //       },
+                    //       itemBuilder: (context, index) {
+                    //         return LocationDialogItem(
+                    //             locationModel: locations[index]);
+                    //       },
+                    //     ),
+                    //   );
+                    // } else if (state is ShowSubmitState) {
+                    //   return SizedBox(
+                    //     height: MediaQuery.of(context).size.height * 0.30,
+                    //     child: Column(
+                    //       children: <Widget>[
+                    //         RadioListTile<String>(
+                    //           title: const Text('AM'),
+                    //           value: "am",
+                    //           groupValue:
+                    //               BlocProvider.of<AddMedicalRepCubit>(context)
+                    //                   .shift,
+                    //           onChanged: (value) {
+                    //             setState(() {
+                    //               BlocProvider.of<AddMedicalRepCubit>(context)
+                    //                   .shift = value!;
+                    //             });
+                    //           },
+                    //         ),
+                    //         RadioListTile<String>(
+                    //           title: const Text('PM'),
+                    //           value: "pm",
+                    //           groupValue:
+                    //               BlocProvider.of<AddMedicalRepCubit>(context)
+                    //                   .shift,
+                    //           onChanged: (value) {
+                    //             setState(() {
+                    //               BlocProvider.of<AddMedicalRepCubit>(context)
+                    //                   .shift = value!;
+                    //             });
+                    //           },
+                    //         ),
+                    //         // ListTile(
+                    //         //   title: const Text('PM'),
+                    //         //   leading: Radio<String>(
+                    //         //     value: "pm",
+                    //         //     groupValue:
+                    //         //         BlocProvider.of<AddMedicalRepCubit>(context)
+                    //         //             .shift,
+                    //         //     onChanged: (value) {
+                    //         //       setState(() {
+                    //         //         BlocProvider.of<AddMedicalRepCubit>(context)
+                    //         //             .shift = value!;
+                    //         //       });
+                    //         //     },
+                    //         //   ),
+                    //         // ),
+                    //         Spacer(),
+                    //         SizedBox(
+                    //           width: MediaQuery.of(context).size.width * 0.30,
+                    //           child: ElevatedButton(
+                    //             child: Padding(
+                    //               padding: const EdgeInsets.all(6.0),
+                    //               child: Text(
+                    //                 "Add",
+                    //                 style: TextStyle(
+                    //                   fontSize: 18.fSize,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             onPressed: () async {
+                    //               // await BlocProvider.of<AddMedicalRepCubit>(
+                    //               //         context)
+                    //               //     .createVisit();
+                    //             },
+                    //           ),
+                    //         ),
+                    //         // RadioListTile<String>(
+                    //         //   value: "PM",
+                    //         //   groupValue:
+                    //         //       BlocProvider.of<AddMedicalRepCubit>(context)
+                    //         //           .shift,
+                    //         //   onChanged: (value) {
+                    //         //     setState(() {
+                    //         //       BlocProvider.of<AddMedicalRepCubit>(context)
+                    //         //           .shift = value!;
+                    //         //     });
+                    //         //   },
+                    //         // ),
+                    //       ],
+                    //     ),
+                    //   );
+                    // }
+                    //
+                    else if (state is FinishSubmitState) {
                       Navigator.pop(context);
                     }
                     return Center(child: CircularProgressIndicator());

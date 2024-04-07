@@ -14,7 +14,13 @@ class ListTapContainerLoading extends ListTapContainerState {
   List<Object> get props => [];
 }
 
-class ListTapContainerGetVisitSuccessState extends ListTapContainerState {
+class ListTapContainerGetLocationsSuccessState extends ListTapContainerState {
+  final List<LocationModel> amLocations;
+  final List<LocationModel> pmLocations;
+  const ListTapContainerGetLocationsSuccessState({
+    required this.amLocations,
+    required this.pmLocations,
+  });
   @override
-  List<Object> get props => [];
+  List<Object> get props => [identityHashCode(this)];
 }

@@ -1,3 +1,4 @@
+import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
 import 'package:mina_s_application5/presentation/home_page/home_page.dart';
 import 'package:mina_s_application5/presentation/list_tab_container_screen/cubit/list_tap_container_cubit.dart';
@@ -48,7 +49,8 @@ class ListTabContainerScreenState extends State<ListTabContainerScreen>
   void initState() {
     super.initState();
     tabviewController = TabController(length: 2, vsync: this);
-    BlocProvider.of<ListTabContainerCubit>(context).getAmAndPmVisits();
+    // BlocProvider.of<ListTabContainerCubit>(context).getAmAndPmVisits();
+    BlocProvider.of<ListTabContainerCubit>(context).getAmAndPmLocations();
   }
 
   @override
@@ -58,13 +60,20 @@ class ListTabContainerScreenState extends State<ListTabContainerScreen>
         return SafeArea(
           child: Scaffold(
             appBar: _buildAppBar(context),
-            body: BlocBuilder<ListTabContainerCubit, ListTapContainerState>(
+            body: BlocConsumer<ListTabContainerCubit, ListTapContainerState>(
+              listener: (context, state) {
+                // if (state is ListTapContainerLoading) {
+                //   ProgressDialogUtils.showProgressDialog();
+                // } else if (state is ListTapContainerGetLocationsSuccessState) {
+                //   ProgressDialogUtils.hideProgressDialog();
+                // }
+              },
               builder: (context, state) {
                 if (state is ListTapContainerLoading) {
                   return Center(child: CircularProgressIndicator());
                 }
                 //
-                else if (state is ListTapContainerGetVisitSuccessState) {
+                else if (state is ListTapContainerGetLocationsSuccessState) {
                   return SizedBox(
                     width: double.maxFinite,
                     child: SingleChildScrollView(

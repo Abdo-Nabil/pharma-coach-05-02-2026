@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'bloc/team_analytics_bloc.dart';
 
+enum DateFilter { day, month, year }
+
 class TeamAnalyticsScreen extends StatefulWidget {
   TeamAnalyticsScreen({Key? key})
       : super(
@@ -37,6 +39,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   bool isTeamToggled = true;
   late final dateController = TextEditingController(
       text: GeneralHelper.formatDateForDisplay1(DateTime.now()));
+  DateFilter dateFilter = DateFilter.day;
   //
   @override
   void dispose() {
@@ -47,7 +50,9 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   //
   @override
   void initState() {
-    BlocProvider.of<AnalysisCubit>(context).getAnalysis(DateTime.now());
+    BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+      DateTime.now(),
+    );
     super.initState();
   }
 
@@ -96,8 +101,10 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                     //
                     dateController.text =
                         GeneralHelper.formatDateForDisplay1(pickedDate);
-                    BlocProvider.of<AnalysisCubit>(context)
-                        .getAnalysis(pickedDate);
+                    BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+                      pickedDate,
+                      dateFilter.name,
+                    );
                   }
                 },
               ),

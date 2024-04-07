@@ -96,14 +96,14 @@ class CustomSearchView extends StatelessWidget {
             }
           },
           autofocus: autofocus!,
-          style: textStyle ?? CustomTextStyles.bodySmallGray400_1,
+          style: textStyle ?? CustomTextStyles.titleLargeAmber700,
           keyboardType: textInputType,
           maxLines: maxLines ?? 1,
           decoration: decoration,
           validator: validator,
-          onChanged: (String value) {
-            onChanged!.call(value);
-          },
+          // onChanged: (String value) {
+          //   onChanged!.call(value);
+          // },
         ),
       );
   InputDecoration get decoration => InputDecoration(

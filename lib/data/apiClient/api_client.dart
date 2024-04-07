@@ -333,8 +333,9 @@ class ApiClient {
     }
   }
 
-  Future createVisit(
+  Future<bool> createVisit(
       int repId, int locationId, String visitTime, String shift) async {
+    bool isCreated = false;
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -357,6 +358,8 @@ class ApiClient {
       if (_isSuccessCall(response)) {
         //
         debugPrint("Visit created successfully");
+        isCreated = true;
+        return isCreated;
       } else {
         throw response.data != null
             ? RepModel.fromMap(response.data)
@@ -368,6 +371,7 @@ class ApiClient {
         error,
         stackTrace: stackTrace,
       );
+      return isCreated;
       rethrow;
     }
   }
@@ -458,13 +462,16 @@ class ApiClient {
     return isSend;
   }
 
-  Future<List<AnalysisModel>> getAnalysis(String date) async {
+  Future<List<AnalysisModel>> getAnalysis(String date, String dateScope) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer ${GeneralData.token!}',
     };
-    Map<String, dynamic> queryParams = {"date": date};
+    Map<String, dynamic> queryParams = {
+      "date": date,
+      "date_scope": dateScope,
+    };
     try {
       await isNetworkConnected();
       Response response = await _dio.get(

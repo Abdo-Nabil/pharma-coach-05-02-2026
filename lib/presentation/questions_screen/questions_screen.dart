@@ -54,7 +54,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   void didChangeDependencies() {
     final routeArgs = ModalRoute.of(context)!.settings.arguments as Map;
     questionType = routeArgs['type'];
-    medicalRepName = routeArgs['medicalRepName'];
+    // medicalRepName = routeArgs['medicalRepName'];
     BlocProvider.of<QuestionsCubit>(context)
         .getQuestionCategories(questionType);
     super.didChangeDependencies();
@@ -174,7 +174,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       // ),
       centerTitle: true,
       title: Text(
-        "$medicalRepName - $questionType",
+        // "$medicalRepName - $questionType",
+        "$questionType",
         style: CustomTextStyles.titleSmallBlack900,
       ),
       // title: AppbarTitle(

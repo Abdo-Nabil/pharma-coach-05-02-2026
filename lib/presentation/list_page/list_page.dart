@@ -1,6 +1,7 @@
 import 'package:mina_s_application5/presentation/list_one_page/widgets/listone_item_widget.dart';
 import 'package:mina_s_application5/presentation/list_tab_container_screen/cubit/list_tap_container_cubit.dart';
 import 'package:mina_s_application5/widgets/custom_search_view.dart';
+import '../../general_data.dart';
 import 'widgets/list_item_widget.dart';
 import 'models/list_item_model.dart';
 import 'models/list_model.dart';
@@ -32,6 +33,26 @@ class ListPageState extends State<ListPage>
     with AutomaticKeepAliveClientMixin<ListPage> {
   @override
   bool get wantKeepAlive => true;
+  //
+  final searchController = TextEditingController();
+  //
+  @override
+  void initState() {
+    searchController.addListener(() {
+      BlocProvider.of<ListTabContainerCubit>(context)
+          .searchInAmLocations(searchController.text);
+    });
+    super.initState();
+  }
+
+  //
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  //
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -57,43 +78,62 @@ class ListPageState extends State<ListPage>
       padding: EdgeInsets.symmetric(horizontal: 15.h),
       child: Column(
         children: [
-          // BlocSelector<ListBloc, ListState, TextEditingController?>(
-          //   selector: (state) => state.searchController,
-          //   builder: (context, searchController) {
-          //     return CustomSearchView(
-          //       controller: searchController,
-          //       hintText: "lbl_search".tr,
-          //     );
-          //   },
-          // ),
+          CustomSearchView(
+            hintText: "lbl_search".tr,
+            controller: searchController,
+            // onChanged: (value) {
+            //   BlocProvider.of<ListTabContainerCubit>(context)
+            //       .searchInAmLocations(value);
+            // },
+          ),
           SizedBox(height: 8.v),
-          Expanded(
-            child: ListView.separated(
-              physics: BouncingScrollPhysics(),
-              shrinkWrap: true,
-              separatorBuilder: (
-                context,
-                index,
-              ) {
-                return SizedBox(
-                  height: 4.v,
+          BlocBuilder<ListTabContainerCubit, ListTapContainerState>(
+            builder: (context, state) {
+              if (state is ListTapContainerGetLocationsSuccessState) {
+                final locations = state.amLocations;
+                return Expanded(
+                  child: ListView.separated(
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    separatorBuilder: (
+                      context,
+                      index,
+                    ) {
+                      return SizedBox(
+                        height: 4.v,
+                      );
+                    },
+                    itemCount: locations.length,
+                    itemBuilder: (context, index) {
+                      final isVisitCreated =
+                          BlocProvider.of<ListTabContainerCubit>(context)
+                              .isVisitCreated(locations[index].id!);
+
+                      final isQuestionSubmitted =
+                          BlocProvider.of<ListTabContainerCubit>(context)
+                              .isQuestionSubmitted(locations[index].id!);
+                      final visitIdIfFound =
+                          BlocProvider.of<ListTabContainerCubit>(context)
+                              .getVisitId(locations[index].id!);
+                      GeneralData.selectedVisitId = visitIdIfFound;
+
+                      //
+                      return ListoneItemWidget(
+                        locations[index],
+                        isPm: false,
+                        isVisitCreated: isVisitCreated,
+                        isQuestionSubmitted: isQuestionSubmitted,
+                        visitId: visitIdIfFound,
+                      );
+                      // return ListItemWidget(
+                      //   visits[index],
+                      // );
+                    },
+                  ),
                 );
-              },
-              itemCount: BlocProvider.of<ListTabContainerCubit>(context)
-                  .amVisits
-                  .length,
-              itemBuilder: (context, index) {
-                final visits =
-                    BlocProvider.of<ListTabContainerCubit>(context).amVisits;
-                return ListoneItemWidget(
-                  visits[index],
-                  isPm: false,
-                );
-                // return ListItemWidget(
-                //   visits[index],
-                // );
-              },
-            ),
+              }
+              return SizedBox.shrink();
+            },
           ),
           // BlocSelector<ListBloc, ListState, ListModel?>(
           //   selector: (state) => state.listModelObj,

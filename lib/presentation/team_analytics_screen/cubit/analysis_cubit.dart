@@ -15,10 +15,10 @@ class AnalysisCubit extends Cubit<AnalysisState> {
   List<AnalysisModel> analysis = [];
   List<TinyRepModel> reps = [];
   //
-  getAnalysis(DateTime date) async {
+  getAnalysis(DateTime date, String dateScope) async {
     String dateAsString = GeneralHelper.formatDateForApi(date);
     emit(AnalysisLoading());
-    analysis = await apiClient.getAnalysis(dateAsString);
+    analysis = await apiClient.getAnalysis(dateAsString, dateScope);
     reps = await apiClient.getMedicalReps();
     emit(AnalysisSuccess());
   }
