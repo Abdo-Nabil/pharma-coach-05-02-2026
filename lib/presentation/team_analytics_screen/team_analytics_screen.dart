@@ -40,6 +40,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   late final dateController = TextEditingController(
       text: GeneralHelper.formatDateForDisplay1(DateTime.now()));
   DateFilter dateFilter = DateFilter.day;
+  DateTime? pickedDate = DateTime.now();
   //
   @override
   void dispose() {
@@ -52,6 +53,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   void initState() {
     BlocProvider.of<AnalysisCubit>(context).getAnalysis(
       DateTime.now(),
+      dateFilter.name,
     );
     super.initState();
   }
@@ -72,7 +74,10 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
             children: [
               CustomElevatedButton(
                 height: 45.v,
-                text: isTeamToggled ? "lbl_team".tr : "Medical rep",
+                // text: isTeamToggled ? "lbl_team".tr : "Medical rep",
+                text: isTeamToggled
+                    ? "Show medical rep only"
+                    : "Compare to team".tr,
                 buttonStyle: CustomButtonStyles.fillPrimaryTL12,
                 buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
                 onPressed: () {
@@ -90,7 +95,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                   ),
                 ),
                 onTap: () async {
-                  final pickedDate = await showDatePicker(
+                  pickedDate = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
                       firstDate: DateTime.now().subtract(
@@ -100,13 +105,58 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                   if (pickedDate != null) {
                     //
                     dateController.text =
-                        GeneralHelper.formatDateForDisplay1(pickedDate);
+                        GeneralHelper.formatDateForDisplay1(pickedDate!);
                     BlocProvider.of<AnalysisCubit>(context).getAnalysis(
-                      pickedDate,
+                      pickedDate!,
                       dateFilter.name,
                     );
                   }
                 },
+              ),
+              SizedBox(height: 16.v),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FilterButton(
+                    label: 'Day',
+                    isSelected: dateFilter.name == DateFilter.day.name,
+                    onTap: () {
+                      setState(() {
+                        dateFilter = DateFilter.day;
+                      });
+                      BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+                        pickedDate!,
+                        dateFilter.name,
+                      );
+                    },
+                  ),
+                  FilterButton(
+                    label: 'Month',
+                    isSelected: dateFilter.name == DateFilter.month.name,
+                    onTap: () {
+                      setState(() {
+                        dateFilter = DateFilter.month;
+                      });
+                      BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+                        pickedDate!,
+                        dateFilter.name,
+                      );
+                    },
+                  ),
+                  FilterButton(
+                    label: 'Year',
+                    isSelected: dateFilter.name == DateFilter.year.name,
+                    onTap: () {
+                      setState(() {
+                        dateFilter = DateFilter.year;
+                      });
+                      BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+                        pickedDate!,
+                        dateFilter.name,
+                      );
+                    },
+                  ),
+                ],
               ),
               SizedBox(height: 16.v),
               SizedBox(
@@ -119,6 +169,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                     setState(() {
                       selectedRepId = newValue!;
                     });
+                    debugPrint("$selectedRepId");
                   },
                   items: BlocProvider.of<AnalysisCubit>(context, listen: true)
                       .reps
@@ -236,7 +287,12 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                       //
                                       if (analysis.reps.length > 1) {
                                         teamAvg = (teamTotal - repPercentage) /
-                                            (analysis.reps.length - 1);
+                                            (analysis.reps.length -
+                                                (analysis.reps[
+                                                            "$selectedRepId"] ==
+                                                        null
+                                                    ? 0
+                                                    : 1));
                                       }
                                       //
                                       return BuildTeamAnalysisView(
@@ -568,6 +624,40 @@ class BuildTeamAnalysisView extends StatelessWidget {
           ),
           Visibility(visible: isTeamToggled, child: SizedBox(height: 3.v)),
         ],
+      ),
+    );
+  }
+}
+
+class FilterButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const FilterButton({
+    Key? key,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? appTheme.orange300 : Colors.grey[200],
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
