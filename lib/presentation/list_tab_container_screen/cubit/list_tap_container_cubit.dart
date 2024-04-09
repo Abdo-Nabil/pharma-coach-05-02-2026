@@ -46,7 +46,7 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
   //
   Future<int?> getRepIdForIntendedVisitToday() async {
     final sharedPref = PrefUtils();
-    final list = sharedPref.getMonthlyIntendedVisits();
+    final list = sharedPref.getIntendedVisits();
     for (int i = 0; i < list.length; i++) {
       if (list[i].stringDate ==
           GeneralHelper.formatDateForApi(DateTime.now())) {

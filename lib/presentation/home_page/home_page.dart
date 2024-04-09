@@ -44,7 +44,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // BlocProvider.of<HomeCubit>(context).getTodayVisits();
-    BlocProvider.of<HomeCubit>(context).getThisWeekVisits();
+    // BlocProvider.of<HomeCubit>(context).getThisWeekVisits();
+    BlocProvider.of<HomeCubit>(context).getThisWeekIntendedVisits();
     super.initState();
   }
 
@@ -228,7 +229,8 @@ class _HomePageState extends State<HomePage> {
           }
           //
           else if (state is HomeGetVisitsSuccess) {
-            final visits = BlocProvider.of<HomeCubit>(context).visits;
+            final intendedVisits =
+                BlocProvider.of<HomeCubit>(context).intendedVisits;
             return ListView.separated(
               // physics: NeverScrollableScrollPhysics(),
               // shrinkWrap: true,
@@ -237,11 +239,9 @@ class _HomePageState extends State<HomePage> {
                   height: 8.v,
                 );
               },
-              itemCount: visits.length,
+              itemCount: intendedVisits.length,
               itemBuilder: (context, index) {
-                return HomeItemWidget(
-                  visits[index],
-                );
+                return HomeItemWidget(intendedVisits[index]);
               },
             );
           }

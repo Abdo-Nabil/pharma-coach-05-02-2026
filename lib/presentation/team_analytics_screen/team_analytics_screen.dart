@@ -41,7 +41,23 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
       text: GeneralHelper.formatDateForDisplay1(DateTime.now()));
   DateFilter dateFilter = DateFilter.day;
   DateTime? pickedDate = DateTime.now();
-  int quarterNumber = 1;
+  //
+  late int quarterNumber = _getQuarter(pickedDate!);
+  //
+  _getQuarter(DateTime date) {
+    late int q;
+    if (date.month >= 1 && date.month <= 3) {
+      q = 1;
+    } else if (date.month >= 4 && date.month <= 6) {
+      q = 2;
+    } else if (date.month >= 7 && date.month <= 9) {
+      q = 3;
+    } else {
+      q = 4;
+    }
+    return q;
+  }
+
   //
   @override
   void dispose() {
@@ -92,7 +108,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                 readOnly: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.h),
+                    borderRadius: BorderRadius.circular(16.h),
                   ),
                 ),
                 onTap: () async {
@@ -111,19 +127,39 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                       pickedDate!,
                       dateFilter.name,
                     );
-                    if (pickedDate!.month >= 1 && pickedDate!.month <= 3) {
-                      quarterNumber = 1;
-                    } else if (pickedDate!.month >= 4 &&
-                        pickedDate!.month <= 6) {
-                      quarterNumber = 2;
-                    } else if (pickedDate!.month >= 7 &&
-                        pickedDate!.month <= 9) {
-                      quarterNumber = 3;
-                    } else {
-                      quarterNumber = 4;
-                    }
+                    quarterNumber = _getQuarter(pickedDate!);
                   }
                 },
+              ),
+              SizedBox(height: 16.v),
+              Container(
+                decoration: AppDecoration.fillBlue100.copyWith(
+                  borderRadius: BorderRadiusStyle.roundedBorder17,
+                ),
+                width: double.infinity,
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    menuMaxHeight: 300.v,
+                    hint: Text("Chose medical rep"),
+                    isExpanded: true,
+                    padding: EdgeInsets.all(8),
+                    value: selectedRepId,
+                    onChanged: (int? newValue) {
+                      setState(() {
+                        selectedRepId = newValue!;
+                      });
+                      debugPrint("$selectedRepId");
+                    },
+                    items: BlocProvider.of<AnalysisCubit>(context, listen: true)
+                        .reps
+                        .map<DropdownMenuItem<int>>((option) {
+                      return DropdownMenuItem<int>(
+                        value: option.id,
+                        child: Text(option.username),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ),
               SizedBox(height: 16.v),
               Center(
@@ -167,7 +203,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           });
                           BlocProvider.of<AnalysisCubit>(context).getAnalysis(
                             pickedDate!,
-                            dateFilter.name,
+                            "q$quarterNumber",
                           );
                         },
                       ),
@@ -189,35 +225,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                 ),
               ),
               SizedBox(height: 16.v),
-              Container(
-                decoration: AppDecoration.fillBlue100.copyWith(
-                  borderRadius: BorderRadiusStyle.roundedBorder7,
-                ),
-                width: double.infinity,
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<int>(
-                    menuMaxHeight: 300.v,
-                    hint: Text("Chose medical rep"),
-                    isExpanded: true,
-                    padding: EdgeInsets.all(8),
-                    value: selectedRepId,
-                    onChanged: (int? newValue) {
-                      setState(() {
-                        selectedRepId = newValue!;
-                      });
-                      debugPrint("$selectedRepId");
-                    },
-                    items: BlocProvider.of<AnalysisCubit>(context, listen: true)
-                        .reps
-                        .map<DropdownMenuItem<int>>((option) {
-                      return DropdownMenuItem<int>(
-                        value: option.id,
-                        child: Text(option.username),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
+
               Expanded(
                 child: BlocBuilder<AnalysisCubit, AnalysisState>(
                     builder: (context, state) {
@@ -414,7 +422,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                 ),
               ),
               SizedBox(
-                width: 14.h,
+                width: 16.h,
               ),
             ],
           )

@@ -132,7 +132,7 @@ class PrefUtils {
   }
 
   //
-  List<IntendedVisitModel> getMonthlyIntendedVisits() {
+  List<IntendedVisitModel> getIntendedVisits() {
     List<String>? list =
         _sharedPreferences!.getStringList("monthlyIntendedVisits");
     if (list == null) {
@@ -148,7 +148,7 @@ class PrefUtils {
 
   //
   addNewIntendedVisit(IntendedVisitModel intendedVisitModel) async {
-    List<IntendedVisitModel> list = getMonthlyIntendedVisits();
+    List<IntendedVisitModel> list = getIntendedVisits();
     int index = list.indexWhere((item) {
       return intendedVisitModel.stringDate == item.stringDate;
     });
@@ -170,7 +170,7 @@ class PrefUtils {
   }
 
   removeIntendedVisit(String isoDate) async {
-    List<IntendedVisitModel> list = getMonthlyIntendedVisits();
+    List<IntendedVisitModel> list = getIntendedVisits();
     list.removeWhere((item) {
       return item.stringDate == isoDate;
     });

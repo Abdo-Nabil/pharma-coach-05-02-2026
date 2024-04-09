@@ -1,5 +1,6 @@
 import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 import 'package:mina_s_application5/general_helper.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/vsit_model.dart';
 
 import '../models/home_item_model.dart';
@@ -8,14 +9,8 @@ import 'package:mina_s_application5/core/app_export.dart';
 
 // ignore: must_be_immutable
 class HomeItemWidget extends StatelessWidget {
-  HomeItemWidget(
-    this.visitModel, {
-    Key? key,
-  }) : super(
-          key: key,
-        );
-
-  VisitModel visitModel;
+  final IntendedVisitModel intendedVisit;
+  HomeItemWidget(this.intendedVisit);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +35,7 @@ class HomeItemWidget extends StatelessWidget {
             // SizedBox(height: 300.v),
             Text(
               // homeItemModelObj.tareqFares!,
-              "${visitModel.rep.firstName}",
+              "${intendedVisit.repName}",
               // "${visitModel.rep.firstName} ${visitModel.rep.lastName}",
               style: CustomTextStyles.labelLargeSFProTextBluegray900,
             ),
@@ -57,7 +52,7 @@ class HomeItemWidget extends StatelessWidget {
                   padding: EdgeInsets.only(left: 2.h),
                   child: Text(
                     // homeItemModelObj.oneMillionTwoHundredFiftyTwoTh!,
-                    "${GeneralHelper.formatDateForDisplay1(GeneralHelper.getDateTimeFromApiVisitTime(visitModel.visitTime))}",
+                    "${GeneralHelper.formatDateForDisplay1(GeneralHelper.getDateTimeFromApiVisitTime(intendedVisit.stringDate))}",
                     style: CustomTextStyles.bodySmall_1,
                   ),
                 ),

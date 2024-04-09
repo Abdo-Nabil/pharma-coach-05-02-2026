@@ -66,7 +66,7 @@ class CalendarCubit extends Cubit<CalendarState> {
     await Future.delayed(const Duration(milliseconds: 300));
     final sharedPref = PrefUtils();
     List<IntendedVisitModel> intendedVisits =
-        await sharedPref.getMonthlyIntendedVisits();
+        await sharedPref.getIntendedVisits();
     meetings = <Meeting>[];
     for (int i = 0; i < intendedVisits.length; i++) {
       meetings.add(
