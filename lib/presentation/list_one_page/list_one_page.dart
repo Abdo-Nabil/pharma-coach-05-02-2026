@@ -112,7 +112,6 @@ class ListOnePageState extends State<ListOnePage>
                       final visitIdIfFound =
                           BlocProvider.of<ListTabContainerCubit>(context)
                               .getVisitId(locations[index].id!);
-                      GeneralData.selectedVisitId = visitIdIfFound;
                       return ListoneItemWidget(
                         locations[index],
                         isPm: true,

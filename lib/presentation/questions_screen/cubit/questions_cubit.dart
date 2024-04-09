@@ -44,13 +44,14 @@ class QuestionsCubit extends Cubit<QuestionsState> {
     emit(QuestionsSuccess());
   }
 
-  Future<bool> submitQuestionAnswers() async {
+  Future<bool> submitQuestionAnswers(int visitId) async {
     bool isSend = false;
     //
     final answerModel = AnswerModel(
-        visitId: GeneralData.selectedVisitId,
-        repId: GeneralData.selectedRepId,
-        answers: answers);
+      visitId: visitId,
+      repId: GeneralData.selectedRepId,
+      answers: answers,
+    );
     isSend = await apiClient.submitQuestionAnswers(answerModel);
     return isSend;
   }

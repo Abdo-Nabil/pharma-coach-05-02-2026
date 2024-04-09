@@ -47,6 +47,7 @@ class QuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<QuestionsScreen> {
   //
   late String questionType;
+  late int visitId;
   late String medicalRepName;
 
   //
@@ -54,6 +55,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   void didChangeDependencies() {
     final routeArgs = ModalRoute.of(context)!.settings.arguments as Map;
     questionType = routeArgs['type'];
+    visitId = routeArgs['visitId'];
     // medicalRepName = routeArgs['medicalRepName'];
     BlocProvider.of<QuestionsCubit>(context)
         .getQuestionCategories(questionType);
@@ -198,7 +200,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         ProgressDialogUtils.showProgressDialog(isCancellable: false);
         //
         final isSuccess = await BlocProvider.of<QuestionsCubit>(context)
-            .submitQuestionAnswers();
+            .submitQuestionAnswers(visitId);
         //
         ProgressDialogUtils.hideProgressDialog();
         ProgressDialogUtils.showSubmitSuccessDialog(context);
@@ -259,6 +261,7 @@ class _QuestionItemState extends State<QuestionItem>
             ),
             decoration: AppDecoration.fillBlue.copyWith(
               borderRadius: BorderRadiusStyle.roundedBorder10,
+              color: Colors.white,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

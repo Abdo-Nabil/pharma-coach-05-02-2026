@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'bloc/team_analytics_bloc.dart';
 
-enum DateFilter { day, month, year }
+enum DateFilter { day, month, year, quarter }
 
 class TeamAnalyticsScreen extends StatefulWidget {
   TeamAnalyticsScreen({Key? key})
@@ -41,6 +41,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
       text: GeneralHelper.formatDateForDisplay1(DateTime.now()));
   DateFilter dateFilter = DateFilter.day;
   DateTime? pickedDate = DateTime.now();
+  int quarterNumber = 1;
   //
   @override
   void dispose() {
@@ -110,75 +111,111 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                       pickedDate!,
                       dateFilter.name,
                     );
+                    if (pickedDate!.month >= 1 && pickedDate!.month <= 3) {
+                      quarterNumber = 1;
+                    } else if (pickedDate!.month >= 4 &&
+                        pickedDate!.month <= 6) {
+                      quarterNumber = 2;
+                    } else if (pickedDate!.month >= 7 &&
+                        pickedDate!.month <= 9) {
+                      quarterNumber = 3;
+                    } else {
+                      quarterNumber = 4;
+                    }
                   }
                 },
               ),
               SizedBox(height: 16.v),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilterButton(
-                    label: 'Day',
-                    isSelected: dateFilter.name == DateFilter.day.name,
-                    onTap: () {
-                      setState(() {
-                        dateFilter = DateFilter.day;
-                      });
-                      BlocProvider.of<AnalysisCubit>(context).getAnalysis(
-                        pickedDate!,
-                        dateFilter.name,
-                      );
-                    },
+              Center(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      FilterButton(
+                        label: 'Day',
+                        isSelected: dateFilter.name == DateFilter.day.name,
+                        onTap: () {
+                          setState(() {
+                            dateFilter = DateFilter.day;
+                          });
+                          BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+                            pickedDate!,
+                            dateFilter.name,
+                          );
+                        },
+                      ),
+                      FilterButton(
+                        label: 'Month',
+                        isSelected: dateFilter.name == DateFilter.month.name,
+                        onTap: () {
+                          setState(() {
+                            dateFilter = DateFilter.month;
+                          });
+                          BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+                            pickedDate!,
+                            dateFilter.name,
+                          );
+                        },
+                      ),
+                      FilterButton(
+                        label: 'Quarter',
+                        isSelected: dateFilter.name == DateFilter.quarter.name,
+                        onTap: () {
+                          setState(() {
+                            dateFilter = DateFilter.quarter;
+                          });
+                          BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+                            pickedDate!,
+                            dateFilter.name,
+                          );
+                        },
+                      ),
+                      FilterButton(
+                        label: 'Year',
+                        isSelected: dateFilter.name == DateFilter.year.name,
+                        onTap: () {
+                          setState(() {
+                            dateFilter = DateFilter.year;
+                          });
+                          BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+                            pickedDate!,
+                            dateFilter.name,
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                  FilterButton(
-                    label: 'Month',
-                    isSelected: dateFilter.name == DateFilter.month.name,
-                    onTap: () {
-                      setState(() {
-                        dateFilter = DateFilter.month;
-                      });
-                      BlocProvider.of<AnalysisCubit>(context).getAnalysis(
-                        pickedDate!,
-                        dateFilter.name,
-                      );
-                    },
-                  ),
-                  FilterButton(
-                    label: 'Year',
-                    isSelected: dateFilter.name == DateFilter.year.name,
-                    onTap: () {
-                      setState(() {
-                        dateFilter = DateFilter.year;
-                      });
-                      BlocProvider.of<AnalysisCubit>(context).getAnalysis(
-                        pickedDate!,
-                        dateFilter.name,
-                      );
-                    },
-                  ),
-                ],
+                ),
               ),
               SizedBox(height: 16.v),
-              SizedBox(
+              Container(
+                decoration: AppDecoration.fillBlue100.copyWith(
+                  borderRadius: BorderRadiusStyle.roundedBorder7,
+                ),
                 width: double.infinity,
-                child: DropdownButton<int>(
-                  hint: Text("Chose medical rep"),
-                  isExpanded: true,
-                  value: null,
-                  onChanged: (int? newValue) {
-                    setState(() {
-                      selectedRepId = newValue!;
-                    });
-                    debugPrint("$selectedRepId");
-                  },
-                  items: BlocProvider.of<AnalysisCubit>(context, listen: true)
-                      .reps
-                      .map<DropdownMenuItem<int>>((option) {
-                    return DropdownMenuItem<int>(
-                      value: option.id,
-                      child: Text(option.username),
-                    );
-                  }).toList(),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    menuMaxHeight: 300.v,
+                    hint: Text("Chose medical rep"),
+                    isExpanded: true,
+                    padding: EdgeInsets.all(8),
+                    value: selectedRepId,
+                    onChanged: (int? newValue) {
+                      setState(() {
+                        selectedRepId = newValue!;
+                      });
+                      debugPrint("$selectedRepId");
+                    },
+                    items: BlocProvider.of<AnalysisCubit>(context, listen: true)
+                        .reps
+                        .map<DropdownMenuItem<int>>((option) {
+                      return DropdownMenuItem<int>(
+                        value: option.id,
+                        child: Text(option.username),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               Expanded(
@@ -342,10 +379,46 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      height: 36.v,
-      title: AppbarTitle(
-        text: "lbl_analytics".tr,
-        margin: EdgeInsets.only(left: 16.h),
+      // appTheme.blue100
+      height: 50.v,
+      title: Row(
+        children: [
+          AppbarTitle(
+            text: "lbl_analytics".tr,
+            margin: EdgeInsets.only(left: 16.h),
+          ),
+          Spacer(),
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 6.v, horizontal: 14.h),
+                decoration: AppDecoration.fillBlue100.copyWith(
+                  borderRadius: BorderRadiusStyle.roundedBorder7,
+                ),
+                child: Text(
+                  "Rep",
+                  style: CustomTextStyles.labelLargeSFProTextBlack900,
+                ),
+              ),
+              SizedBox(
+                width: 14.h,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 6.v, horizontal: 14.h),
+                decoration: AppDecoration.fillPurple.copyWith(
+                  borderRadius: BorderRadiusStyle.roundedBorder7,
+                ),
+                child: Text(
+                  "Team",
+                  style: CustomTextStyles.labelLargeSFProTextBlack900,
+                ),
+              ),
+              SizedBox(
+                width: 14.h,
+              ),
+            ],
+          )
+        ],
       ),
       // actions: [
       //   AppbarTrailingIconbuttonOne(
@@ -510,7 +583,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
     // width: (MediaQuery.of(context).size.width - 60.h) *
     //     (teamPercentage / 100),
     // debugPrint("ssssssssss ${teamPercentage / 100}");
-    debugPrint("################ ${teamPercentage}");
+    // debugPrint("################ ${teamPercentage}");
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 13.h,
@@ -646,6 +719,7 @@ class FilterButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 12),
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: BoxDecoration(
           color: isSelected ? appTheme.orange300 : Colors.grey[200],

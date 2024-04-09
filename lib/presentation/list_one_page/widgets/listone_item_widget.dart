@@ -53,6 +53,7 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget> {
               final isCreated =
                   await BlocProvider.of<ListTabContainerCubit>(context)
                       .creteVisit(
+                widget.visitId,
                 widget.locationModel.id!,
                 widget.locationModel.type,
               );
@@ -64,6 +65,7 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget> {
                 AppRoutes.questionsScreen,
                 arguments: {
                   'type': groupValue,
+                  'visitId': widget.visitId,
                   // 'medicalRepName': widget.locationModel.rep.firstName,
                 },
               );

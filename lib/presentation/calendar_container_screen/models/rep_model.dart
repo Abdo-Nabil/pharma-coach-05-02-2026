@@ -1,3 +1,6 @@
+import 'package:mina_s_application5/general_data.dart';
+import 'package:mina_s_application5/general_helper.dart';
+
 class RepModel {
   final int? id;
   final String firstName;

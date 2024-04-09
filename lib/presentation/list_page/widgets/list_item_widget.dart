@@ -63,10 +63,13 @@ class ListItemWidget extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     GeneralData.selectedRepId = visitModel.rep.id!;
-                    GeneralData.selectedVisitId = visitModel.id;
+                    // GeneralData.selectedVisitId = visitModel.id;
                     NavigatorService.pushNamed(
                       AppRoutes.questionsScreen,
-                      arguments: {'type': 'normal'},
+                      arguments: {
+                        'type': 'normal',
+                        'visitId': visitModel.id,
+                      },
                     );
                   },
                   child: Container(
@@ -121,10 +124,13 @@ class ListItemWidget extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     GeneralData.selectedRepId = visitModel.rep.id!;
-                    GeneralData.selectedVisitId = visitModel.id;
+                    // GeneralData.selectedVisitId = visitModel.id;
                     NavigatorService.pushNamed(
                       AppRoutes.questionsScreen,
-                      arguments: {'type': 'flash'},
+                      arguments: {
+                        'type': 'flash',
+                        'visitId': visitModel.id,
+                      },
                     );
                   },
                   child: Container(
