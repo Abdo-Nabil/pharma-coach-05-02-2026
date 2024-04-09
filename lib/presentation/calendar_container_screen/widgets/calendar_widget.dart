@@ -161,7 +161,7 @@ class CalendarWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.750,
+          height: MediaQuery.of(context).size.height * 0.45,
           child: SfCalendar(
             view: CalendarView.month,
             // dataSource: MeetingDataSource(_getDataSource()),
@@ -173,12 +173,12 @@ class CalendarWidget extends StatelessWidget {
                 BlocProvider.of<CalendarCubit>(context, listen: true).meetings),
             monthViewSettings: MonthViewSettings(
               appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
-              showAgenda: true,
-              agendaStyle: AgendaStyle(
-                dateTextStyle: Theme.of(context).textTheme.titleLarge,
-              ),
-              // agendaViewHeight: MediaQuery.of(context).size.height * 0.250,
-              agendaItemHeight: 90.v,
+              // showAgenda: true,
+              // agendaStyle: AgendaStyle(
+              //   dateTextStyle: Theme.of(context).textTheme.titleLarge,
+              // ),
+              // // agendaViewHeight: MediaQuery.of(context).size.height * 0.250,
+              // agendaItemHeight: 90.v,
               showTrailingAndLeadingDates: true,
               monthCellStyle: MonthCellStyle(
                 trailingDatesBackgroundColor: appTheme.gray300,
@@ -193,7 +193,7 @@ class CalendarWidget extends StatelessWidget {
             selectionDecoration: BoxDecoration(
               border: Border.all(color: appTheme.amber700, width: 2),
             ),
-            appointmentBuilder: (context, details) {
+            /* appointmentBuilder: (context, details) {
               return Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -241,7 +241,7 @@ class CalendarWidget extends StatelessWidget {
                   ],
                 ),
               );
-            },
+            },*/
 /*
                   monthCellBuilder: (BuildContext context, details) {
                     // Check if the current day has events
@@ -264,6 +264,104 @@ class CalendarWidget extends StatelessWidget {
 */
           ),
         ),
+        SizedBox(
+          height: 14.h,
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.345,
+          child: ListView.separated(
+            itemCount: BlocProvider.of<CalendarCubit>(context)
+                .everyRepIntendedVisits
+                .length,
+            separatorBuilder: (context, index) {
+              return SizedBox(height: 6.v);
+            },
+            itemBuilder: (context, index) {
+              final everyRepIntendedVisits =
+                  BlocProvider.of<CalendarCubit>(context, listen: true)
+                      .everyRepIntendedVisits;
+              return Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.h),
+                ),
+                // child: Text(details.appointments.first.eventName.toString()),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                everyRepIntendedVisits[index][0].repName,
+                                style: TextStyle(
+                                  fontSize: 17.fSize,
+                                  color: appTheme.black900,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 4.h,
+                              ),
+                              CircleAvatar(
+                                radius: 10.h,
+                                child: Text(
+                                  everyRepIntendedVisits[index]
+                                      .length
+                                      .toString(),
+                                  style: TextStyle(
+                                    fontSize: 12.fSize,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 4.v),
+                          Row(
+                            children: List.generate(
+                              everyRepIntendedVisits[index].length,
+                              (i) {
+                                return Expanded(
+                                  child: Text(
+                                    GeneralHelper.formatFromApiToDisplay(
+                                        everyRepIntendedVisits[index][i]
+                                            .stringDate),
+                                    style: TextStyle(
+                                      fontSize: 15.fSize,
+                                      color: appTheme.gray500,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                          // .toString()
+
+                          // Text(DateFormat.yMd('ar').  .toString()),
+                        ],
+                      ),
+                    ),
+                    //TODO: may be we might use it
+                    /*InkWell(
+                onTap: () async {
+                  // BlocProvider.of<CalendarCubit>(context)
+                  //     .removeIntendedVisit(details.date);
+                },
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                ),
+              ),*/
+                  ],
+                ),
+              );
+            },
+          ),
+        )
       ],
     );
   }

@@ -95,7 +95,10 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                 text: isTeamToggled
                     ? "Show medical rep only"
                     : "Compare to team".tr,
-                buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+                // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+                buttonStyle: isTeamToggled
+                    ? CustomButtonStyles.fillPrimaryTL12
+                    : CustomButtonStyles.fillPink,
                 buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
                 onPressed: () {
                   isTeamToggled = !isTeamToggled;

@@ -6,6 +6,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../general_helper.dart';
+
 class PrefUtils {
   static SharedPreferences? _sharedPreferences;
 
@@ -144,6 +146,58 @@ class PrefUtils {
       }
       return temp;
     }
+  }
+
+  Future<List<IntendedVisitModel>> getThisWeekIntendedVisits() async {
+    final temp = DateTime.now();
+    final dateNow = DateTime(temp.year, temp.month, temp.day);
+    final dateAfter8Days = dateNow.add(Duration(days: 8));
+    //
+    List<IntendedVisitModel> intendedVisits = await getIntendedVisits();
+    intendedVisits = intendedVisits.where((visit) {
+      final visitDate = GeneralHelper.formatDateFromApi(visit.stringDate);
+      if (visitDate.isAtSameMomentAs(dateNow) ||
+          (visitDate.isBefore(dateAfter8Days) && visitDate.isAfter(dateNow))) {
+        return true;
+      }
+      return false;
+    }).toList();
+
+    intendedVisits.sort((a, b) {
+      return GeneralHelper.getDateTimeFromApiVisitTime(a.stringDate)
+          .compareTo(GeneralHelper.getDateTimeFromApiVisitTime(b.stringDate));
+    });
+    return intendedVisits;
+  }
+
+  List<IntendedVisitModel> _getThisWeekIntendedVisitsForRep(
+      int repId, List<IntendedVisitModel> list) {
+    //
+    final visitsForRep =
+        list.where((element) => element.repId == repId).toList();
+    return visitsForRep;
+  }
+
+  Future<List<int>> _getThisWeekRepsIds(List<IntendedVisitModel> visits) async {
+    List<int> reps = [];
+    for (int i = 0; i < visits.length; i++) {
+      if (!reps.contains(visits[i].repId)) {
+        reps.add(visits[i].repId);
+      }
+    }
+    return reps;
+  }
+
+  Future<List<List<IntendedVisitModel>>> getThisWeekVisitsForEveryRep() async {
+    final allVisits = await getThisWeekIntendedVisits();
+    List<List<IntendedVisitModel>> list = [];
+    //
+    final reps = await _getThisWeekRepsIds(allVisits);
+    for (int i = 0; i < reps.length; i++) {
+      final temp = _getThisWeekIntendedVisitsForRep(reps[i], allVisits);
+      list.add(temp);
+    }
+    return list;
   }
 
   //

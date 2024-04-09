@@ -44,7 +44,8 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
   void initState() {
     // BlocProvider.of<CalendarCubit>(context)
     //     .getMonthlyVisits(GeneralHelper.formatDateForApi(DateTime.now()));
-    BlocProvider.of<CalendarCubit>(context).getMonthlyIntendedVisits();
+    // BlocProvider.of<CalendarCubit>(context).getMonthlyIntendedVisits();
+    BlocProvider.of<CalendarCubit>(context).getData();
     super.initState();
   }
 

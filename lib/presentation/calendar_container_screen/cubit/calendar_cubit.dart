@@ -21,6 +21,7 @@ class CalendarCubit extends Cubit<CalendarState> {
   }) : super(CalendarInitial());
 
   List<Meeting> meetings = <Meeting>[];
+  List<List<IntendedVisitModel>> everyRepIntendedVisits = [];
 
   // getMedicalReps() async {
   //   // await Future.delayed(const Duration(seconds: 3));
@@ -62,6 +63,33 @@ class CalendarCubit extends Cubit<CalendarState> {
   //   emit(CalendarSuccess());
   // }
 
+  getData() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    final sharedPref = PrefUtils();
+    everyRepIntendedVisits = await sharedPref.getThisWeekVisitsForEveryRep();
+    //
+    await _getMonthlyIntendedVisits(sharedPref);
+    emit(CalendarSuccess());
+  }
+
+  _getMonthlyIntendedVisits(PrefUtils prefUtils) async {
+    List<IntendedVisitModel> intendedVisits =
+        await prefUtils.getIntendedVisits();
+    meetings = <Meeting>[];
+    for (int i = 0; i < intendedVisits.length; i++) {
+      meetings.add(
+        Meeting(
+          intendedVisits[i].repName,
+          DateTime.parse(intendedVisits[i].stringDate),
+          DateTime.parse(intendedVisits[i].stringDate),
+          appTheme.amber700,
+          true,
+        ),
+      );
+    }
+  }
+
+/*
   getMonthlyIntendedVisits() async {
     await Future.delayed(const Duration(milliseconds: 300));
     final sharedPref = PrefUtils();
@@ -89,6 +117,7 @@ class CalendarCubit extends Cubit<CalendarState> {
     // return meetings;
     emit(CalendarSuccess());
   }
+*/
 
   //
   removeIntendedVisit(DateTime date) async {
@@ -97,7 +126,7 @@ class CalendarCubit extends Cubit<CalendarState> {
     String stringDate = GeneralHelper.formatDateForApi(date);
     final sharedPref = PrefUtils();
     await sharedPref.removeIntendedVisit(stringDate);
-    getMonthlyIntendedVisits();
+    _getMonthlyIntendedVisits(sharedPref);
     emit(CalendarSuccess());
   }
 }

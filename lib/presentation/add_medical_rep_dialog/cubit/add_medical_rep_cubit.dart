@@ -61,7 +61,8 @@ class AddMedicalRepCubit extends Cubit<AddMedicalRepState> {
     emit(AddMedicalRepLoading());
     final sharedPref = PrefUtils();
     await sharedPref.addNewIntendedVisit(intendedVisitModel);
-    await calendarCubit.getMonthlyIntendedVisits();
+    // await calendarCubit.getMonthlyIntendedVisits();
+    await calendarCubit.getData();
     emit(FinishSubmitState());
   }
 }

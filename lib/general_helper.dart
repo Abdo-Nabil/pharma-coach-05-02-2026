@@ -14,6 +14,10 @@ class GeneralHelper {
     return DateFormat("EEE d-M-yyyy").format(date);
   }
 
+  static String formatFromApiToDisplay(String date) {
+    return formatDateForDisplay1(formatDateFromApi(date));
+  }
+
   static DateTime getDateTimeFromApiVisitTime(String visitTime) {
     return DateTime.parse(visitTime.split(' ').first);
   }
