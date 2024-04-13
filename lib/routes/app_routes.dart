@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../presentation/on_boarding_screen/on_boarding_screen.dart';
+import '../presentation/questions_screen/first_question/first_question_screen.dart';
+import '../presentation/questions_screen/last_question/last_question_screen.dart';
 import '../presentation/sign_in_propsal_one_screen/sign_in_propsal_one_screen.dart';
 import '../presentation/home_container_screen/home_container_screen.dart';
 import '../presentation/list_tab_container_screen/list_tab_container_screen.dart';
@@ -27,6 +29,10 @@ class AppRoutes {
 
   static const String questionsScreen = '/questions_screen';
 
+  static const String firstQuestionsScreen = '/first_question_screen';
+
+  static const String lastQuestionsScreen = '/last_question_screen';
+
   static const String finalQuestScreen = '/final_quest_screen';
 
   static const String calendarContainerScreen = '/calendar_container_screen';
@@ -48,6 +54,8 @@ class AppRoutes {
         homeContainerScreen: HomeContainerScreen.builder,
         listTabContainerScreen: ListTabContainerScreen.builder,
         questionsScreen: QuestionsScreen.builder,
+        firstQuestionsScreen: FirstQuestionScreen.builder,
+        lastQuestionsScreen: (_) => LastQuestionScreen(),
         finalQuestScreen: FinalQuestScreen.builder,
         calendarContainerScreen: CalendarContainerScreen.builder,
         analyticsTabContainerScreen: AnalyticsTabContainerScreen.builder,

@@ -6,6 +6,7 @@ import 'package:mina_s_application5/general_data.dart';
 
 import '../../general_cubit/general_cubit.dart';
 import '../../presentation/team_analytics_screen/team_analytics_screen.dart';
+import '../../widgets/custom_elevated_button.dart';
 
 class ProgressDialogUtils {
   static bool isProgressVisible = false;
@@ -203,5 +204,143 @@ class ProgressDialogUtils {
       //   ),
       // ),
     )..show();
+  }
+
+  static showEndOfTheDaySuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 313.h,
+              padding: EdgeInsets.symmetric(
+                horizontal: 13.h,
+                vertical: 14.v,
+              ),
+              decoration: AppDecoration.fillOnPrimary.copyWith(
+                borderRadius: BorderRadiusStyle.roundedBorder17,
+              ),
+              child: Material(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomImageView(
+                      imagePath: ImageConstant.imgXBlueGray900,
+                      height: 24.adaptSize,
+                      width: 24.adaptSize,
+                      alignment: Alignment.centerRight,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    SizedBox(height: 9.v),
+                    CustomImageView(
+                      imagePath: ImageConstant.imgVector,
+                      width: 112.h,
+                    ),
+                    SizedBox(height: 16.v),
+                    Text(
+                      "lbl_thank_you".tr,
+                      style: CustomTextStyles.titleLargeBluegray900,
+                    ),
+                    SizedBox(height: 22.v),
+                    Text(
+                      "lbl_success".tr.toUpperCase(),
+                      style: CustomTextStyles.titleLargeAmber700,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static showNextStepDialog(BuildContext context,
+      {required Function onNextVisit, required Function onEndOfTheDay}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 313.h,
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.h,
+                vertical: 12.v,
+              ),
+              decoration: AppDecoration.fillOnPrimary.copyWith(
+                borderRadius: BorderRadiusStyle.roundedBorder17,
+              ),
+              child: Material(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 57.h,
+                        right: 2.h,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 21.v),
+                            child: Text(
+                              "msg_choose_your_next".tr,
+                              style: CustomTextStyles.titleSmallBluegray900,
+                            ),
+                          ),
+                          Spacer(),
+                          CustomImageView(
+                            imagePath: ImageConstant.imgXBlueGray900,
+                            height: 24.adaptSize,
+                            width: 24.adaptSize,
+                            margin: EdgeInsets.only(
+                              left: 31.h,
+                              bottom: 15.v,
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 19.v),
+                    CustomElevatedButton(
+                      text: "lbl_next_visit".tr,
+                      margin: EdgeInsets.only(right: 2.h),
+                      onPressed: () {
+                        onNextVisit();
+                      },
+                    ),
+                    SizedBox(height: 10.v),
+                    CustomElevatedButton(
+                      text: "lbl_end_of_the_day".tr,
+                      margin: EdgeInsets.only(right: 2.h),
+                      buttonStyle: CustomButtonStyles.fillPrimary,
+                      onPressed: () {
+                        onEndOfTheDay();
+                      },
+                    ),
+                    SizedBox(height: 21.v),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

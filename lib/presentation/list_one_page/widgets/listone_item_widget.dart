@@ -61,15 +61,29 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget> {
               return;
             }
             if (!widget.isQuestionSubmitted) {
-              NavigatorService.pushNamed(
-                AppRoutes.questionsScreen,
-                arguments: {
-                  'type': groupValue,
-                  'visitId': widget.visitId,
-                  // 'medicalRepName': widget.locationModel.rep.firstName,
-                },
-              );
-              return;
+              final pref = PrefUtils();
+              final result = await pref.getFirstCategoryAnswer();
+              if (result == null) {
+                NavigatorService.pushNamed(
+                  AppRoutes.firstQuestionsScreen,
+                  arguments: {
+                    'type': groupValue,
+                    'visitId': widget.visitId,
+                    // 'medicalRepName': widget.locationModel.rep.firstName,
+                  },
+                );
+                return;
+              } else {
+                NavigatorService.pushNamed(
+                  AppRoutes.questionsScreen,
+                  arguments: {
+                    'type': groupValue,
+                    'visitId': widget.visitId,
+                    // 'medicalRepName': widget.locationModel.rep.firstName,
+                  },
+                );
+                return;
+              }
             }
           },
           child: Container(

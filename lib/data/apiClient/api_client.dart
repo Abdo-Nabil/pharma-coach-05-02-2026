@@ -357,6 +357,7 @@ class ApiClient {
       );
       if (_isSuccessCall(response)) {
         //
+        log("${response.data}");
         debugPrint("Visit created successfully");
         isCreated = true;
         return isCreated;
@@ -457,7 +458,7 @@ class ApiClient {
       // rethrow;
     }
     //
-    await pref.saveSubmittedVisitId(answerModel.visitId);
+    // await pref.saveSubmittedVisitId(answerModel.visitId);
     //
     return isSend;
   }

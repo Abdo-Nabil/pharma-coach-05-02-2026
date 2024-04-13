@@ -24,7 +24,8 @@ class AnalysisModel {
     Map moddedMap = {};
     for (int i = 0; i < moddedMap.length; i++) {}
     map['reps'].forEach((key, value) {
-      moddedMap['$key'] = double.parse("${value.split('%').first}");
+      // moddedMap['$key'] = double.parse("${value.split('%').first}");
+      moddedMap['$key'] = value.toDouble();
     });
     //
     return AnalysisModel(

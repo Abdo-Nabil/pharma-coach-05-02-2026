@@ -9,6 +9,12 @@ class NavigatorService {
         ?.pushNamed(routeName, arguments: arguments);
   }
 
+  static Future<dynamic> pushReplacementNamed(String routeName,
+      {dynamic arguments}) async {
+    return navigatorKey.currentState
+        ?.pushReplacementNamed(routeName, arguments: arguments);
+  }
+
   static void goBack() {
     return navigatorKey.currentState?.pop();
   }

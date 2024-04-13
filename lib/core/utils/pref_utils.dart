@@ -4,9 +4,11 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
+import 'package:mina_s_application5/presentation/questions_screen/models/answer_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../general_helper.dart';
+import '../../presentation/questions_screen/models/question_answer_model.dart';
 
 class PrefUtils {
   static SharedPreferences? _sharedPreferences;
@@ -229,5 +231,51 @@ class PrefUtils {
       return item.stringDate == isoDate;
     });
     await _saveIntendedVisitsLocally(list);
+  }
+
+  /// Handling the question logic in 3 screens starts from here
+  setFirstCategoryAnswer(List<QuestionAnswerModel> answers) async {
+    await _sharedPreferences!.setString(
+        "firstCategoryDate", GeneralHelper.formatDateForApi(DateTime.now()));
+    List<Map<String, dynamic>> maps = [];
+    for (int i = 0; i < answers.length; i++) {
+      maps.add(answers[i].toMap());
+    }
+    await _sharedPreferences!.setString("firstCategory", json.encode(maps));
+  }
+
+  //This return a list of two question of the first category
+  List<Map<String, dynamic>>? getFirstCategoryAnswer() {
+    String? date = _sharedPreferences!.getString("firstCategoryDate");
+    if (date == null) {
+      return null;
+    } else {
+      if (date == GeneralHelper.formatDateForApi(DateTime.now())) {
+        final temp = _sharedPreferences!.getString("firstCategory")!;
+        List<dynamic> listOfMaps = json.decode(temp);
+        return listOfMaps.cast<Map<String, dynamic>>();
+      }
+      return null;
+    }
+  }
+
+  saveQuestionsBlockForSingleVisit(
+      int visitId, List<QuestionAnswerModel> answers) async {
+    List<Map<String, dynamic>> maps = [];
+    for (int i = 0; i < answers.length; i++) {
+      maps.add(answers[i].toMap());
+    }
+    //
+    debugPrint("@@@@@@@@ saved visit id $visitId");
+    await _sharedPreferences!.setString("$visitId", json.encode(maps));
+  }
+
+  getQuestionsBlockForSingleVisit(int visitId) {
+    final temp = _sharedPreferences!.getString("$visitId");
+    if (temp == null) {
+      return null;
+    }
+    List<dynamic> listOfMaps = json.decode(temp);
+    return listOfMaps.cast<Map<String, dynamic>>();
   }
 }
