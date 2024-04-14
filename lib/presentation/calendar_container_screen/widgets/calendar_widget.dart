@@ -148,6 +148,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
+import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/cubit/calendar_cubit.dart';
@@ -280,83 +281,85 @@ class CalendarWidget extends StatelessWidget {
               final everyRepIntendedVisits =
                   BlocProvider.of<CalendarCubit>(context, listen: true)
                       .everyRepIntendedVisits;
-              return Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.h),
-                ),
-                // child: Text(details.appointments.first.eventName.toString()),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                everyRepIntendedVisits[index][0].repName,
-                                style: TextStyle(
-                                  fontSize: 17.fSize,
-                                  color: appTheme.black900,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 4.h,
-                              ),
-                              CircleAvatar(
-                                radius: 10.h,
-                                child: Text(
-                                  everyRepIntendedVisits[index]
-                                      .length
-                                      .toString(),
+              return GestureDetector(
+                onTap: () {
+                  ProgressDialogUtils.showRemoveIntendedVisitsDialog(
+                      context,
+                      everyRepIntendedVisits[index],
+                      BlocProvider.of<CalendarCubit>(context));
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.h),
+                  ),
+                  // child: Text(details.appointments.first.eventName.toString()),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  everyRepIntendedVisits[index][0].repName,
                                   style: TextStyle(
-                                    fontSize: 12.fSize,
-                                    color: Colors.white,
+                                    fontSize: 17.fSize,
+                                    color: appTheme.black900,
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 4.v),
-                          Row(
-                            children: List.generate(
-                              everyRepIntendedVisits[index].length,
-                              (i) {
-                                return Expanded(
+                                SizedBox(
+                                  width: 4.h,
+                                ),
+                                CircleAvatar(
+                                  radius: 10.h,
                                   child: Text(
-                                    GeneralHelper.formatFromApiToDisplay(
-                                        everyRepIntendedVisits[index][i]
-                                            .stringDate),
+                                    everyRepIntendedVisits[index]
+                                        .length
+                                        .toString(),
                                     style: TextStyle(
-                                      fontSize: 15.fSize,
-                                      color: appTheme.gray500,
-                                      overflow: TextOverflow.ellipsis,
+                                      fontSize: 12.fSize,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                );
-                              },
+                                )
+                              ],
                             ),
-                          )
-                          // .toString()
+                            SizedBox(height: 4.v),
+                            Row(
+                              children: List.generate(
+                                everyRepIntendedVisits[index].length,
+                                (i) {
+                                  return Expanded(
+                                    child: Text(
+                                      GeneralHelper.formatFromApiToDisplay(
+                                          everyRepIntendedVisits[index][i]
+                                              .stringDate),
+                                      style: TextStyle(
+                                        fontSize: 15.fSize,
+                                        color: appTheme.gray500,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                            // .toString()
 
-                          // Text(DateFormat.yMd('ar').  .toString()),
-                        ],
+                            // Text(DateFormat.yMd('ar').  .toString()),
+                          ],
+                        ),
                       ),
-                    ),
-                    //TODO: may be we might use it
-                    /*InkWell(
-                onTap: () async {
-                  // BlocProvider.of<CalendarCubit>(context)
-                  //     .removeIntendedVisit(details.date);
-                },
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-              ),*/
-                  ],
+                      //TODO: may be we might use it
+                      Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

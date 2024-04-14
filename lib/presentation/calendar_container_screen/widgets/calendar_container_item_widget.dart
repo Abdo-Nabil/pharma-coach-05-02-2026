@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 
 // ignore: must_be_immutable
-class CalendarcontainerItemWidget extends StatelessWidget {
-  CalendarcontainerItemWidget(
-    this.calendarcontainerItemModelObj, {
+class CalendarContainerItemWidget extends StatelessWidget {
+  CalendarContainerItemWidget(
+    this.calendarContainerItemModelObj, {
     Key? key,
   }) : super(
           key: key,
         );
 
-  CalendarcontainerItemModel calendarcontainerItemModelObj;
+  CalendarcontainerItemModel calendarContainerItemModelObj;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class CalendarcontainerItemWidget extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      calendarcontainerItemModelObj.ahmedEssam!,
+                      calendarContainerItemModelObj.ahmedEssam!,
                       style: CustomTextStyles.bodySmallBlack90012,
                     ),
                     Container(
@@ -49,7 +49,7 @@ class CalendarcontainerItemWidget extends StatelessWidget {
                         borderRadius: BorderRadiusStyle.roundedBorder7,
                       ),
                       child: Text(
-                        calendarcontainerItemModelObj.widget!,
+                        calendarContainerItemModelObj.widget!,
                         style: CustomTextStyles.bodySmallOnPrimary,
                       ),
                     ),
@@ -62,11 +62,11 @@ class CalendarcontainerItemWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        calendarcontainerItemModelObj.sun!,
+                        calendarContainerItemModelObj.sun!,
                         style: CustomTextStyles.bodySmallGray500,
                       ),
                       Text(
-                        calendarcontainerItemModelObj.th!,
+                        calendarContainerItemModelObj.th!,
                         style: CustomTextStyles.bodySmallGray500,
                       ),
                     ],

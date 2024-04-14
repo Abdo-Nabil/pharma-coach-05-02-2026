@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:mina_s_application5/categories_data.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/general_data.dart';
+import 'package:mina_s_application5/general_helper.dart';
 
 import '../../general_cubit/general_cubit.dart';
+import '../../presentation/calendar_container_screen/cubit/calendar_cubit.dart';
+import '../../presentation/calendar_container_screen/intended_visit_model.dart';
 import '../../presentation/team_analytics_screen/team_analytics_screen.dart';
 import '../../widgets/custom_elevated_button.dart';
 
@@ -339,6 +342,78 @@ class ProgressDialogUtils {
               ),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  static showRemoveIntendedVisitsDialog(BuildContext context,
+      List<IntendedVisitModel> list, CalendarCubit calendarCubit) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusStyle.roundedBorder17,
+          ),
+          title: Text(
+            list[0].repName,
+            style: TextStyle(
+              fontSize: 17.fSize,
+              color: appTheme.black900,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: List.generate(
+              list.length,
+              (index) {
+                return ListTile(
+                  title: Text(
+                    GeneralHelper.formatFromApiToDisplay(
+                        list[index].stringDate),
+                    style: TextStyle(
+                      fontSize: 15.fSize,
+                      color: appTheme.black900.withOpacity(0.60),
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onTap: () async {
+                    // await BlocProvider.of<CalendarCubit>(context)
+                    await calendarCubit.removeIntendedVisit(list[index]);
+                    Navigator.pop(context);
+                  },
+                );
+
+/*
+              return Padding(
+                padding: EdgeInsets.fromLTRB(8.0.h, 0.0, 8.v, 20.v),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        list[index].stringDate,
+                        style: TextStyle(
+                          fontSize: 15.fSize,
+                          color: appTheme.black900,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                  ],
+                ),
+              );
+*/
+              },
+            ),
+          ),
         );
       },
     );

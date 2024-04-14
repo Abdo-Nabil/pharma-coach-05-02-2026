@@ -120,13 +120,13 @@ class CalendarCubit extends Cubit<CalendarState> {
 */
 
   //
-  removeIntendedVisit(DateTime date) async {
+  removeIntendedVisit(IntendedVisitModel intendedVisitModel) async {
     emit(CalendarLoading());
-    // await Future.delayed(const Duration(seconds: 3));
-    String stringDate = GeneralHelper.formatDateForApi(date);
     final sharedPref = PrefUtils();
-    await sharedPref.removeIntendedVisit(stringDate);
-    _getMonthlyIntendedVisits(sharedPref);
+    await sharedPref.removeIntendedVisit(intendedVisitModel);
+    everyRepIntendedVisits = await sharedPref.getThisWeekVisitsForEveryRep();
+    //
+    await _getMonthlyIntendedVisits(sharedPref);
     emit(CalendarSuccess());
   }
 }

@@ -1,5 +1,6 @@
 //ignore: unused_import
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
@@ -217,6 +218,16 @@ class PrefUtils {
     await _saveIntendedVisitsLocally(list);
   }
 
+  removeIntendedVisit(IntendedVisitModel intendedVisitModel) async {
+    List<IntendedVisitModel> list = getIntendedVisits();
+    list.removeWhere((IntendedVisitModel element) {
+      return (element.repName == intendedVisitModel.repName &&
+          element.repId == intendedVisitModel.repId &&
+          element.stringDate == intendedVisitModel.stringDate);
+    });
+    await _saveIntendedVisitsLocally(list);
+  }
+
   _saveIntendedVisitsLocally(List<IntendedVisitModel> list) async {
     List<String> temp = [];
     for (int i = 0; i < list.length; i++) {
@@ -225,13 +236,13 @@ class PrefUtils {
     await _sharedPreferences!.setStringList("monthlyIntendedVisits", temp);
   }
 
-  removeIntendedVisit(String isoDate) async {
+/*  removeIntendedVisit(String isoDate) async {
     List<IntendedVisitModel> list = getIntendedVisits();
     list.removeWhere((item) {
       return item.stringDate == isoDate;
     });
     await _saveIntendedVisitsLocally(list);
-  }
+  }*/
 
   /// Handling the question logic in 3 screens starts from here
   setFirstCategoryAnswer(List<QuestionAnswerModel> answers) async {
