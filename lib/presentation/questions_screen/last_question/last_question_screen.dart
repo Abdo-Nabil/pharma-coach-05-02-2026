@@ -3,8 +3,10 @@ import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/presentation/questions_screen/cubit/questions_cubit.dart';
 import 'package:mina_s_application5/presentation/questions_screen/last_question/last_build_category_with_questions.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/team_analytics_screen.dart';
 
 import '../../../core/utils/size_utils.dart';
+import '../../../general_cubit/general_cubit.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
@@ -137,8 +139,14 @@ class LastQuestionScreen extends StatelessWidget {
                             .submitEndOfTheDay();
                         //
                         ProgressDialogUtils.hideProgressDialog();
-                        ProgressDialogUtils.showEndOfTheDaySuccessDialog(
-                            context);
+
+                        ///
+                        Navigator.pop(context);
+                        BlocProvider.of<GeneralCubit>(context)
+                            .setBottomNavIndex(3);
+                        // ProgressDialogUtils.showEndOfTheDaySuccessDialog(
+                        //     context);
+                        //
                       } else {
                         ProgressDialogUtils.showWarningDialog(context,
                             'Keep Note!', 'Some questions were not answered');

@@ -3,6 +3,7 @@ import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/vsit_model.dart';
 
+import '../../list_tab_container_screen/list_tab_container_screen.dart';
 import '../models/home_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
@@ -16,7 +17,15 @@ class HomeItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        NavigatorService.pushNamed(AppRoutes.listTabContainerScreen);
+        if (intendedVisit.stringDate ==
+            GeneralHelper.formatDateForApi(DateTime.now())) {
+          BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(1);
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) {
+              return ListTabContainerScreen.builder(context);
+            }),
+          );
+        }
       },
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -25,6 +34,10 @@ class HomeItemWidget extends StatelessWidget {
         ),
         decoration: AppDecoration.fillOnPrimary.copyWith(
           borderRadius: BorderRadiusStyle.roundedBorder10,
+          border: (intendedVisit.stringDate ==
+                  GeneralHelper.formatDateForApi(DateTime.now()))
+              ? Border.all(color: appTheme.orange300)
+              : null,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

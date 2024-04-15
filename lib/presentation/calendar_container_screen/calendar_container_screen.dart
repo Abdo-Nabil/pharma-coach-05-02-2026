@@ -27,7 +27,11 @@ class CalendarContainerScreen extends StatefulWidget {
 
   static Widget builder(BuildContext context) {
     return BlocProvider<CalendarCubit>(
-      create: (context) => GeneralData.calendarCubit,
+      create: (context) {
+        GeneralData.calendarCubit = CalendarCubit(apiClient: ApiClient());
+        return GeneralData.calendarCubit;
+      },
+      // create: (context) => CalendarCubit(apiClient: ApiClient()),
       child: CalendarContainerScreen(),
     );
   }

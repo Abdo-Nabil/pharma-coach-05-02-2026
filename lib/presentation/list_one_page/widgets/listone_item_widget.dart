@@ -3,6 +3,7 @@ import 'package:mina_s_application5/presentation/calendar_container_screen/model
 import 'package:mina_s_application5/presentation/list_tab_container_screen/cubit/list_tap_container_cubit.dart';
 import 'package:mina_s_application5/widgets/custom_elevated_button.dart';
 
+import '../../../general_cubit/general_cubit.dart';
 import '../../../general_data.dart';
 import '../../../widgets/custom_search_view.dart';
 import '../models/listone_item_model.dart';
@@ -35,6 +36,15 @@ class ListoneItemWidget extends StatefulWidget {
 class _ListoneItemWidgetState extends State<ListoneItemWidget> {
   //
   String groupValue = "normal";
+  //
+  @override
+  void initState() {
+    widget.isPm
+        ? BlocProvider.of<GeneralCubit>(context).setSelectedIndexForListPage(1)
+        : BlocProvider.of<GeneralCubit>(context).setSelectedIndexForListPage(0);
+    super.initState();
+  }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -91,13 +101,16 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget> {
               horizontal: 12.h,
               vertical: 8.v,
             ),
-            decoration: widget.isPm
-                ? AppDecoration.fillBlue.copyWith(
-                    borderRadius: BorderRadiusStyle.roundedBorder10,
-                  )
-                : AppDecoration.fillOnPrimary.copyWith(
-                    borderRadius: BorderRadiusStyle.roundedBorder10,
-                  ),
+            decoration: AppDecoration.fillOnPrimary.copyWith(
+              borderRadius: BorderRadiusStyle.roundedBorder10,
+            ),
+            // decoration: widget.isPm
+            //     ? AppDecoration.fillBlue.copyWith(
+            //         borderRadius: BorderRadiusStyle.roundedBorder10,
+            //       )
+            //     : AppDecoration.fillOnPrimary.copyWith(
+            //         borderRadius: BorderRadiusStyle.roundedBorder10,
+            //       ),
             child: Padding(
               padding: EdgeInsets.only(top: 3.v),
               child: Column(

@@ -106,8 +106,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
           );
         }),
         onTap: (index) {
-          BlocProvider.of<GeneralCubit>(context).bottomNavIndex = index;
-          widget.onChanged?.call(bottomMenuList[index].type);
+          BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(index);
+          // widget.onChanged?.call(bottomMenuList[index].type);
           setState(() {});
         },
       ),

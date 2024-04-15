@@ -1,6 +1,7 @@
 import 'package:mina_s_application5/presentation/list_one_page/widgets/listone_item_widget.dart';
 import 'package:mina_s_application5/presentation/list_tab_container_screen/cubit/list_tap_container_cubit.dart';
 import 'package:mina_s_application5/widgets/custom_search_view.dart';
+import '../../general_cubit/general_cubit.dart';
 import '../../general_data.dart';
 import 'widgets/list_item_widget.dart';
 import 'models/list_item_model.dart';

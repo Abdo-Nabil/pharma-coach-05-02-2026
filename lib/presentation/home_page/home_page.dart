@@ -1,5 +1,6 @@
 import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/presentation/home_page/cubit/home_cubit.dart';
 import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
@@ -124,10 +125,7 @@ class _HomePageState extends State<HomePage> {
               Spacer(),
               AppbarTrailingIconbutton(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return CalendarContainerScreen.builder(context);
-                  }));
-                  // NavigatorService.pushNamed(AppRoutes.calendarCotainerScreen);
+                  BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(2);
                 },
                 imagePath: ImageConstant.imgCalendarText,
                 margin: EdgeInsets.only(

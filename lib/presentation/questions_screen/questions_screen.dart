@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 import 'package:mina_s_application5/presentation/final_quest_screen/final_quest_screen.dart';
 import 'package:mina_s_application5/presentation/questions_screen/cubit/questions_cubit.dart';
 import 'package:mina_s_application5/presentation/questions_screen/last_question/last_question_screen.dart';
@@ -191,6 +192,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   /// Section Widget
   Widget _buildSubmit(BuildContext context) {
+    // just to reload the index at 1
+    BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(0);
     return CustomElevatedButton(
       text: "lbl_submit".tr,
       onPressed: () async {
@@ -203,13 +206,15 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
         ProgressDialogUtils.showNextStepDialog(
           context,
-          onNextVisit: () {
+          onNextVisit: () async {
             BlocProvider.of<QuestionsCubit>(context)
                 .submitQuestionAnswersLocally(visitId);
             Navigator.pop(context);
-            NavigatorService.pushReplacementNamed(
-              AppRoutes.listTabContainerScreen,
-            );
+            Navigator.pop(context);
+            BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(1);
+            // NavigatorService.pushReplacementNamed(
+            //   AppRoutes.listTabContainerScreen,
+            // );
           },
           onEndOfTheDay: () {
             //

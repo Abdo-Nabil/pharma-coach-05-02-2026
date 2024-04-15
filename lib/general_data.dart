@@ -7,7 +7,7 @@ class GeneralData {
   static String? userName;
   static String? token;
   static DateTime selectedDate = DateTime.now();
-  static CalendarCubit calendarCubit = CalendarCubit(apiClient: ApiClient());
+  static late CalendarCubit calendarCubit;
   static late int selectedRepId;
   // static late int selectedVisitId;
 }

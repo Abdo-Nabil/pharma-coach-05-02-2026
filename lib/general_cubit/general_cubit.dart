@@ -6,8 +6,14 @@ part 'general_state.dart';
 class GeneralCubit extends Cubit<GeneralState> {
   GeneralCubit() : super(GeneralInitial());
 
-  int bottomNavIndex = 0;
+  int selectedIndexForListPage = 0;
+  setSelectedIndexForListPage(value) {
+    selectedIndexForListPage = value;
+    emit(GeneralInitial());
+  }
 
+  //
+  int bottomNavIndex = 0;
   setBottomNavIndex(value) {
     bottomNavIndex = value;
     emit(GeneralInitial());
