@@ -95,7 +95,7 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
     return createdVisitsLocationIds.contains(locationId);
   }
 
-  Future<bool> creteVisit(int visitId, int locationId, String type) async {
+  Future<int> creteVisit(int locationId, String type) async {
     emit(ListTapContainerLoading());
 
     final shift = type == "Hospital" ? "am" : "pm";

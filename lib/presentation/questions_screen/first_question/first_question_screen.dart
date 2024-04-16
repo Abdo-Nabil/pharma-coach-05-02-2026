@@ -30,7 +30,23 @@ class _FirstQuestionScreenState extends State<FirstQuestionScreen> {
   //
   late String questionType;
   late int visitId;
+  late int locationId;
+  late String locationType;
   late String medicalRepName;
+
+  //
+  handleScreenData() async {
+    if (visitId == -1) {
+      //we need to create visit first
+      final theVisitId = await BlocProvider.of<FirstQuestionCubit>(context)
+          .getQuestionCategoriesAndCreateVisit(
+              questionType, locationId, locationType);
+      visitId = theVisitId;
+    } else {
+      BlocProvider.of<FirstQuestionCubit>(context)
+          .getQuestionCategoriesForAlreadyCreatedVisit(questionType);
+    }
+  }
 
   //
   @override
@@ -38,9 +54,10 @@ class _FirstQuestionScreenState extends State<FirstQuestionScreen> {
     final routeArgs = ModalRoute.of(context)!.settings.arguments as Map;
     questionType = routeArgs['type'];
     visitId = routeArgs['visitId'];
+    locationId = routeArgs['locationId'];
+    locationType = routeArgs['locationType'];
     // medicalRepName = routeArgs['medicalRepName'];
-    BlocProvider.of<FirstQuestionCubit>(context)
-        .getQuestionCategories(questionType);
+    handleScreenData();
     super.didChangeDependencies();
   }
 

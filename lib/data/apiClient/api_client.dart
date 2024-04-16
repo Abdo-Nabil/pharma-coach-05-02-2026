@@ -333,7 +333,7 @@ class ApiClient {
     }
   }
 
-  Future<bool> createVisit(
+  Future<int> createVisit(
       int repId, int locationId, String visitTime, String shift) async {
     bool isCreated = false;
     Map<String, String> headers = {
@@ -360,7 +360,7 @@ class ApiClient {
         log("${response.data}");
         debugPrint("Visit created successfully");
         isCreated = true;
-        return isCreated;
+        return response.data["data"]["id"];
       } else {
         throw response.data != null
             ? RepModel.fromMap(response.data)
@@ -372,7 +372,7 @@ class ApiClient {
         error,
         stackTrace: stackTrace,
       );
-      return isCreated;
+      return -1;
       rethrow;
     }
   }

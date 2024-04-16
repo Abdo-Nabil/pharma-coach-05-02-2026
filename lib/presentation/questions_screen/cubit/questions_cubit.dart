@@ -55,14 +55,39 @@ class QuestionsCubit extends Cubit<QuestionsState> {
   }
 
   //
-  getQuestionCategories(String type) async {
-    emit(QuestionsLoading());
-    questionsCategories = await apiClient.getQuestionCategories(type);
+  _createVisit(int locationId, String type) async {
+    final shift = type == "Hospital" ? "am" : "pm";
+    final visitId = await apiClient.createVisit(
+      GeneralData.selectedRepId,
+      locationId,
+      GeneralHelper.formatDateForApi(DateTime.now()),
+      shift,
+    );
+    return visitId;
+  }
+
+  _getQuestions(String questionType) async {
+    questionsCategories = await apiClient.getQuestionCategories(questionType);
     questionsCategories.removeAt(0);
     _getNumberOfLastCategoryQuestions();
     lastCategory = questionsCategories.removeLast();
     _getNumberOfBlockQuestions();
+  }
+
+  //
+  getQuestionCategoriesForAlreadyCreatedVisit(String questionType) async {
+    emit(QuestionsLoading());
+    await _getQuestions(questionType);
     emit(QuestionsSuccess());
+  }
+
+  getQuestionCategoriesAndCreateVisit(
+      String questionType, int locationId, String type) async {
+    emit(QuestionsLoading());
+    final visitId = await _createVisit(locationId, type);
+    await _getQuestions(questionType);
+    emit(QuestionsSuccess());
+    return visitId;
   }
 
   Future<bool> submitQuestionAnswers(int visitId) async {

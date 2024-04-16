@@ -17,7 +17,7 @@ class ListoneItemWidget extends StatefulWidget {
     required this.isPm,
     required this.isVisitCreated,
     required this.isQuestionSubmitted,
-    required this.visitId,
+    required this.visitIdIfFound,
     Key? key,
   }) : super(
           key: key,
@@ -27,15 +27,17 @@ class ListoneItemWidget extends StatefulWidget {
   bool isPm;
   bool isVisitCreated;
   bool isQuestionSubmitted;
-  int visitId;
+  int visitIdIfFound;
 
   @override
   State<ListoneItemWidget> createState() => _ListoneItemWidgetState();
 }
 
-class _ListoneItemWidgetState extends State<ListoneItemWidget> {
+class _ListoneItemWidgetState extends State<ListoneItemWidget>
+    with AutomaticKeepAliveClientMixin {
   //
   String groupValue = "normal";
+  late bool localIsVisitCreated = widget.isVisitCreated;
   //
   @override
   void initState() {
@@ -59,15 +61,16 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget> {
           onTap: () async {
             // GeneralData.selectedRepId = widget.locationModel.rep.id!;
             // GeneralData.selectedVisitId = widget.locationModel.id;
-            if (!widget.isVisitCreated) {
-              final isCreated =
-                  await BlocProvider.of<ListTabContainerCubit>(context)
-                      .creteVisit(
-                widget.visitId,
-                widget.locationModel.id!,
-                widget.locationModel.type,
-              );
-
+            if (!localIsVisitCreated) {
+              // final isCreated =
+              //     await BlocProvider.of<ListTabContainerCubit>(context)
+              //         .creteVisit(
+              //   widget.locationModel.id!,
+              //   widget.locationModel.type,
+              // );
+              setState(() {
+                localIsVisitCreated = true;
+              });
               return;
             }
             if (!widget.isQuestionSubmitted) {
@@ -78,7 +81,9 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget> {
                   AppRoutes.firstQuestionsScreen,
                   arguments: {
                     'type': groupValue,
-                    'visitId': widget.visitId,
+                    'visitId': widget.visitIdIfFound,
+                    'locationId': widget.locationModel.id!,
+                    'locationType': widget.locationModel.type,
                     // 'medicalRepName': widget.locationModel.rep.firstName,
                   },
                 );
@@ -88,7 +93,9 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget> {
                   AppRoutes.questionsScreen,
                   arguments: {
                     'type': groupValue,
-                    'visitId': widget.visitId,
+                    'visitId': widget.visitIdIfFound,
+                    'locationId': widget.locationModel.id!,
+                    'locationType': widget.locationModel.type,
                     // 'medicalRepName': widget.locationModel.rep.firstName,
                   },
                 );
@@ -192,7 +199,7 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget> {
                     ],
                   ),
                   SizedBox(height: 8.v),
-                  widget.isVisitCreated && !widget.isQuestionSubmitted
+                  localIsVisitCreated && !widget.isQuestionSubmitted
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -344,6 +351,10 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget> {
       ],
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class RadioItemWidget extends StatelessWidget {

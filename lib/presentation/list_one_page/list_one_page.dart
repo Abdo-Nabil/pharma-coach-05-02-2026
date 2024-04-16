@@ -118,7 +118,7 @@ class ListOnePageState extends State<ListOnePage>
                         isPm: true,
                         isVisitCreated: isVisitCreated,
                         isQuestionSubmitted: isQuestionSubmitted,
-                        visitId: visitIdIfFound,
+                        visitIdIfFound: visitIdIfFound,
                       );
                     },
                   ),
