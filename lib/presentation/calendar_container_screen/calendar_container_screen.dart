@@ -204,6 +204,10 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
           ProgressDialogUtils.showWarningDialog(
               context, "Sorry!", "You can't create visits in Friday");
           return;
+        } else if (GeneralData.selectedDate.isBefore(DateTime.now())) {
+          ProgressDialogUtils.showWarningDialog(
+              context, "Sorry!", "You can't create visits in Day Before");
+          return;
         }
 
         showDialog(
