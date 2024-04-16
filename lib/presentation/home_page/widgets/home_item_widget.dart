@@ -20,11 +20,6 @@ class HomeItemWidget extends StatelessWidget {
         if (intendedVisit.stringDate ==
             GeneralHelper.formatDateForApi(DateTime.now())) {
           BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(1);
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              return ListTabContainerScreen.builder(context);
-            }),
-          );
         }
       },
       child: Container(
