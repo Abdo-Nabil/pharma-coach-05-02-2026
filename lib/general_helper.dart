@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
+import 'core/utils/pref_utils.dart';
+import 'core/utils/progress_dialog_utils.dart';
+
 class GeneralHelper {
   static String formatDateForApi(DateTime date) {
     return DateFormat("yyyy-MM-dd").format(date);
@@ -20,5 +23,18 @@ class GeneralHelper {
 
   static DateTime getDateTimeFromApiVisitTime(String visitTime) {
     return DateTime.parse(visitTime.split(' ').first);
+  }
+
+  static Future<bool> canRemoveOrOverrideIntendedVisit(
+      BuildContext context, String date) async {
+    final pref = PrefUtils();
+    final result = pref.getFirstCategoryAnswer();
+    if (result != null &&
+        GeneralHelper.formatDateForApi(DateTime.now()) == date) {
+      ProgressDialogUtils.showWarningDialog(
+          context, "Sorry!", "You have already started the day");
+      return true;
+    }
+    return false;
   }
 }

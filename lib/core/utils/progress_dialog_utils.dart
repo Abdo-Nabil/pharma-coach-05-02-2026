@@ -384,6 +384,12 @@ class ProgressDialogUtils {
                   ),
                   onTap: () async {
                     // await BlocProvider.of<CalendarCubit>(context)
+                    final result =
+                        await GeneralHelper.canRemoveOrOverrideIntendedVisit(
+                            context, list[index].stringDate);
+                    if (result) {
+                      return;
+                    }
                     await calendarCubit.removeIntendedVisit(list[index]);
                     Navigator.pop(context);
                   },

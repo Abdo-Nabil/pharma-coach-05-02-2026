@@ -282,7 +282,8 @@ class CalendarWidget extends StatelessWidget {
                   BlocProvider.of<CalendarCubit>(context, listen: true)
                       .everyRepIntendedVisits;
               return GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  //
                   ProgressDialogUtils.showRemoveIntendedVisitsDialog(
                       context,
                       everyRepIntendedVisits[index],

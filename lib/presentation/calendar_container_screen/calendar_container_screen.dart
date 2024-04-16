@@ -195,7 +195,7 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
         Icons.add,
         color: Colors.white,
       ),
-      onTap: () {
+      onTap: () async {
         DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
         if (GeneralData.selectedDate.weekday == DateTime.thursday) {
           ProgressDialogUtils.showWarningDialog(
@@ -210,7 +210,14 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
               context, "Sorry!", "You can't create visits in Day Before");
           return;
         }
+        //
+        final result = await GeneralHelper.canRemoveOrOverrideIntendedVisit(
+            context, GeneralHelper.formatDateForApi(DateTime.now()));
+        if (result) {
+          return;
+        }
 
+        //
         showDialog(
           context: context,
           builder: (context) {
