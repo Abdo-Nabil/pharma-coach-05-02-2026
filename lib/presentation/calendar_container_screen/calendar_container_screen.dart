@@ -196,6 +196,7 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
         color: Colors.white,
       ),
       onTap: () {
+        DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
         if (GeneralData.selectedDate.weekday == DateTime.thursday) {
           ProgressDialogUtils.showWarningDialog(
               context, "Sorry!", "You can't create visits in Thursday");
@@ -204,7 +205,7 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
           ProgressDialogUtils.showWarningDialog(
               context, "Sorry!", "You can't create visits in Friday");
           return;
-        } else if (GeneralData.selectedDate.isBefore(DateTime.now())) {
+        } else if (GeneralData.selectedDate.isBefore(yesterday)) {
           ProgressDialogUtils.showWarningDialog(
               context, "Sorry!", "You can't create visits in Day Before");
           return;
