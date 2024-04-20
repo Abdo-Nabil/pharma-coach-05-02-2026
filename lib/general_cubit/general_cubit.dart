@@ -74,6 +74,9 @@ class GeneralCubit extends Cubit<GeneralState> {
       List<QuestionAnswerModel> answersList =
           pref.getSingleVisitQuestionsAnswersLocally(visits[i].locationId);
       //
+      if (visits[i].isVisitCreatedInServerAndQuestionSubmittedOnline) {
+        continue;
+      }
       final int? visitId = await apiClient.createVisit(
           GeneralData.selectedRepId,
           visits[i].locationId,
@@ -90,7 +93,7 @@ class GeneralCubit extends Cubit<GeneralState> {
 
         final isSent = await apiClient.submitQuestionAnswers(answerModel);
         if (isSent) {
-          await pref.removeSentVisitInLocalForToday(visits[i].locationId);
+          await pref.updateSentVisitInLocalForToday(visits[i].locationId);
         }
         //
       } else {

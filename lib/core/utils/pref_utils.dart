@@ -459,7 +459,7 @@ class PrefUtils {
     return visitsInfo;
   }
 
-  removeSentVisitInLocalForToday(int locationId) async {
+  updateSentVisitInLocalForToday(int locationId) async {
     List<Map<String, dynamic>> visitsInfo = [];
     //
     String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
@@ -472,7 +472,11 @@ class PrefUtils {
         visitsInfo.add(json.decode(encodedVisitsInfo[i]));
       }
 
-      visitsInfo.removeWhere((element) => element["locationId"] == locationId);
+      final visitIndexToUpdate = visitsInfo
+          .indexWhere((element) => element["locationId"] == locationId);
+      final visitToUpdate = visitsInfo[visitIndexToUpdate];
+      visitToUpdate["isVisitCreatedInServerAndQuestionSubmittedOnline"] = true;
+      visitsInfo[visitIndexToUpdate] = visitToUpdate;
       //
       List<String> temp = [];
       for (int i = 0; i < visitsInfo.length; i++) {
@@ -521,6 +525,7 @@ class VisitInfoModel {
   final String visitTime;
   final String shift;
   final bool isQuestionSubmitted;
+  final bool isVisitCreatedInServerAndQuestionSubmittedOnline;
 
   const VisitInfoModel({
     required this.repId,
@@ -528,6 +533,7 @@ class VisitInfoModel {
     required this.visitTime,
     required this.shift,
     required this.isQuestionSubmitted,
+    this.isVisitCreatedInServerAndQuestionSubmittedOnline = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -537,6 +543,8 @@ class VisitInfoModel {
       'visitTime': this.visitTime,
       'shift': this.shift,
       'isQuestionSubmitted': this.isQuestionSubmitted,
+      'isVisitCreatedInServerAndQuestionSubmittedOnline':
+          this.isVisitCreatedInServerAndQuestionSubmittedOnline,
     };
   }
 
@@ -547,6 +555,8 @@ class VisitInfoModel {
       visitTime: map['visitTime'] as String,
       shift: map['shift'] as String,
       isQuestionSubmitted: map['isQuestionSubmitted'] as bool,
+      isVisitCreatedInServerAndQuestionSubmittedOnline:
+          map['isVisitCreatedInServerAndQuestionSubmittedOnline'] as bool,
     );
   }
 }
