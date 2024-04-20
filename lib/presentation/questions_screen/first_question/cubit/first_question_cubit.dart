@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 
 import '../../../../core/utils/pref_utils.dart';
 import '../../../../data/apiClient/api_client.dart';
@@ -12,8 +13,10 @@ part 'first_question_state.dart';
 
 class FirstQuestionCubit extends Cubit<FirstQuestionState> {
   final ApiClient apiClient;
+  final GeneralCubit generalCubit;
 
-  FirstQuestionCubit(this.apiClient) : super(FirstQuestionInitial());
+  FirstQuestionCubit(this.apiClient, this.generalCubit)
+      : super(FirstQuestionInitial());
 
   List<CategoryModel> questionsCategories = [];
   int questionNumbers = 0;
@@ -31,7 +34,7 @@ class FirstQuestionCubit extends Cubit<FirstQuestionState> {
     }
   }
 
-  _createVisit(int locationId, String type) async {
+/*  _createVisit(int locationId, String type) async {
     final shift = type == "Hospital" ? "am" : "pm";
     final visitId = await apiClient.createVisit(
       GeneralData.selectedRepId,
@@ -40,29 +43,49 @@ class FirstQuestionCubit extends Cubit<FirstQuestionState> {
       shift,
     );
     return visitId;
-  }
+  }*/
 
-  _getQuestions(String questionType) async {
+/*  _getQuestions(String questionType) async {
     questionsCategories = await apiClient.getQuestionCategories(questionType);
     _getNumberOfQuestions();
-  }
+  }*/
 
-  getQuestionCategoriesForAlreadyCreatedVisit(String questionType) async {
+/*  getQuestionCategoriesForAlreadyCreatedVisit(String questionType) async {
     emit(FirstQuestionsLoading());
     await _getQuestions(questionType);
     emit(FirstQuestionsSuccess());
-  }
+  }*/
 
-  getQuestionCategoriesAndCreateVisit(
+/*  getQuestionCategoriesAndCreateVisit(
       String questionType, int locationId, String type) async {
     emit(FirstQuestionsLoading());
     final visitId = await _createVisit(locationId, type);
     await _getQuestions(questionType);
     emit(FirstQuestionsSuccess());
     return visitId;
+  }*/
+
+  getSavedLocallyQuestions(String questionType) async {
+    emit(FirstQuestionsLoading());
+    questionsCategories =
+        await generalCubit.getQuestionsCategoriesForToday(questionType);
+    _getNumberOfQuestions();
+    emit(FirstQuestionsSuccess());
   }
 
-  submitFirstQuestion() {
+  _createTheVisitLocally(int locationId, String locationType) async {
+    final shift = locationType == "Hospital" ? "am" : "pm";
+    final pref = PrefUtils();
+    await pref.addVisitInLocalForToday(VisitInfoModel(
+      repId: GeneralData.selectedRepId,
+      locationId: locationId,
+      visitTime: GeneralHelper.formatDateForApi(DateTime.now()),
+      shift: shift,
+      isQuestionSubmitted: true,
+    ));
+  }
+
+  submitFirstQuestion() async {
     final pref = PrefUtils();
     pref.setFirstCategoryAnswer(answers);
   }

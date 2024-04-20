@@ -13,6 +13,21 @@ class CategoryModel {
     required this.questions,
   });
 
+  Map<String, dynamic> toMap() {
+    List questionsAsMaps = [];
+
+    for (int i = 0; i < questions.length; i++) {
+      questionsAsMaps.add(questions[i].toMap());
+    }
+
+    return {
+      'id': this.id,
+      'title': this.title,
+      'type': this.type,
+      'questions': questionsAsMaps,
+    };
+  }
+
   factory CategoryModel.fromMap(Map<String, dynamic> map) {
     List<QuestionModel> questionsAsModels = [];
     for (int i = 0; i < map['questions'].length; i++) {

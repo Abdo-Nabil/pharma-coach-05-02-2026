@@ -32,7 +32,10 @@ class HomePage extends StatefulWidget {
   // }
   static Widget builder(BuildContext context) {
     return BlocProvider<HomeCubit>(
-      create: (context) => HomeCubit(apiClient: ApiClient()),
+      create: (context) => HomeCubit(
+        apiClient: ApiClient(),
+        generalCubit: BlocProvider.of<GeneralCubit>(context),
+      ),
       child: HomePage(),
     );
   }

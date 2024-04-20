@@ -4,6 +4,8 @@
 // "body": "Voluptas odio qui cum quo natus. Sit possimus asperiores iure voluptatem ea deserunt voluptatem."
 // },
 
+import 'package:flutter/cupertino.dart';
+
 class QuestionModel {
   final int id;
   final int categoryId;
@@ -14,6 +16,14 @@ class QuestionModel {
     required this.categoryId,
     required this.body,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': this.id,
+      'category_id': this.categoryId,
+      'body': this.body,
+    };
+  }
 
   factory QuestionModel.fromMap(Map<String, dynamic> map) {
     return QuestionModel(

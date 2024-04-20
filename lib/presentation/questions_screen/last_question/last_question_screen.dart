@@ -180,7 +180,8 @@ class LastQuestionScreen extends StatelessWidget {
       ),
       centerTitle: true,
       title: AppbarTitle(
-        text: "msg_medical_rep_s_name".tr,
+        // text: "msg_medical_rep_s_name".tr,
+        text: "",
       ),
     );
   }

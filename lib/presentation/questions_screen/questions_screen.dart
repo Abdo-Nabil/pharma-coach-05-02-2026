@@ -39,7 +39,8 @@ class QuestionsScreen extends StatefulWidget {
   // }
   static Widget builder(BuildContext context) {
     return BlocProvider<QuestionsCubit>(
-      create: (context) => QuestionsCubit(ApiClient()),
+      create: (context) =>
+          QuestionsCubit(ApiClient(), BlocProvider.of<GeneralCubit>(context)),
       child: QuestionsScreen(),
     );
   }
@@ -57,7 +58,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   late String medicalRepName;
 
   //
-  handleScreenData() async {
+/*  handleScreenData() async {
     if (visitId == -1) {
       //we need to create visit first
       final theVisitId = await BlocProvider.of<QuestionsCubit>(context)
@@ -68,6 +69,11 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       BlocProvider.of<QuestionsCubit>(context)
           .getQuestionCategoriesForAlreadyCreatedVisit(questionType);
     }
+  }*/
+
+  handleScreenData() async {
+    BlocProvider.of<QuestionsCubit>(context)
+        .getSavedLocallyQuestions(questionType);
   }
 
   //
@@ -198,7 +204,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       centerTitle: true,
       title: Text(
         // "$medicalRepName - $questionType",
-        "$questionType",
+        "$questionType" == "normal" ? "Normal" : "Flash",
         style: CustomTextStyles.titleSmallBlack900,
       ),
       // title: AppbarTitle(
@@ -225,7 +231,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           context,
           onNextVisit: () async {
             BlocProvider.of<QuestionsCubit>(context)
-                .submitQuestionAnswersLocally(visitId);
+                .submitQuestionAnswersLocally(-1, locationId, locationType);
             Navigator.pop(context);
             Navigator.pop(context);
             BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(1);
@@ -236,7 +242,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           onEndOfTheDay: () {
             //
             BlocProvider.of<QuestionsCubit>(context)
-                .submitQuestionAnswersLocally(visitId);
+                .submitQuestionAnswersLocally(-1, locationId, locationType);
             //
             Navigator.pop(context);
             Navigator.of(context).pushReplacement(

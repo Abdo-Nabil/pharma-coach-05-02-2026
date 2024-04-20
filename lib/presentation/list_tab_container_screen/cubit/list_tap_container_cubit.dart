@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mina_s_application5/core/app_export.dart';
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
@@ -14,9 +15,11 @@ import '../../calendar_container_screen/models/vsit_model.dart';
 part 'list_tap_container_state.dart';
 
 class ListTabContainerCubit extends Cubit<ListTapContainerState> {
+  final GeneralCubit generalCubit;
   final ApiClient apiClient;
 
-  ListTabContainerCubit(this.apiClient) : super(ListTapContainerInitial());
+  ListTabContainerCubit(this.apiClient, this.generalCubit)
+      : super(ListTapContainerInitial());
 
 /*
   List<VisitModel> amVisits = [];
@@ -40,11 +43,11 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
   int? repId;
   //
   List<int> createdVisitsLocationIds = [];
-  List<VisitModel> visits = [];
+  List<VisitInfoModel> visits = [];
   List<LocationModel> amLocations = [];
   List<LocationModel> pmLocations = [];
   //
-  Future<int?> getRepIdForIntendedVisitToday() async {
+/*  Future<int?> _getRepIdForIntendedVisitToday() async {
     final sharedPref = PrefUtils();
     final list = sharedPref.getIntendedVisits();
     for (int i = 0; i < list.length; i++) {
@@ -56,11 +59,12 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
       }
     }
     return null;
-  }
+  }*/
 
+/*
   getAmAndPmLocations() async {
     emit(ListTapContainerLoading());
-    final repId = await getRepIdForIntendedVisitToday();
+    final repId = await _getRepIdForIntendedVisitToday();
     if (repId == null) {
       emit(ListTapContainerGetLocationsSuccessState(
           pmLocations: [], amLocations: []));
@@ -90,11 +94,45 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
     emit(ListTapContainerGetLocationsSuccessState(
         amLocations: amLocations, pmLocations: pmLocations));
   }
+*/
+
+  getAmAndPmLocations() async {
+    emit(ListTapContainerLoading());
+    final locations = await generalCubit.getLocationsForToday();
+    if (locations.isEmpty) {
+      emit(ListTapContainerGetLocationsSuccessState(
+          pmLocations: [], amLocations: []));
+      return;
+    }
+    //
+
+    amLocations = [];
+    pmLocations = [];
+    for (int i = 0; i < locations.length; i++) {
+      if (locations[i].type == "Hospital") {
+        amLocations.add(locations[i]);
+      } else if (locations[i].type == "Clinic") {
+        pmLocations.add(locations[i]);
+      }
+    }
+
+    /// GET VISITS LOCALLY LOGIC IS HERE
+    final pref = PrefUtils();
+    visits = await pref.getVisitsInLocalForToday();
+    createdVisitsLocationIds = [];
+    for (int i = 0; i < visits.length; i++) {
+      createdVisitsLocationIds.add(visits[i].locationId);
+    }
+
+    emit(ListTapContainerGetLocationsSuccessState(
+        amLocations: amLocations, pmLocations: pmLocations));
+  }
 
   isVisitCreated(int locationId) {
     return createdVisitsLocationIds.contains(locationId);
   }
 
+/*
   Future<int> creteVisit(int locationId, String type) async {
     emit(ListTapContainerLoading());
 
@@ -112,20 +150,33 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
     ));
     return result;
   }
+*/
 
   bool isQuestionSubmitted(int locationId) {
     bool isQuestionSubmitted = false;
     for (int i = 0; i < visits.length; i++) {
-      if (visits[i].location.id == locationId) {
+      if (visits[i].locationId == locationId) {
+        // isQuestionSubmitted = visits[i].isQuestionSubmitted;
+        isQuestionSubmitted = true;
+        break;
+      }
+    }
+    return isQuestionSubmitted;
+  }
+
+/*  bool isQuestionSubmitted(int locationId) {
+    bool isQuestionSubmitted = false;
+    for (int i = 0; i < visits.length; i++) {
+      if (visits[i].locationId == locationId) {
         isQuestionSubmitted = visits[i].isQuestionSubmitted;
         break;
       }
     }
 
     return isQuestionSubmitted;
-  }
+  }*/
 
-  int getVisitId(int locationId) {
+/*  int getVisitId(int locationId) {
     int visitId = -1;
     for (int i = 0; i < visits.length; i++) {
       if (visits[i].location.id == locationId) {
@@ -134,7 +185,7 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
       }
     }
     return visitId;
-  }
+  }*/
 
   searchInPmLocations(String value) {
     final list = pmLocations

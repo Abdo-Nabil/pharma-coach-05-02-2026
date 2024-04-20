@@ -5,10 +5,12 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/answer_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../general_helper.dart';
+import '../../presentation/questions_screen/models/category_model.dart';
 import '../../presentation/questions_screen/models/question_answer_model.dart';
 
 class PrefUtils {
@@ -72,6 +74,7 @@ class PrefUtils {
   }
 
   // the list is something like that ["52","iso8601Sate","77","iso8601Sate",....]
+/*
   saveSubmittedVisitId(int visitId) async {
     List<String>? result = _sharedPreferences!.getStringList("visitIdsList");
     if (result == null) {
@@ -94,7 +97,9 @@ class PrefUtils {
       await _sharedPreferences!.setStringList("visitIdsList", result);
     }
   }
+*/
 
+/*
   bool isVisitSubmittedBefore(String visitId) {
     List<String>? result = _sharedPreferences!.getStringList("visitIdsList");
     if (result == null) {
@@ -103,7 +108,9 @@ class PrefUtils {
       return result.contains(visitId);
     }
   }
+*/
 
+/*
   List getSubmittedQuestionsToBeExecuted() {
     final list =
         _sharedPreferences!.getStringList("submittedAnswersFailureList");
@@ -113,8 +120,9 @@ class PrefUtils {
       return list;
     }
   }
+*/
 
-  saveSubmittedQuestionsForTheNextLaunchIfErrorHappen(
+/*saveSubmittedQuestionsForTheNextLaunchIfErrorHappen(
       String encodedData) async {
     List<String>? list =
         _sharedPreferences!.getStringList("submittedAnswersFailureList");
@@ -126,15 +134,15 @@ class PrefUtils {
       await _sharedPreferences!
           .setStringList("submittedAnswersFailureList", list);
     }
-  }
+  }*/
 
-  removeSubmittedQuestion(String encodedData) async {
+/*  removeSubmittedQuestion(String encodedData) async {
     List<String> list =
         _sharedPreferences!.getStringList("submittedAnswersFailureList")!;
     list.remove(encodedData);
     await _sharedPreferences!
         .setStringList("submittedAnswersFailureList", list);
-  }
+  }*/
 
   //
   List<IntendedVisitModel> getIntendedVisits() {
@@ -271,6 +279,29 @@ class PrefUtils {
   }
 
   saveQuestionsBlockForSingleVisit(
+      int locationId, List<QuestionAnswerModel> answers) async {
+    List<Map<String, dynamic>> maps = [];
+    for (int i = 0; i < answers.length; i++) {
+      maps.add(answers[i].toMap());
+    }
+    //
+    debugPrint("@@@@@@@@ saved visit with location id :: $locationId");
+    await _sharedPreferences!.setString("$locationId", json.encode(maps));
+  }
+
+  getQuestionsBlockForSingleVisit(int locationId) {
+    final temp = _sharedPreferences!.getString("$locationId");
+    if (temp == null) {
+      debugPrint(
+          "########## ########## ########## getQuestionsBlockForSingleVisit");
+      return null;
+    }
+    List<dynamic> listOfMaps = json.decode(temp);
+    return listOfMaps.cast<Map<String, dynamic>>();
+  }
+
+/*
+  saveQuestionsBlockForSingleVisit(
       int visitId, List<QuestionAnswerModel> answers) async {
     List<Map<String, dynamic>> maps = [];
     for (int i = 0; i < answers.length; i++) {
@@ -288,5 +319,225 @@ class PrefUtils {
     }
     List<dynamic> listOfMaps = json.decode(temp);
     return listOfMaps.cast<Map<String, dynamic>>();
+  }*/
+
+  ///Full offline starts here
+  ///
+  ///
+  int getRepIdForToday() {
+    final temp = DateTime.now();
+    final dateNow = DateTime(temp.year, temp.month, temp.day);
+    //
+    List<IntendedVisitModel> intendedVisits = getIntendedVisits();
+    final intendedVisit = intendedVisits.firstWhere((visit) {
+      final visitDate = GeneralHelper.formatDateFromApi(visit.stringDate);
+      if (visitDate.isAtSameMomentAs(dateNow)) {
+        return true;
+      }
+      return false;
+    },
+        orElse: () => IntendedVisitModel(
+            repName: "repName", stringDate: "stringDate", repId: -1));
+
+    return intendedVisit.repId;
+  }
+
+  saveQuestionsCategories(
+      List<CategoryModel> categories, String questionType) async {
+    List<String> encodedList = [];
+    for (int i = 0; i < categories.length; i++) {
+      encodedList.add(json.encode(categories[i].toMap()));
+    }
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    await _sharedPreferences!
+        .setStringList("${questionType}Questions$todayDate", encodedList);
+  }
+
+  List<CategoryModel> getQuestionsCategories(String questionType) {
+    List<CategoryModel> categories = [];
+    //
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    List<String>? encodedCategories =
+        _sharedPreferences!.getStringList("${questionType}Questions$todayDate");
+    //
+    if (encodedCategories != null) {
+      for (int i = 0; i < encodedCategories.length; i++) {
+        categories
+            .add(CategoryModel.fromMap(json.decode(encodedCategories[i])));
+      }
+      //
+    }
+    return categories;
+  }
+
+  saveLocationsOfTodayForMedicalRep(List<LocationModel> locations) async {
+    List<String> encodedList = [];
+    for (int i = 0; i < locations.length; i++) {
+      encodedList.add(json.encode(locations[i].toMap()));
+    }
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    await _sharedPreferences!
+        .setStringList("locationsFor$todayDate", encodedList);
+  }
+
+  List<LocationModel> getLocationsOfTodayForMedicalRep() {
+    List<LocationModel> locations = [];
+    //
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    List<String>? encodedLocations =
+        _sharedPreferences!.getStringList("locationsFor$todayDate");
+    //
+    if (encodedLocations != null) {
+      for (int i = 0; i < encodedLocations.length; i++) {
+        locations.add(LocationModel.fromMap(json.decode(encodedLocations[i])));
+      }
+      //
+    }
+    return locations;
+  }
+
+  bool isLastQuestionTodayAnswered() {
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    final result =
+        _sharedPreferences?.getBool("isLastQuestionAnswered$todayDate");
+    if (result == null) {
+      return false;
+    }
+    return true;
+  }
+
+  setLastQuestionAsAnsweredToday() async {
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    await _sharedPreferences?.setBool("isLastQuestionAnswered$todayDate", true);
+  }
+
+  addVisitInLocalForToday(VisitInfoModel visitInfo) async {
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    List<String>? encodedVisitsInfo =
+        _sharedPreferences!.getStringList("visitsInfo$todayDate");
+    //
+    if (encodedVisitsInfo == null) {
+      await _sharedPreferences!.setStringList(
+        "visitsInfo$todayDate",
+        [json.encode(visitInfo.toMap())],
+      );
+    } else {
+      if (encodedVisitsInfo.contains(json.encode(visitInfo.toMap()))) {
+        debugPrint('############## visit added previously!!!');
+        return;
+      }
+      encodedVisitsInfo.add(json.encode(visitInfo.toMap()));
+      await _sharedPreferences!.setStringList(
+        "visitsInfo$todayDate",
+        encodedVisitsInfo,
+      );
+    }
+  }
+
+  List<VisitInfoModel> getVisitsInLocalForToday() {
+    List<VisitInfoModel> visitsInfo = [];
+    //
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    List<String>? encodedVisitsInfo =
+        _sharedPreferences!.getStringList("visitsInfo$todayDate");
+    //
+    if (encodedVisitsInfo != null) {
+      for (int i = 0; i < encodedVisitsInfo.length; i++) {
+        visitsInfo
+            .add(VisitInfoModel.fromMap(json.decode(encodedVisitsInfo[i])));
+      }
+    }
+    return visitsInfo;
+  }
+
+  removeSentVisitInLocalForToday(int locationId) async {
+    List<Map<String, dynamic>> visitsInfo = [];
+    //
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    List<String>? encodedVisitsInfo =
+        _sharedPreferences!.getStringList("visitsInfo$todayDate");
+    //
+    if (encodedVisitsInfo != null) {
+      //
+      for (int i = 0; i < encodedVisitsInfo.length; i++) {
+        visitsInfo.add(json.decode(encodedVisitsInfo[i]));
+      }
+
+      visitsInfo.removeWhere((element) => element["locationId"] == locationId);
+      //
+      List<String> temp = [];
+      for (int i = 0; i < visitsInfo.length; i++) {
+        temp.add(json.encode(visitsInfo[i]));
+      }
+      await _sharedPreferences?.setStringList("visitsInfo$todayDate", temp);
+    }
+  }
+
+  saveSingleVisitQuestionsAnswersLocally(
+      List<Map<String, dynamic>> visitAnswers, int locationId) async {
+    //
+    List<String> encodedAnswers = [];
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    //
+    for (int i = 0; i < visitAnswers.length; i++) {
+      encodedAnswers.add(json.encode(visitAnswers[i]));
+    }
+    //
+    await _sharedPreferences?.setStringList(
+        "$locationId$todayDate", encodedAnswers);
+  }
+
+  List<QuestionAnswerModel> getSingleVisitQuestionsAnswersLocally(
+      int locationId) {
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    List<String>? visitAnswersList =
+        _sharedPreferences?.getStringList("$locationId$todayDate");
+    List<QuestionAnswerModel> answers = [];
+    //
+    if (visitAnswersList != null) {
+      for (int i = 0; i < visitAnswersList.length; i++) {
+        answers
+            .add(QuestionAnswerModel.fromMap(json.decode(visitAnswersList[i])));
+      }
+    }
+
+    //
+    return answers;
+  }
+}
+
+class VisitInfoModel {
+  final int repId;
+  final int locationId;
+  final String visitTime;
+  final String shift;
+  final bool isQuestionSubmitted;
+
+  const VisitInfoModel({
+    required this.repId,
+    required this.locationId,
+    required this.visitTime,
+    required this.shift,
+    required this.isQuestionSubmitted,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'repId': this.repId,
+      'locationId': this.locationId,
+      'visitTime': this.visitTime,
+      'shift': this.shift,
+      'isQuestionSubmitted': this.isQuestionSubmitted,
+    };
+  }
+
+  factory VisitInfoModel.fromMap(Map<String, dynamic> map) {
+    return VisitInfoModel(
+      repId: map['repId'] as int,
+      locationId: map['locationId'] as int,
+      visitTime: map['visitTime'] as String,
+      shift: map['shift'] as String,
+      isQuestionSubmitted: map['isQuestionSubmitted'] as bool,
+    );
   }
 }

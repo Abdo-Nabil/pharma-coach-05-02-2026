@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mina_s_application5/core/app_export.dart';
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/vsit_model.dart';
@@ -11,7 +13,11 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final ApiClient apiClient;
-  HomeCubit({required this.apiClient}) : super(HomeInitial());
+  final GeneralCubit generalCubit;
+  HomeCubit({
+    required this.apiClient,
+    required this.generalCubit,
+  }) : super(HomeInitial());
 
   List<IntendedVisitModel> intendedVisits = [];
 
@@ -51,8 +57,24 @@ class HomeCubit extends Cubit<HomeState> {
   }
 */
 
+  _saveQuestionCategoriesInLocal() async {
+    await generalCubit.getQuestionsCategoriesForToday("normal");
+    await generalCubit.getQuestionsCategoriesForToday("flash");
+  }
+
+  _saveLocationsInLocal() async {
+    await generalCubit.getLocationsForToday();
+  }
+
+  //
+
   getThisWeekIntendedVisits() async {
     emit(HomeLoadingState());
+    await _saveQuestionCategoriesInLocal();
+    await _saveLocationsInLocal();
+    await _saveLocationsInLocal();
+    await generalCubit.executeSubmitQuestionsAndRemoveVisitsFromLocal();
+    //
     final pref = PrefUtils();
     intendedVisits = await pref.getThisWeekIntendedVisits();
     emit(HomeGetVisitsSuccess());

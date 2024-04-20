@@ -3,6 +3,7 @@ import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 import 'package:mina_s_application5/presentation/questions_screen/first_question/first_build_category_with_questions.dart';
 
 import '../../../data/apiClient/api_client.dart';
@@ -19,7 +20,8 @@ class FirstQuestionScreen extends StatefulWidget {
 
   static Widget builder(BuildContext context) {
     return BlocProvider<FirstQuestionCubit>(
-      create: (context) => FirstQuestionCubit(ApiClient()),
+      create: (context) => FirstQuestionCubit(
+          ApiClient(), BlocProvider.of<GeneralCubit>(context)),
       child: FirstQuestionScreen(),
     );
   }
@@ -35,7 +37,7 @@ class _FirstQuestionScreenState extends State<FirstQuestionScreen> {
   late String medicalRepName;
 
   //
-  handleScreenData() async {
+/*  handleScreenData() async {
     if (visitId == -1) {
       //we need to create visit first
       final theVisitId = await BlocProvider.of<FirstQuestionCubit>(context)
@@ -46,6 +48,11 @@ class _FirstQuestionScreenState extends State<FirstQuestionScreen> {
       BlocProvider.of<FirstQuestionCubit>(context)
           .getQuestionCategoriesForAlreadyCreatedVisit(questionType);
     }
+  }*/
+
+  handleScreenData() async {
+    BlocProvider.of<FirstQuestionCubit>(context)
+        .getSavedLocallyQuestions(questionType);
   }
 
   //
@@ -193,13 +200,15 @@ class _FirstQuestionScreenState extends State<FirstQuestionScreen> {
                                   'Some questions were not answered');
                               return;
                             } else {
-                              BlocProvider.of<FirstQuestionCubit>(context)
+                              await BlocProvider.of<FirstQuestionCubit>(context)
                                   .submitFirstQuestion();
                               NavigatorService.popAndPushNamed(
                                 AppRoutes.questionsScreen,
                                 arguments: {
                                   'type': questionType,
-                                  'visitId': visitId,
+                                  'visitId': -1,
+                                  'locationId': locationId,
+                                  'locationType': locationType,
                                   // 'medicalRepName': widget.locationModel.rep.firstName,
                                 },
                               );
@@ -236,7 +245,7 @@ class _FirstQuestionScreenState extends State<FirstQuestionScreen> {
       ),
       centerTitle: true,
       title: AppbarTitle(
-        text: "$questionType",
+        text: "$questionType" == "normal" ? "Normal" : "Flash",
       ),
     );
   }

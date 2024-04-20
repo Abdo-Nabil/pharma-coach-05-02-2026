@@ -31,7 +31,7 @@ class ApiClient {
 
   final _dio = Dio(BaseOptions(
       // connectTimeout: const Duration(seconds: 60),
-      connectTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 5),
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json"
@@ -151,7 +151,8 @@ class ApiClient {
     }
   }
 
-  _uploadSubmittedQuestionThatSavedLocallyPreviously() async {
+/*
+  uploadSubmittedQuestionThatSavedLocallyPreviously() async {
     debugPrint('################### 1 Resend submitted QS');
     final shared = PrefUtils();
     final list = shared.getSubmittedQuestionsToBeExecuted();
@@ -178,7 +179,9 @@ class ApiClient {
       );
     }
   }
+*/
 
+/*
   Future<List<VisitModel>> getVisits(String param, String date) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -193,7 +196,8 @@ class ApiClient {
     try {
       await isNetworkConnected();
       //
-      await _uploadSubmittedQuestionThatSavedLocallyPreviously();
+      //TODO: move this line from here
+      // await _uploadSubmittedQuestionThatSavedLocallyPreviously();
       //
       Response response = await _dio.get(
         '$url/visits/today',
@@ -224,6 +228,7 @@ class ApiClient {
       rethrow;
     }
   }
+*/
 
   Future<List<TinyRepModel>> getMedicalReps() async {
     Map<String, String> headers = {
@@ -333,9 +338,11 @@ class ApiClient {
     }
   }
 
-  Future<int> createVisit(
+  Future<int?> createVisit(
       int repId, int locationId, String visitTime, String shift) async {
-    bool isCreated = false;
+    //
+    int? visitId;
+    //
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -348,8 +355,9 @@ class ApiClient {
       "visit_time": visitTime,
       "name": "eg.visit name",
     };
+    //
     try {
-      await isNetworkConnected();
+      // await isNetworkConnected();
       Response response = await _dio.get(
         '$url/visits/create',
         queryParameters: queryParams,
@@ -359,22 +367,21 @@ class ApiClient {
         //
         log("${response.data}");
         debugPrint("Visit created successfully");
-        isCreated = true;
-        return response.data["data"]["id"];
+        visitId = response.data["data"]["id"];
       } else {
-        throw response.data != null
-            ? RepModel.fromMap(response.data)
-            : 'Something Went Wrong!';
+        // throw response.data != null
+        //     ? RepModel.fromMap(response.data)
+        //     : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
       // ProgressDialogUtils.hideProgressDialog();
-      Logger.log(
-        error,
-        stackTrace: stackTrace,
-      );
-      return -1;
-      rethrow;
+      debugPrint("############### Error createVisit");
+      // Logger.log(
+      //   error,
+      //   stackTrace: stackTrace,
+      // );
     }
+    return visitId;
   }
 
   Future<List<CategoryModel>> getQuestionCategories(
@@ -425,12 +432,12 @@ class ApiClient {
       'Authorization': 'Bearer ${GeneralData.token!}',
     };
     Map<String, dynamic> queryParams = {};
-    final pref = PrefUtils();
     final encodedData = json.encode(
       answerModel.toMap(),
     );
+    log("###################### ${encodedData}");
     try {
-      await isNetworkConnected();
+      // await isNetworkConnected();
       Response response = await _dio.get(
         '$url/questions/answer',
         queryParameters: queryParams,
@@ -441,20 +448,22 @@ class ApiClient {
         log(response.data.toString());
         isSend = true;
       } else {
-        throw response.data != null
-            ? RepModel.fromMap(response.data)
-            : 'Something Went Wrong!';
+        // throw response.data != null
+        //     ? RepModel.fromMap(response.data)
+        //     : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
-      if (saveFailedTransaction) {
-        //save the request in sharedpref to next launch
-        await pref
-            .saveSubmittedQuestionsForTheNextLaunchIfErrorHappen(encodedData);
-      }
-      Logger.log(
-        error,
-        stackTrace: stackTrace,
-      );
+      // if (saveFailedTransaction) {
+      //save the request in sharedpref to next launch
+      // await pref
+      //     .saveSubmittedQuestionsForTheNextLaunchIfErrorHappen(encodedData);
+      // }
+      debugPrint("############### Error submitQuestionAnswers");
+
+      // Logger.log(
+      //   error,
+      //   stackTrace: stackTrace,
+      // );
       // rethrow;
     }
     //

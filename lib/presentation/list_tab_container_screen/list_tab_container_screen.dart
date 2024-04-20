@@ -37,7 +37,10 @@ class ListTabContainerScreen extends StatefulWidget {
     BuildContext context,
   ) {
     return BlocProvider<ListTabContainerCubit>(
-      create: (context) => ListTabContainerCubit(ApiClient()),
+      create: (context) => ListTabContainerCubit(
+        ApiClient(),
+        BlocProvider.of<GeneralCubit>(context),
+      ),
       child: ListTabContainerScreen(),
     );
   }

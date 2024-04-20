@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mina_s_application5/data/apiClient/api_client.dart';
 import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 import 'presentation/calendar_container_screen/widgets/calendar_widget.dart';
 import 'core/app_export.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return BlocProvider(
-          create: (context) => GeneralCubit(),
+          create: (context) => GeneralCubit(ApiClient()),
           child: BlocProvider(
             create: (context) => ThemeBloc(
               ThemeState(

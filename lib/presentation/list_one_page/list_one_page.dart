@@ -110,15 +110,15 @@ class ListOnePageState extends State<ListOnePage>
                       final isQuestionSubmitted =
                           BlocProvider.of<ListTabContainerCubit>(context)
                               .isQuestionSubmitted(locations[index].id!);
-                      final visitIdIfFound =
-                          BlocProvider.of<ListTabContainerCubit>(context)
-                              .getVisitId(locations[index].id!);
+                      // final visitIdIfFound =
+                      //     BlocProvider.of<ListTabContainerCubit>(context)
+                      //         .getVisitId(locations[index].id!);
                       return ListoneItemWidget(
                         locations[index],
                         isPm: true,
                         isVisitCreated: isVisitCreated,
                         isQuestionSubmitted: isQuestionSubmitted,
-                        visitIdIfFound: visitIdIfFound,
+                        visitIdIfFound: -1,
                       );
                     },
                   ),

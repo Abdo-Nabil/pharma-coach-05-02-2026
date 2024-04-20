@@ -9,13 +9,16 @@ import 'package:mina_s_application5/presentation/questions_screen/models/categor
 import 'package:mina_s_application5/presentation/questions_screen/models/question_answer_model.dart';
 
 import '../../../data/apiClient/api_client.dart';
+import '../../../general_cubit/general_cubit.dart';
 import '../models/answer_model.dart';
 
 part 'questions_state.dart';
 
 class QuestionsCubit extends Cubit<QuestionsState> {
   final ApiClient apiClient;
-  QuestionsCubit(this.apiClient) : super(QuestionsInitial());
+  final GeneralCubit generalCubit;
+
+  QuestionsCubit(this.apiClient, this.generalCubit) : super(QuestionsInitial());
 
   List<CategoryModel> questionsCategories = [];
   //
@@ -55,6 +58,7 @@ class QuestionsCubit extends Cubit<QuestionsState> {
   }
 
   //
+/*
   _createVisit(int locationId, String type) async {
     final shift = type == "Hospital" ? "am" : "pm";
     final visitId = await apiClient.createVisit(
@@ -65,6 +69,7 @@ class QuestionsCubit extends Cubit<QuestionsState> {
     );
     return visitId;
   }
+*/
 
   _getQuestions(String questionType) async {
     questionsCategories = await apiClient.getQuestionCategories(questionType);
@@ -74,12 +79,26 @@ class QuestionsCubit extends Cubit<QuestionsState> {
     _getNumberOfBlockQuestions();
   }
 
+  getSavedLocallyQuestions(String questionType) async {
+    emit(QuestionsLoading());
+    questionsCategories =
+        await generalCubit.getQuestionsCategoriesForToday(questionType);
+    questionsCategories.removeAt(0);
+    _getNumberOfLastCategoryQuestions();
+    lastCategory = questionsCategories.removeLast();
+    _getNumberOfBlockQuestions();
+    emit(QuestionsSuccess());
+  }
+
   //
+/*
   getQuestionCategoriesForAlreadyCreatedVisit(String questionType) async {
     emit(QuestionsLoading());
     await _getQuestions(questionType);
     emit(QuestionsSuccess());
   }
+*/
+/*
 
   getQuestionCategoriesAndCreateVisit(
       String questionType, int locationId, String type) async {
@@ -89,8 +108,9 @@ class QuestionsCubit extends Cubit<QuestionsState> {
     emit(QuestionsSuccess());
     return visitId;
   }
+*/
 
-  Future<bool> submitQuestionAnswers(int visitId) async {
+/*  Future<bool> submitQuestionAnswers(int visitId) async {
     bool isSend = false;
     //
     final answerModel = AnswerModel(
@@ -100,16 +120,62 @@ class QuestionsCubit extends Cubit<QuestionsState> {
     );
     isSend = await apiClient.submitQuestionAnswers(answerModel);
     return isSend;
+  }*/
+
+  _createTheVisitLocally(int locationId, String locationType) async {
+    final shift = locationType == "Hospital" ? "am" : "pm";
+    final pref = PrefUtils();
+    await pref.addVisitInLocalForToday(VisitInfoModel(
+      repId: GeneralData.selectedRepId,
+      locationId: locationId,
+      visitTime: GeneralHelper.formatDateForApi(DateTime.now()),
+      shift: shift,
+      isQuestionSubmitted: true,
+    ));
   }
 
   //
-  submitQuestionAnswersLocally(int visitId) async {
+  submitQuestionAnswersLocally(int visitId, locationId, locationType) async {
     //
     final pref = PrefUtils();
-    await pref.saveQuestionsBlockForSingleVisit(visitId, answers);
-    await pref.saveSubmittedVisitId(visitId);
+    await _createTheVisitLocally(locationId, locationType);
+    await pref.saveQuestionsBlockForSingleVisit(locationId, answers);
+    // await pref.saveSubmittedVisitId(visitId);
   }
 
+  _saveAllQuestionsInLocal() async {
+    final pref = PrefUtils();
+    final firstCategoryQuestions = pref.getFirstCategoryAnswer()!;
+    final List<Map<String, dynamic>> lastCategoryQuestions = [];
+    //
+    for (int i = 0; i < lastCategoryAnswers.length; i++) {
+      lastCategoryQuestions.add(lastCategoryAnswers[i].toMap());
+    }
+    //
+    final visits = await pref.getVisitsInLocalForToday();
+    //
+    for (int i = 0; i < visits.length; i++) {
+      List<Map<String, dynamic>> allQuestions = [];
+      final result = pref.getQuestionsBlockForSingleVisit(visits[i].locationId);
+
+      allQuestions.addAll(result);
+      allQuestions.addAll(firstCategoryQuestions);
+      allQuestions.addAll(lastCategoryQuestions);
+      //
+      await pref.saveSingleVisitQuestionsAnswersLocally(
+          allQuestions, visits[i].locationId);
+    }
+  }
+
+  submitEndOfTheDay() async {
+    //
+    final pref = PrefUtils();
+    await pref.setLastQuestionAsAnsweredToday();
+    await _saveAllQuestionsInLocal();
+    await generalCubit.executeSubmitQuestionsAndRemoveVisitsFromLocal();
+  }
+
+/*
   submitEndOfTheDay() async {
     //
     final pref = PrefUtils();
@@ -149,4 +215,5 @@ class QuestionsCubit extends Cubit<QuestionsState> {
       await apiClient.submitQuestionAnswers(answerModel);
     }
   }
+*/
 }
