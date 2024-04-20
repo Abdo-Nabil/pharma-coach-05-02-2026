@@ -254,23 +254,28 @@ class PrefUtils {
 
   /// Handling the question logic in 3 screens starts from here
   setFirstCategoryAnswer(List<QuestionAnswerModel> answers) async {
-    await _sharedPreferences!.setString(
-        "firstCategoryDate", GeneralHelper.formatDateForApi(DateTime.now()));
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    await _sharedPreferences!.setString("firstCategoryDate$todayDate",
+        GeneralHelper.formatDateForApi(DateTime.now()));
     List<Map<String, dynamic>> maps = [];
     for (int i = 0; i < answers.length; i++) {
       maps.add(answers[i].toMap());
     }
-    await _sharedPreferences!.setString("firstCategory", json.encode(maps));
+    await _sharedPreferences!
+        .setString("firstCategory$todayDate", json.encode(maps));
   }
 
   //This return a list of two question of the first category
   List<Map<String, dynamic>>? getFirstCategoryAnswer() {
-    String? date = _sharedPreferences!.getString("firstCategoryDate");
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    String? date = _sharedPreferences!.getString(
+      "firstCategoryDate$todayDate",
+    );
     if (date == null) {
       return null;
     } else {
       if (date == GeneralHelper.formatDateForApi(DateTime.now())) {
-        final temp = _sharedPreferences!.getString("firstCategory")!;
+        final temp = _sharedPreferences!.getString("firstCategory$todayDate")!;
         List<dynamic> listOfMaps = json.decode(temp);
         return listOfMaps.cast<Map<String, dynamic>>();
       }
@@ -280,17 +285,21 @@ class PrefUtils {
 
   saveQuestionsBlockForSingleVisit(
       int locationId, List<QuestionAnswerModel> answers) async {
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
     List<Map<String, dynamic>> maps = [];
     for (int i = 0; i < answers.length; i++) {
       maps.add(answers[i].toMap());
     }
     //
     debugPrint("@@@@@@@@ saved visit with location id :: $locationId");
-    await _sharedPreferences!.setString("$locationId", json.encode(maps));
+    await _sharedPreferences!
+        .setString("${locationId}BlockFor$todayDate", json.encode(maps));
   }
 
   getQuestionsBlockForSingleVisit(int locationId) {
-    final temp = _sharedPreferences!.getString("$locationId");
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    final temp =
+        _sharedPreferences!.getString("${locationId}BlockFor$todayDate");
     if (temp == null) {
       debugPrint(
           "########## ########## ########## getQuestionsBlockForSingleVisit");
@@ -484,14 +493,14 @@ class PrefUtils {
     }
     //
     await _sharedPreferences?.setStringList(
-        "$locationId$todayDate", encodedAnswers);
+        "visitQuestionsAnswers$locationId$todayDate", encodedAnswers);
   }
 
   List<QuestionAnswerModel> getSingleVisitQuestionsAnswersLocally(
       int locationId) {
     String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
-    List<String>? visitAnswersList =
-        _sharedPreferences?.getStringList("$locationId$todayDate");
+    List<String>? visitAnswersList = _sharedPreferences
+        ?.getStringList("visitQuestionsAnswers$locationId$todayDate");
     List<QuestionAnswerModel> answers = [];
     //
     if (visitAnswersList != null) {
