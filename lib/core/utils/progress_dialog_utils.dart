@@ -384,8 +384,8 @@ class ProgressDialogUtils {
                   ),
                   onTap: () async {
                     // await BlocProvider.of<CalendarCubit>(context)
-                    final result =
-                        await GeneralHelper.canRemoveOrOverrideIntendedVisit(
+                    final result = await GeneralHelper
+                        .canRemoveOrOverrideTodayIntendedVisit(
                             context, list[index].stringDate);
                     if (result) {
                       return;

@@ -25,11 +25,13 @@ class GeneralHelper {
     return DateTime.parse(visitTime.split(' ').first);
   }
 
-  static Future<bool> canRemoveOrOverrideIntendedVisit(
+  static Future<bool> canRemoveOrOverrideTodayIntendedVisit(
       BuildContext context, String date) async {
     final pref = PrefUtils();
     final result = pref.getFirstCategoryAnswer();
+    final result2 = pref.isLastQuestionTodayAnswered();
     if (result != null &&
+        result2 == false &&
         GeneralHelper.formatDateForApi(DateTime.now()) == date) {
       ProgressDialogUtils.showWarningDialog(
           context, "Sorry!", "You have already started the day");

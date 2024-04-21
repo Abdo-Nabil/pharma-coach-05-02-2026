@@ -211,8 +211,9 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
           return;
         }
         //
-        final result = await GeneralHelper.canRemoveOrOverrideIntendedVisit(
-            context, GeneralHelper.formatDateForApi(DateTime.now()));
+        final result =
+            await GeneralHelper.canRemoveOrOverrideTodayIntendedVisit(context,
+                GeneralHelper.formatDateForApi(GeneralData.selectedDate));
         if (result) {
           return;
         }
