@@ -90,100 +90,112 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   }
 
   //
+  onTapBack() {
+    Navigator.pop(context);
+    BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(1);
+  }
+
+  //
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: _buildAppBar(context),
-        body: BlocBuilder<QuestionsCubit, QuestionsState>(
-          builder: (context, state) {
-            if (state is QuestionsLoading) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is QuestionsSuccess) {
-              return SizedBox(
-                width: SizeUtils.width,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 5.v),
-                  padding: EdgeInsets.symmetric(horizontal: 14.h),
-                  child: Column(
-                    children: [
-                      /*
-                      AnotherStepper(
-                        stepperDirection: Axis.horizontal,
-                        activeIndex: 0,
-                        barThickness: 1,
-                        inverted: true,
-                        stepperList: [
-                          StepperData(),
-                          StepperData(
-                            iconWidget: SizedBox(
-                              height: 12.adaptSize,
-                              width: 12.adaptSize,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      height: 12.adaptSize,
-                                      width: 12.adaptSize,
-                                      decoration: BoxDecoration(
-                                        color: appTheme.teal50,
-                                        borderRadius: BorderRadius.circular(
-                                          6.h,
+    return WillPopScope(
+      onWillPop: () async {
+        onTapBack();
+        return true;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: _buildAppBar(context),
+          body: BlocBuilder<QuestionsCubit, QuestionsState>(
+            builder: (context, state) {
+              if (state is QuestionsLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is QuestionsSuccess) {
+                return SizedBox(
+                  width: SizeUtils.width,
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 5.v),
+                    padding: EdgeInsets.symmetric(horizontal: 14.h),
+                    child: Column(
+                      children: [
+                        /*
+                        AnotherStepper(
+                          stepperDirection: Axis.horizontal,
+                          activeIndex: 0,
+                          barThickness: 1,
+                          inverted: true,
+                          stepperList: [
+                            StepperData(),
+                            StepperData(
+                              iconWidget: SizedBox(
+                                height: 12.adaptSize,
+                                width: 12.adaptSize,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Container(
+                                        height: 12.adaptSize,
+                                        width: 12.adaptSize,
+                                        decoration: BoxDecoration(
+                                          color: appTheme.teal50,
+                                          borderRadius: BorderRadius.circular(
+                                            6.h,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  CustomImageView(
-                                    imagePath: ImageConstant.imgGroup36959,
-                                    height: 12.adaptSize,
-                                    width: 12.adaptSize,
-                                    alignment: Alignment.center,
-                                  ),
-                                ],
+                                    CustomImageView(
+                                      imagePath: ImageConstant.imgGroup36959,
+                                      height: 12.adaptSize,
+                                      width: 12.adaptSize,
+                                      alignment: Alignment.center,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          StepperData(),
-                        ],
-                      ),
-*/
-                      SizedBox(height: 24.v),
-                      Expanded(
-                        child: ListView.separated(
-                          itemCount: BlocProvider.of<QuestionsCubit>(context)
-                              .questionsCategories
-                              .length,
-                          separatorBuilder: (context, index) {
-                            return SizedBox(height: 16.v);
-                          },
-                          itemBuilder: (context, index) {
-                            final questions =
-                                BlocProvider.of<QuestionsCubit>(context)
-                                    .questionsCategories;
-                            return BlockBuildCategoryWithQuestions(
-                                categoryModel: questions[index]);
-                          },
+                            StepperData(),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 12.v),
-                      SizedBox(height: 8.v),
-                      Visibility(
-                          visible: BlocProvider.of<QuestionsCubit>(context)
-                              .questionsCategories
-                              .isNotEmpty,
-                          child: _buildSubmit(context)),
-                      SizedBox(height: 15.v),
-                    ],
+*/
+                        SizedBox(height: 24.v),
+                        Expanded(
+                          child: ListView.separated(
+                            itemCount: BlocProvider.of<QuestionsCubit>(context)
+                                .questionsCategories
+                                .length,
+                            separatorBuilder: (context, index) {
+                              return SizedBox(height: 16.v);
+                            },
+                            itemBuilder: (context, index) {
+                              final questions =
+                                  BlocProvider.of<QuestionsCubit>(context)
+                                      .questionsCategories;
+                              return BlockBuildCategoryWithQuestions(
+                                  categoryModel: questions[index]);
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 12.v),
+                        SizedBox(height: 8.v),
+                        Visibility(
+                            visible: BlocProvider.of<QuestionsCubit>(context)
+                                .questionsCategories
+                                .isNotEmpty,
+                            child: _buildSubmit(context)),
+                        SizedBox(height: 15.v),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }
+                );
+              }
 
-            return Center(child: CircularProgressIndicator());
-          },
+              return Center(child: CircularProgressIndicator());
+            },
+          ),
         ),
       ),
     );
@@ -193,23 +205,21 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       leadingWidth: 40.h,
-      // leading: AppbarLeadingImage(
-      //   imagePath: ImageConstant.imgArrowLeft,
-      //   margin: EdgeInsets.only(
-      //     left: 16.h,
-      //     top: 4.v,
-      //     bottom: 3.v,
-      //   ),
-      // ),
-      centerTitle: true,
-      title: Text(
-        // "$medicalRepName - $questionType",
-        "$questionType" == "normal" ? "Normal" : "Flash",
-        style: CustomTextStyles.titleSmallBlack900,
+      leading: AppbarLeadingImage(
+        imagePath: ImageConstant.imgArrowLeft,
+        margin: EdgeInsets.only(
+          left: 16.h,
+          top: 4.v,
+          bottom: 3.v,
+        ),
+        onTap: () {
+          onTapBack();
+        },
       ),
-      // title: AppbarTitle(
-      //   text: "msg_medical_rep_s_name".tr,
-      // ),
+      centerTitle: true,
+      title: AppbarTitle(
+        text: "$questionType" == "normal" ? "Normal" : "Flash",
+      ),
     );
   }
 

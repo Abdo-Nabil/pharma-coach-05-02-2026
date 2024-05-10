@@ -13,148 +13,164 @@ import '../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../widgets/custom_elevated_button.dart';
 
 class LastQuestionScreen extends StatelessWidget {
+  //
+  onTapBack(BuildContext context) {
+    Navigator.pop(context);
+    BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(1);
+  }
+
+  //
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: _buildAppBar(context),
-        body: SizedBox(
-          width: SizeUtils.width,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(top: 16.v),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 15.h),
-              child: Column(
-                children: [
-/*
-                  AnotherStepper(
-                    stepperDirection: Axis.horizontal,
-                    activeIndex: 0,
-                    barThickness: 1,
-                    inverted: true,
-                    stepperList: [
-                      // StepperData(),
-                      StepperData(
-                        iconWidget: SizedBox(
-                          height: 12.adaptSize,
-                          width: 12.adaptSize,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  height: 12.adaptSize,
-                                  width: 12.adaptSize,
-                                  decoration: BoxDecoration(
-                                    color: appTheme.teal50,
-                                    borderRadius: BorderRadius.circular(
-                                      6.h,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              CustomImageView(
-                                imagePath: ImageConstant.imgGroup36958,
-                                height: 12.adaptSize,
-                                width: 12.adaptSize,
-                                alignment: Alignment.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      StepperData(
-                        iconWidget: SizedBox(
-                          height: 12.adaptSize,
-                          width: 12.adaptSize,
-                          child: Stack(
-                            alignment: Alignment.centerLeft,
-                            children: [
-                              Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  height: 12.adaptSize,
-                                  width: 12.adaptSize,
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.primary,
-                                    borderRadius: BorderRadius.circular(
-                                      6.h,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  height: 6.adaptSize,
-                                  width: 6.adaptSize,
-                                  margin: EdgeInsets.only(left: 2.h),
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.onPrimary,
-                                    borderRadius: BorderRadius.circular(
-                                      3.h,
-                                    ),
-                                    border: Border.all(
-                                      color: theme.colorScheme.onPrimary,
-                                      width: 1.h,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: appTheme.gray50021,
-                                        spreadRadius: 2.h,
-                                        blurRadius: 2.h,
-                                        offset: Offset(
-                                          0,
-                                          4,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-*/
-                  SizedBox(height: 8.v),
-                  //
-                  LastBuildCategoryWithQuestions(
-                    categoryModel:
-                        BlocProvider.of<QuestionsCubit>(context).lastCategory,
-                  ),
-                  SizedBox(height: 16.v),
-                  CustomElevatedButton(
-                    text: "lbl_submit".tr,
-                    onPressed: () async {
-                      if (BlocProvider.of<QuestionsCubit>(context)
-                          .areAllLastCategoryQuestionsAnswered()) {
-                        ProgressDialogUtils.showProgressDialog();
-                        //
-                        await BlocProvider.of<QuestionsCubit>(context)
-                            .submitEndOfTheDay();
-                        //
-                        ProgressDialogUtils.hideProgressDialog();
+    //
 
-                        ///
-                        Navigator.pop(context);
-                        BlocProvider.of<GeneralCubit>(context)
-                            .setBottomNavIndex(3);
-                        // ProgressDialogUtils.showEndOfTheDaySuccessDialog(
-                        //     context);
-                        //
-                      } else {
-                        ProgressDialogUtils.showWarningDialog(context,
-                            'Keep Note!', 'Some questions were not answered');
-                        return;
-                      }
-                    },
-                  ),
-                ],
+    //
+    return WillPopScope(
+      onWillPop: () async {
+        onTapBack(context);
+        return true;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: _buildAppBar(context),
+          body: SizedBox(
+            width: SizeUtils.width,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(top: 16.v),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 15.h),
+                child: Column(
+                  children: [
+/*
+                    AnotherStepper(
+                      stepperDirection: Axis.horizontal,
+                      activeIndex: 0,
+                      barThickness: 1,
+                      inverted: true,
+                      stepperList: [
+                        // StepperData(),
+                        StepperData(
+                          iconWidget: SizedBox(
+                            height: 12.adaptSize,
+                            width: 12.adaptSize,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: 12.adaptSize,
+                                    width: 12.adaptSize,
+                                    decoration: BoxDecoration(
+                                      color: appTheme.teal50,
+                                      borderRadius: BorderRadius.circular(
+                                        6.h,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                CustomImageView(
+                                  imagePath: ImageConstant.imgGroup36958,
+                                  height: 12.adaptSize,
+                                  width: 12.adaptSize,
+                                  alignment: Alignment.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        StepperData(
+                          iconWidget: SizedBox(
+                            height: 12.adaptSize,
+                            width: 12.adaptSize,
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: 12.adaptSize,
+                                    width: 12.adaptSize,
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.primary,
+                                      borderRadius: BorderRadius.circular(
+                                        6.h,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                    height: 6.adaptSize,
+                                    width: 6.adaptSize,
+                                    margin: EdgeInsets.only(left: 2.h),
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.onPrimary,
+                                      borderRadius: BorderRadius.circular(
+                                        3.h,
+                                      ),
+                                      border: Border.all(
+                                        color: theme.colorScheme.onPrimary,
+                                        width: 1.h,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: appTheme.gray50021,
+                                          spreadRadius: 2.h,
+                                          blurRadius: 2.h,
+                                          offset: Offset(
+                                            0,
+                                            4,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+*/
+                    SizedBox(height: 8.v),
+                    //
+                    LastBuildCategoryWithQuestions(
+                      categoryModel:
+                          BlocProvider.of<QuestionsCubit>(context).lastCategory,
+                    ),
+                    SizedBox(height: 16.v),
+                    CustomElevatedButton(
+                      text: "lbl_submit".tr,
+                      onPressed: () async {
+                        if (BlocProvider.of<QuestionsCubit>(context)
+                            .areAllLastCategoryQuestionsAnswered()) {
+                          ProgressDialogUtils.showProgressDialog();
+                          //
+                          await BlocProvider.of<QuestionsCubit>(context)
+                              .submitEndOfTheDay();
+                          //
+                          ProgressDialogUtils.hideProgressDialog();
+
+                          ///
+                          Navigator.pop(context);
+                          BlocProvider.of<GeneralCubit>(context)
+                              .setBottomNavIndex(3);
+                          // ProgressDialogUtils.showEndOfTheDaySuccessDialog(
+                          //     context);
+                          //
+                        } else {
+                          ProgressDialogUtils.showWarningDialog(context,
+                              'Keep Note!', 'Some questions were not answered');
+                          return;
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -175,7 +191,7 @@ class LastQuestionScreen extends StatelessWidget {
           bottom: 3.v,
         ),
         onTap: () {
-          Navigator.pop(context);
+          onTapBack(context);
         },
       ),
       centerTitle: true,

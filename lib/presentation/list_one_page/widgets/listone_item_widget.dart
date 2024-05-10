@@ -48,6 +48,45 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget>
   }
 
   //
+  onTapFlashOrNormal(String value) async {
+    if (groupValue == value) {
+      if (!widget.isQuestionSubmitted) {
+        final pref = PrefUtils();
+        final result = await pref.getFirstCategoryAnswer();
+        if (result == null) {
+          NavigatorService.pushNamed(
+            AppRoutes.firstQuestionsScreen,
+            arguments: {
+              'type': groupValue,
+              'visitId': widget.visitIdIfFound,
+              'locationId': widget.locationModel.id!,
+              'locationType': widget.locationModel.type,
+              // 'medicalRepName': widget.locationModel.rep.firstName,
+            },
+          );
+          return;
+        } else {
+          NavigatorService.pushNamed(
+            AppRoutes.questionsScreen,
+            arguments: {
+              'type': groupValue,
+              'visitId': widget.visitIdIfFound,
+              'locationId': widget.locationModel.id!,
+              'locationType': widget.locationModel.type,
+              // 'medicalRepName': widget.locationModel.rep.firstName,
+            },
+          );
+          return;
+        }
+      }
+    } else {
+      setState(() {
+        groupValue = value;
+      });
+    }
+  }
+
+  //
   @override
   Widget build(BuildContext context) {
     final List<String> temp = widget.locationModel.name.split('_');
@@ -72,35 +111,6 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget>
                 localIsVisitCreated = true;
               });
               return;
-            }
-            if (!widget.isQuestionSubmitted) {
-              final pref = PrefUtils();
-              final result = await pref.getFirstCategoryAnswer();
-              if (result == null) {
-                NavigatorService.pushNamed(
-                  AppRoutes.firstQuestionsScreen,
-                  arguments: {
-                    'type': groupValue,
-                    'visitId': widget.visitIdIfFound,
-                    'locationId': widget.locationModel.id!,
-                    'locationType': widget.locationModel.type,
-                    // 'medicalRepName': widget.locationModel.rep.firstName,
-                  },
-                );
-                return;
-              } else {
-                NavigatorService.pushNamed(
-                  AppRoutes.questionsScreen,
-                  arguments: {
-                    'type': groupValue,
-                    'visitId': widget.visitIdIfFound,
-                    'locationId': widget.locationModel.id!,
-                    'locationType': widget.locationModel.type,
-                    // 'medicalRepName': widget.locationModel.rep.firstName,
-                  },
-                );
-                return;
-              }
             }
           },
           child: Container(
@@ -207,15 +217,11 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget>
                               title: "Normal",
                               value: "normal",
                               groupValue: groupValue,
-                              onTap: () {
-                                setState(() {
-                                  groupValue = "normal";
-                                });
+                              onTap: () async {
+                                onTapFlashOrNormal('normal');
                               },
                               onChange: (_) {
-                                setState(() {
-                                  groupValue = "normal";
-                                });
+                                onTapFlashOrNormal('normal');
                               },
                             ),
                             RadioItemWidget(
@@ -223,14 +229,10 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget>
                               value: "flash",
                               groupValue: groupValue,
                               onTap: () {
-                                setState(() {
-                                  groupValue = "flash";
-                                });
+                                onTapFlashOrNormal('flash');
                               },
                               onChange: (_) {
-                                setState(() {
-                                  groupValue = "flash";
-                                });
+                                onTapFlashOrNormal('flash');
                               },
                             ),
                           ],
