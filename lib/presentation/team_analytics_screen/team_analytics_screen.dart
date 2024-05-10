@@ -89,82 +89,122 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
           ),
           child: Column(
             children: [
-              CustomElevatedButton(
-                height: 45.v,
-                // text: isTeamToggled ? "lbl_team".tr : "Medical rep",
-                text: isTeamToggled
-                    ? "Show medical rep only"
-                    : "Compare to team".tr,
-                // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
-                buttonStyle: isTeamToggled
-                    ? CustomButtonStyles.fillPrimaryTL12
-                    : CustomButtonStyles.fillPink,
-                buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
-                onPressed: () {
-                  isTeamToggled = !isTeamToggled;
-                  setState(() {});
-                },
-              ),
-              SizedBox(height: 16.v),
-              TextField(
-                controller: dateController,
-                readOnly: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.h),
-                  ),
-                ),
-                onTap: () async {
-                  pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now().subtract(
-                        Duration(days: 365),
-                      ),
-                      lastDate: DateTime(2080));
-                  if (pickedDate != null) {
-                    //
-                    dateController.text =
-                        GeneralHelper.formatDateForDisplay1(pickedDate!);
-                    BlocProvider.of<AnalysisCubit>(context).getAnalysis(
-                      pickedDate!,
-                      dateFilter.name,
-                    );
-                    quarterNumber = _getQuarter(pickedDate!);
-                  }
-                },
-              ),
-              SizedBox(height: 16.v),
+              // SizedBox(height: 16.v),
               Container(
-                decoration: AppDecoration.fillBlue100.copyWith(
+                decoration: AppDecoration.fillPurple.copyWith(
                   borderRadius: BorderRadiusStyle.roundedBorder17,
                 ),
                 width: double.infinity,
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<int>(
-                    menuMaxHeight: 300.v,
-                    hint: Text("Choose medical rep"),
-                    isExpanded: true,
-                    padding: EdgeInsets.all(8),
-                    value: selectedRepId,
-                    onChanged: (int? newValue) {
-                      setState(() {
-                        selectedRepId = newValue!;
-                      });
-                      debugPrint("$selectedRepId");
-                    },
-                    items: BlocProvider.of<AnalysisCubit>(context, listen: true)
-                        .reps
-                        .map<DropdownMenuItem<int>>((option) {
-                      return DropdownMenuItem<int>(
-                        value: option.id,
-                        child: Text(option.username),
-                      );
-                    }).toList(),
+                child: ClipRRect(
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<int>(
+                      menuMaxHeight: 300.v,
+                      hint: Text("Choose Medical Rep"),
+                      isExpanded: true,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.h, vertical: 2.v),
+                      value: selectedRepId,
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          selectedRepId = newValue!;
+                        });
+                        debugPrint("$selectedRepId");
+                      },
+                      items:
+                          BlocProvider.of<AnalysisCubit>(context, listen: true)
+                              .reps
+                              .map<DropdownMenuItem<int>>((option) {
+                        return DropdownMenuItem<int>(
+                          value: option.id,
+                          child: Text(option.username),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
               ),
               SizedBox(height: 16.v),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 48.v,
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Center(
+                      child: TextField(
+                        textAlign: TextAlign.center,
+                        controller: dateController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.h),
+                          ),
+                        ),
+                        onTap: () async {
+                          pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now().subtract(
+                                Duration(days: 365),
+                              ),
+                              lastDate: DateTime(2080));
+                          if (pickedDate != null) {
+                            //
+                            dateController.text =
+                                GeneralHelper.formatDateForDisplay1(
+                                    pickedDate!);
+                            BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+                              pickedDate!,
+                              dateFilter.name,
+                            );
+                            quarterNumber = _getQuarter(pickedDate!);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  SizedBox(width: 10.h),
+                  Row(
+                    children: [
+                      Container(
+                        height: 48.v,
+                        width: MediaQuery.of(context).size.width * 0.17,
+                        // padding: EdgeInsets.fromLTRB(16.h, 14.v, 16.h, 14.v),
+                        decoration: AppDecoration.fillPurple.copyWith(
+                          borderRadius: BorderRadiusStyle.roundedBorder7 * 2,
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Rep",
+                            style: CustomTextStyles.labelLargeSFProTextBlack900,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 14.h,
+                      ),
+                      Container(
+                        height: 48.v,
+                        width: MediaQuery.of(context).size.width * 0.17,
+                        // padding: EdgeInsets.fromLTRB(16.h, 14.v, 16.h, 14.v),
+                        decoration: AppDecoration.fillBlue100.copyWith(
+                          borderRadius: BorderRadiusStyle.roundedBorder7 * 2,
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Team",
+                            style: CustomTextStyles.labelLargeSFProTextBlack900,
+                          ),
+                        ),
+                      ),
+                      // SizedBox(
+                      //   width: 16.h,
+                      // ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.v),
               Center(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -355,7 +395,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                         selectedRepId == null
                             ? Container()
                             : BuildTeamAnalysisView(
-                                title: "Score",
+                                title: "Total score",
                                 repPercentage: avgRepScore,
                                 teamPercentage: avgTeamScore,
                                 isTeamToggled: isTeamToggled,
@@ -391,7 +431,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       // appTheme.blue100
-      height: 50.v,
+      height: 60.v,
       title: Row(
         children: [
           AppbarTitle(
@@ -399,36 +439,24 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
             margin: EdgeInsets.only(left: 16.h),
           ),
           Spacer(),
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 6.v, horizontal: 14.h),
-                decoration: AppDecoration.fillBlue100.copyWith(
-                  borderRadius: BorderRadiusStyle.roundedBorder7,
-                ),
-                child: Text(
-                  "Rep",
-                  style: CustomTextStyles.labelLargeSFProTextBlack900,
-                ),
-              ),
-              SizedBox(
-                width: 14.h,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 6.v, horizontal: 14.h),
-                decoration: AppDecoration.fillPurple.copyWith(
-                  borderRadius: BorderRadiusStyle.roundedBorder7,
-                ),
-                child: Text(
-                  "Team",
-                  style: CustomTextStyles.labelLargeSFProTextBlack900,
-                ),
-              ),
-              SizedBox(
-                width: 16.h,
-              ),
-            ],
-          )
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0.h),
+            child: CustomElevatedButton(
+              height: 40.v,
+              width: MediaQuery.of(context).size.width * 0.40,
+              // text: isTeamToggled ? "lbl_team".tr : "Medical rep",
+              text: isTeamToggled ? "Progress" : "Compare to team".tr,
+              // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+              buttonStyle: isTeamToggled
+                  ? CustomButtonStyles.fillPink
+                  : CustomButtonStyles.fillPrimaryTL12,
+              buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
+              onPressed: () {
+                isTeamToggled = !isTeamToggled;
+                setState(() {});
+              },
+            ),
+          ),
         ],
       ),
       // actions: [
@@ -617,7 +645,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width - 60.h,
-                decoration: AppDecoration.fillBlue100.copyWith(
+                decoration: AppDecoration.fillPurple.copyWith(
                   borderRadius: BorderRadiusStyle.roundedBorder7,
                 ),
                 child: Row(
@@ -629,7 +657,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
                           (repPercentage / 100),
                       // MediaQuery.of(context).size.width - 60.h
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary,
+                        color: appTheme.purple300,
                         borderRadius: BorderRadius.circular(
                           8.h,
                         ),
@@ -665,7 +693,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width - 60.h,
-                  decoration: AppDecoration.fillPurple.copyWith(
+                  decoration: AppDecoration.fillBlue100.copyWith(
                     borderRadius: BorderRadiusStyle.roundedBorder7,
                   ),
                   child: Row(
@@ -677,7 +705,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
                             (teamPercentage / 100),
                         // width: 200,
                         decoration: BoxDecoration(
-                          color: appTheme.purple300,
+                          color: theme.colorScheme.primary,
                           borderRadius: BorderRadius.circular(
                             8.h,
                           ),
