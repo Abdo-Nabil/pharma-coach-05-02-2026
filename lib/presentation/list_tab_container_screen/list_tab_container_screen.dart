@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'bloc/list_tab_container_bloc.dart';
 
+late ListTabContainerCubit listCubit;
+
 class ListTabContainerScreen extends StatefulWidget {
   const ListTabContainerScreen({Key? key})
       : super(
@@ -33,14 +35,18 @@ class ListTabContainerScreen extends StatefulWidget {
   //     child: ListTabContainerScreen(),
   //   );
   // }
+
   static Widget builder(
     BuildContext context,
   ) {
     return BlocProvider<ListTabContainerCubit>(
-      create: (context) => ListTabContainerCubit(
-        ApiClient(),
-        BlocProvider.of<GeneralCubit>(context),
-      ),
+      create: (context) {
+        listCubit = ListTabContainerCubit(
+          ApiClient(),
+          BlocProvider.of<GeneralCubit>(context),
+        );
+        return listCubit;
+      },
       child: ListTabContainerScreen(),
     );
   }
@@ -97,8 +103,24 @@ class ListTabContainerScreenState extends State<ListTabContainerScreen>
                             child: TabBarView(
                               controller: tabviewController,
                               children: [
-                                ListPage.builder(context),
-                                ListOnePage.builder(context),
+                                // Center(
+                                //   child: Text(
+                                //     "Hi from Am",
+                                //     style: TextStyle(fontSize: 30),
+                                //   ),
+                                // ),
+                                //
+                                BlocProvider.value(
+                                  value: listCubit,
+                                  child: ListPage(),
+                                ),
+                                BlocProvider.value(
+                                  value: listCubit,
+                                  child: ListOnePage(),
+                                ),
+
+                                // ListPage.builder(context),
+                                // ListOnePage.builder(context),
                               ],
                             ),
                           ),

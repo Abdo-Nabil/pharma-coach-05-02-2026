@@ -19,15 +19,15 @@ class ListPage extends StatefulWidget {
 
   @override
   ListPageState createState() => ListPageState();
-  static Widget builder(BuildContext context) {
-    return BlocProvider<ListBloc>(
-      create: (context) => ListBloc(ListState(
-        listModelObj: ListModel(),
-      ))
-        ..add(ListInitialEvent()),
-      child: ListPage(),
-    );
-  }
+  // static Widget builder(BuildContext context) {
+  //   return BlocProvider<ListBloc>(
+  //     create: (context) => ListBloc(ListState(
+  //       listModelObj: ListModel(),
+  //     ))
+  //       ..add(ListInitialEvent()),
+  //     child: ListPage(),
+  //   );
+  // }
 }
 
 class ListPageState extends State<ListPage>
@@ -88,52 +88,100 @@ class ListPageState extends State<ListPage>
             // },
           ),
           SizedBox(height: 8.v),
-          BlocBuilder<ListTabContainerCubit, ListTapContainerState>(
-            builder: (context, state) {
-              if (state is ListTapContainerGetLocationsSuccessState) {
-                final locations = state.amLocations;
-                return Expanded(
-                  child: ListView.separated(
-                    physics: BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    separatorBuilder: (
-                      context,
-                      index,
-                    ) {
-                      return SizedBox(
-                        height: 4.v,
-                      );
-                    },
-                    itemCount: locations.length,
-                    itemBuilder: (context, index) {
-                      final isVisitCreated =
-                          BlocProvider.of<ListTabContainerCubit>(context)
-                              .isVisitCreated(locations[index].id!);
-
-                      final isQuestionSubmitted =
-                          BlocProvider.of<ListTabContainerCubit>(context)
-                              .isQuestionSubmitted(locations[index].id!);
-                      // final visitIdIfFound =
-                      //     BlocProvider.of<ListTabContainerCubit>(context)
-                      //         .getVisitId(locations[index].id!);
-                      //
-                      return ListoneItemWidget(
-                        locations[index],
-                        isPm: false,
-                        isVisitCreated: isVisitCreated,
-                        isQuestionSubmitted: isQuestionSubmitted,
-                        visitIdIfFound: -1,
-                      );
-                      // return ListItemWidget(
-                      //   visits[index],
-                      // );
-                    },
-                  ),
+          //
+          Expanded(
+            child: ListView.separated(
+              physics: BouncingScrollPhysics(),
+              shrinkWrap: true,
+              separatorBuilder: (
+                context,
+                index,
+              ) {
+                return SizedBox(
+                  height: 4.v,
                 );
-              }
-              return SizedBox.shrink();
-            },
-          ),
+              },
+              itemCount: BlocProvider.of<ListTabContainerCubit>(context)
+                  .amLocations
+                  .length,
+              itemBuilder: (context, index) {
+                final locations =
+                    BlocProvider.of<ListTabContainerCubit>(context).amLocations;
+
+                final isVisitCreated =
+                    BlocProvider.of<ListTabContainerCubit>(context)
+                        .isVisitCreated(locations[index].id!);
+
+                final isQuestionSubmitted =
+                    BlocProvider.of<ListTabContainerCubit>(context)
+                        .isQuestionSubmitted(locations[index].id!);
+                // final visitIdIfFound =
+                //     BlocProvider.of<ListTabContainerCubit>(context)
+                //         .getVisitId(locations[index].id!);
+                //
+                return ListoneItemWidget(
+                  locations[index],
+                  isPm: false,
+                  isVisitCreated: isVisitCreated,
+                  isQuestionSubmitted: isQuestionSubmitted,
+                  visitIdIfFound: -1,
+                );
+                // return ListItemWidget(
+                //   visits[index],
+                // );
+              },
+            ),
+          )
+          //
+          ////////////////////////////////////////////////////////////////////
+
+          // BlocBuilder<ListTabContainerCubit, ListTapContainerState>(
+          //   builder: (context, state) {
+          //     if (state is ListTapContainerGetLocationsSuccessState) {
+          //       final locations = state.amLocations;
+          //       return Expanded(
+          //         child: ListView.separated(
+          //           physics: BouncingScrollPhysics(),
+          //           shrinkWrap: true,
+          //           separatorBuilder: (
+          //             context,
+          //             index,
+          //           ) {
+          //             return SizedBox(
+          //               height: 4.v,
+          //             );
+          //           },
+          //           itemCount: locations.length,
+          //           itemBuilder: (context, index) {
+          //             final isVisitCreated =
+          //                 BlocProvider.of<ListTabContainerCubit>(context)
+          //                     .isVisitCreated(locations[index].id!);
+          //
+          //             final isQuestionSubmitted =
+          //                 BlocProvider.of<ListTabContainerCubit>(context)
+          //                     .isQuestionSubmitted(locations[index].id!);
+          //             // final visitIdIfFound =
+          //             //     BlocProvider.of<ListTabContainerCubit>(context)
+          //             //         .getVisitId(locations[index].id!);
+          //             //
+          //             return ListoneItemWidget(
+          //               locations[index],
+          //               isPm: false,
+          //               isVisitCreated: isVisitCreated,
+          //               isQuestionSubmitted: isQuestionSubmitted,
+          //               visitIdIfFound: -1,
+          //             );
+          //             // return ListItemWidget(
+          //             //   visits[index],
+          //             // );
+          //           },
+          //         ),
+          //       );
+          //     }
+          //     return SizedBox.shrink();
+          //   },
+          // ),
+          ////////////////////////////////////////////////////////////////////
           // BlocSelector<ListBloc, ListState, ListModel?>(
           //   selector: (state) => state.listModelObj,
           //   builder: (context, listModelObj) {

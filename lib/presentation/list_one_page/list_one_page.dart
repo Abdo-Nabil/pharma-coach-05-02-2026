@@ -85,7 +85,46 @@ class ListOnePageState extends State<ListOnePage>
             // },
           ),
           SizedBox(height: 8.v),
-          BlocBuilder<ListTabContainerCubit, ListTapContainerState>(
+          Expanded(
+            child: ListView.separated(
+              // physics: NeverScrollableScrollPhysics(),
+              // shrinkWrap: true,
+              separatorBuilder: (
+                context,
+                index,
+              ) {
+                return SizedBox(
+                  height: 4.v,
+                );
+              },
+              itemCount: BlocProvider.of<ListTabContainerCubit>(context)
+                  .pmLocations
+                  .length,
+              itemBuilder: (context, index) {
+                final locations =
+                    BlocProvider.of<ListTabContainerCubit>(context).pmLocations;
+
+                final isVisitCreated =
+                    BlocProvider.of<ListTabContainerCubit>(context)
+                        .isVisitCreated(locations[index].id!);
+                final isQuestionSubmitted =
+                    BlocProvider.of<ListTabContainerCubit>(context)
+                        .isQuestionSubmitted(locations[index].id!);
+                // final visitIdIfFound =
+                //     BlocProvider.of<ListTabContainerCubit>(context)
+                //         .getVisitId(locations[index].id!);
+                return ListoneItemWidget(
+                  locations[index],
+                  isPm: true,
+                  isVisitCreated: isVisitCreated,
+                  isQuestionSubmitted: isQuestionSubmitted,
+                  visitIdIfFound: -1,
+                );
+              },
+            ),
+          ),
+          ////////////////////////////////////////////////////////////////////
+          /*BlocBuilder<ListTabContainerCubit, ListTapContainerState>(
             builder: (context, state) {
               if (state is ListTapContainerGetLocationsSuccessState) {
                 final locations = state.pmLocations;
@@ -126,7 +165,8 @@ class ListOnePageState extends State<ListOnePage>
               }
               return Container();
             },
-          ),
+          ),*/
+          ///////////////////////////////////////////////////////////////////////
           // BlocSelector<ListOneBloc, ListOneState, ListOneModel?>(
           //   selector: (state) => state.listOneModelObj,
           //   builder: (context, listOneModelObj) {
