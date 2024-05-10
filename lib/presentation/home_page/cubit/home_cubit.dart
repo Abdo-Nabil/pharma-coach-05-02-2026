@@ -72,7 +72,6 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeLoadingState());
     await _saveQuestionCategoriesInLocal();
     await _saveLocationsInLocal();
-    await _saveLocationsInLocal();
     await generalCubit.executeSubmitQuestionsAndRemoveVisitsFromLocal();
     //
     final pref = PrefUtils();

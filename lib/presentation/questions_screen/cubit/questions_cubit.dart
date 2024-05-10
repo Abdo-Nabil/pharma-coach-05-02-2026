@@ -129,6 +129,7 @@ class QuestionsCubit extends Cubit<QuestionsState> {
       repId: GeneralData.selectedRepId,
       locationId: locationId,
       visitTime: GeneralHelper.formatDateForApi(DateTime.now()),
+      accurateVisitTime: GeneralHelper.formatAccurateDateForApi(DateTime.now()),
       shift: shift,
       isQuestionSubmitted: true,
     ));

@@ -207,7 +207,7 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
           return;
         } else if (GeneralData.selectedDate.isBefore(yesterday)) {
           ProgressDialogUtils.showWarningDialog(
-              context, "Sorry!", "You can't create visits in Day Before");
+              context, "Sorry!", "You can't create visits in the Past");
           return;
         }
         //

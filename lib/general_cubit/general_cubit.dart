@@ -80,7 +80,8 @@ class GeneralCubit extends Cubit<GeneralState> {
       final int? visitId = await apiClient.createVisit(
           GeneralData.selectedRepId,
           visits[i].locationId,
-          visits[i].visitTime,
+          // visits[i].visitTime,
+          visits[i].accurateVisitTime,
           visits[i].shift);
 
       if (visitId != null) {

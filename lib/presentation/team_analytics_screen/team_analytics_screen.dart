@@ -143,7 +143,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<int>(
                     menuMaxHeight: 300.v,
-                    hint: Text("Chose medical rep"),
+                    hint: Text("Choose medical rep"),
                     isExpanded: true,
                     padding: EdgeInsets.all(8),
                     value: selectedRepId,

@@ -5,12 +5,19 @@ import 'core/utils/pref_utils.dart';
 import 'core/utils/progress_dialog_utils.dart';
 
 class GeneralHelper {
+  static String format = "yyyy-MM-dd";
+  static String format2 = "yyyy-MM-dd HH:mm:ss";
+
   static String formatDateForApi(DateTime date) {
-    return DateFormat("yyyy-MM-dd").format(date);
+    return DateFormat(format).format(date);
+  }
+
+  static String formatAccurateDateForApi(DateTime date) {
+    return DateFormat(format2).format(date);
   }
 
   static DateTime formatDateFromApi(String date) {
-    return DateFormat("yyyy-MM-dd").parse(date);
+    return DateFormat(format).parse(date);
   }
 
   static String formatDateForDisplay1(DateTime date) {

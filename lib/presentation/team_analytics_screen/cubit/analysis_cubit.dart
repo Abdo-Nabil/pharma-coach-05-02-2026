@@ -18,6 +18,7 @@ class AnalysisCubit extends Cubit<AnalysisState> {
   getAnalysis(DateTime date, String dateScope) async {
     String dateAsString = GeneralHelper.formatDateForApi(date);
     emit(AnalysisLoading());
+    ;
     analysis = await apiClient.getAnalysis(dateAsString, dateScope);
     reps = await apiClient.getMedicalReps();
     emit(AnalysisSuccess());
