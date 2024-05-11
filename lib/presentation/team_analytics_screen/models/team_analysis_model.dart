@@ -11,16 +11,16 @@ final z = [
   }
 ];
 
-class AnalysisModel {
+class TeamAnalysisModel {
   final String category;
   final Map reps;
 
-  const AnalysisModel({
+  const TeamAnalysisModel({
     required this.category,
     required this.reps,
   });
 
-  factory AnalysisModel.fromMap(Map<String, dynamic> map) {
+  factory TeamAnalysisModel.fromMap(Map<String, dynamic> map) {
     Map moddedMap = {};
     for (int i = 0; i < moddedMap.length; i++) {}
     map['reps'].forEach((key, value) {
@@ -28,7 +28,7 @@ class AnalysisModel {
       moddedMap['$key'] = value.toDouble();
     });
     //
-    return AnalysisModel(
+    return TeamAnalysisModel(
       category: map['category'] as String,
       reps: moddedMap,
     );

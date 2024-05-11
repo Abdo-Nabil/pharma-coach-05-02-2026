@@ -1,4 +1,4 @@
-part of 'analysis_cubit.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class AnalysisState extends Equatable {
   const AnalysisState();
@@ -14,7 +14,12 @@ class AnalysisLoading extends AnalysisState {
   List<Object> get props => [];
 }
 
-class AnalysisSuccess extends AnalysisState {
+class TeamAnalysisSuccess extends AnalysisState {
+  @override
+  List<Object> get props => [];
+}
+
+class RepAnalysisSuccess extends AnalysisState {
   @override
   List<Object> get props => [];
 }

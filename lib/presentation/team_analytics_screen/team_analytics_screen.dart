@@ -1,13 +1,17 @@
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
 import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/home_page/home_page.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/build_rep_analysis_widget.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/cubit/rep_analysis_cubit/rep_analysis_cubit.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/select_medical_rep_alert.dart';
 import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
 import 'package:mina_s_application5/widgets/app_bar/appbar_title.dart';
 import 'package:mina_s_application5/widgets/app_bar/appbar_trailing_iconbutton_one.dart';
 import 'package:mina_s_application5/widgets/app_bar/appbar_trailing_iconbutton.dart';
 import 'package:mina_s_application5/widgets/custom_elevated_button.dart';
 import 'package:mina_s_application5/widgets/custom_drop_down.dart';
-import 'cubit/analysis_cubit.dart';
+import 'cubit/analysis_cubit/analysis_cubit.dart';
+import 'cubit/analysis_cubit/analysis_state.dart';
 import 'models/team_analytics_model.dart';
 import 'package:mina_s_application5/widgets/custom_bottom_bar.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +29,10 @@ class TeamAnalyticsScreen extends StatefulWidget {
   static Widget builder(BuildContext context, {bool isManualNav = false}) {
     return BlocProvider<AnalysisCubit>(
       create: (context) => AnalysisCubit(ApiClient()),
-      child: TeamAnalyticsScreen(),
+      child: BlocProvider(
+        create: (_) => RepAnalysisCubit(ApiClient()),
+        child: TeamAnalyticsScreen(),
+      ),
     );
   }
 
@@ -42,21 +49,8 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   DateFilter dateFilter = DateFilter.day;
   DateTime? pickedDate = DateTime.now();
   //
-  late int quarterNumber = _getQuarter(pickedDate!);
+  late int quarterNumber = GeneralHelper.getQuarter(pickedDate!);
   //
-  _getQuarter(DateTime date) {
-    late int q;
-    if (date.month >= 1 && date.month <= 3) {
-      q = 1;
-    } else if (date.month >= 4 && date.month <= 6) {
-      q = 2;
-    } else if (date.month >= 7 && date.month <= 9) {
-      q = 3;
-    } else {
-      q = 4;
-    }
-    return q;
-  }
 
   //
   @override
@@ -68,7 +62,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   //
   @override
   void initState() {
-    BlocProvider.of<AnalysisCubit>(context).getAnalysis(
+    BlocProvider.of<AnalysisCubit>(context).getTeamAnalysis(
       DateTime.now(),
       dateFilter.name,
     );
@@ -152,11 +146,21 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                             dateController.text =
                                 GeneralHelper.formatDateForDisplay1(
                                     pickedDate!);
-                            BlocProvider.of<AnalysisCubit>(context).getAnalysis(
-                              pickedDate!,
-                              dateFilter.name,
-                            );
-                            quarterNumber = _getQuarter(pickedDate!);
+                            if (isTeamToggled) {
+                              BlocProvider.of<AnalysisCubit>(context)
+                                  .getTeamAnalysis(
+                                pickedDate!,
+                                dateFilter.name,
+                              );
+                              quarterNumber =
+                                  GeneralHelper.getQuarter(pickedDate!);
+                            } else {
+                              BlocProvider.of<RepAnalysisCubit>(context)
+                                  .getRepAnalysis(
+                                pickedDate!,
+                                dateFilter.name,
+                              );
+                            }
                           }
                         },
                       ),
@@ -218,10 +222,19 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           setState(() {
                             dateFilter = DateFilter.day;
                           });
-                          BlocProvider.of<AnalysisCubit>(context).getAnalysis(
-                            pickedDate!,
-                            dateFilter.name,
-                          );
+                          if (isTeamToggled) {
+                            BlocProvider.of<AnalysisCubit>(context)
+                                .getTeamAnalysis(
+                              pickedDate!,
+                              dateFilter.name,
+                            );
+                          } else {
+                            BlocProvider.of<RepAnalysisCubit>(context)
+                                .getRepAnalysis(
+                              pickedDate!,
+                              dateFilter.name,
+                            );
+                          }
                         },
                       ),
                       FilterButton(
@@ -231,10 +244,19 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           setState(() {
                             dateFilter = DateFilter.month;
                           });
-                          BlocProvider.of<AnalysisCubit>(context).getAnalysis(
-                            pickedDate!,
-                            dateFilter.name,
-                          );
+                          if (isTeamToggled) {
+                            BlocProvider.of<AnalysisCubit>(context)
+                                .getTeamAnalysis(
+                              pickedDate!,
+                              dateFilter.name,
+                            );
+                          } else {
+                            BlocProvider.of<RepAnalysisCubit>(context)
+                                .getRepAnalysis(
+                              pickedDate!,
+                              dateFilter.name,
+                            );
+                          }
                         },
                       ),
                       FilterButton(
@@ -244,10 +266,19 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           setState(() {
                             dateFilter = DateFilter.quarter;
                           });
-                          BlocProvider.of<AnalysisCubit>(context).getAnalysis(
-                            pickedDate!,
-                            "q$quarterNumber",
-                          );
+                          if (isTeamToggled) {
+                            BlocProvider.of<AnalysisCubit>(context)
+                                .getTeamAnalysis(
+                              pickedDate!,
+                              "q$quarterNumber",
+                            );
+                          } else {
+                            BlocProvider.of<RepAnalysisCubit>(context)
+                                .getRepAnalysis(
+                              pickedDate!,
+                              "q$quarterNumber",
+                            );
+                          }
                         },
                       ),
                       FilterButton(
@@ -257,10 +288,19 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           setState(() {
                             dateFilter = DateFilter.year;
                           });
-                          BlocProvider.of<AnalysisCubit>(context).getAnalysis(
-                            pickedDate!,
-                            dateFilter.name,
-                          );
+                          if (isTeamToggled) {
+                            BlocProvider.of<AnalysisCubit>(context)
+                                .getTeamAnalysis(
+                              pickedDate!,
+                              dateFilter.name,
+                            );
+                          } else {
+                            BlocProvider.of<RepAnalysisCubit>(context)
+                                .getRepAnalysis(
+                              pickedDate!,
+                              dateFilter.name,
+                            );
+                          }
                         },
                       ),
                     ],
@@ -268,7 +308,6 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                 ),
               ),
               SizedBox(height: 16.v),
-
               Expanded(
                 child: BlocBuilder<AnalysisCubit, AnalysisState>(
                     builder: (context, state) {
@@ -297,12 +336,12 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                     );
                   }
                   //
-                  else if (state is AnalysisSuccess) {
+                  else if (state is TeamAnalysisSuccess) {
                     //
                     final temp =
-                        BlocProvider.of<AnalysisCubit>(context).analysis;
+                        BlocProvider.of<AnalysisCubit>(context).teamAnalysis;
                     if (BlocProvider.of<AnalysisCubit>(context)
-                        .analysis
+                        .teamAnalysis
                         .isEmpty) {
                       BlocProvider.of<AnalysisCubit>(context)
                           .emit(NoAnalysisState());
@@ -336,12 +375,12 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                       children: [
                         SizedBox(height: 8.v),
                         selectedRepId == null
-                            ? Container()
+                            ? Expanded(child: SelectMedicalRepAlert())
                             : Expanded(
                                 child: ListView.separated(
                                     itemCount:
                                         BlocProvider.of<AnalysisCubit>(context)
-                                            .analysis
+                                            .teamAnalysis
                                             .length,
                                     separatorBuilder: (context, index) {
                                       return SizedBox(height: 10.v);
@@ -351,7 +390,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                       final analysis =
                                           BlocProvider.of<AnalysisCubit>(
                                                   context)
-                                              .analysis[index];
+                                              .teamAnalysis[index];
                                       //
                                       /* if (!analysis.reps
                                           .containsKey("$selectedRepId")) {
@@ -387,7 +426,6 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                         title: analysis.category,
                                         repPercentage: repPercentage,
                                         teamPercentage: teamAvg,
-                                        isTeamToggled: isTeamToggled,
                                       );
                                     }),
                               ),
@@ -398,12 +436,20 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                 title: "Total score",
                                 repPercentage: avgRepScore,
                                 teamPercentage: avgTeamScore,
-                                isTeamToggled: isTeamToggled,
                               ),
                         SizedBox(height: 12.v),
                       ],
                     );
                   }
+                  //
+                  else if (state is RepAnalysisSuccess) {
+                    return BuildRepAnalysisWidget(
+                      dateFilter: dateFilter,
+                      pickedDate: pickedDate!,
+                      selectedRepId: selectedRepId,
+                    );
+                  }
+                  //
                   return Center(child: CircularProgressIndicator());
                 }),
               ),
@@ -453,7 +499,19 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
               buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
               onPressed: () {
                 isTeamToggled = !isTeamToggled;
-                setState(() {});
+                if (!isTeamToggled) {
+                  BlocProvider.of<AnalysisCubit>(context)
+                      .emit(RepAnalysisSuccess());
+                  BlocProvider.of<RepAnalysisCubit>(context).getRepAnalysis(
+                    DateTime.now(),
+                    dateFilter.name,
+                  );
+                } else {
+                  BlocProvider.of<AnalysisCubit>(context).getTeamAnalysis(
+                    DateTime.now(),
+                    dateFilter.name,
+                  );
+                }
               },
             ),
           ),
@@ -609,12 +667,10 @@ class BuildTeamAnalysisView extends StatelessWidget {
   final String title;
   final double repPercentage;
   final double teamPercentage;
-  final bool isTeamToggled;
   const BuildTeamAnalysisView({
     required this.title,
     required this.repPercentage,
     required this.teamPercentage,
-    required this.isTeamToggled,
   });
 
   @override
@@ -686,55 +742,52 @@ class BuildTeamAnalysisView extends StatelessWidget {
             ],
           ),
           SizedBox(height: 5.v),
-          Visibility(
-            visible: isTeamToggled,
-            child: Stack(
-              alignment: Alignment.centerRight,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width - 60.h,
-                  decoration: AppDecoration.fillBlue100.copyWith(
-                    borderRadius: BorderRadiusStyle.roundedBorder7,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        height: 16.v,
-                        width: (MediaQuery.of(context).size.width - 60.h) *
-                            (teamPercentage / 100),
-                        // width: 200,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
-                          borderRadius: BorderRadius.circular(
-                            8.h,
-                          ),
+          Stack(
+            alignment: Alignment.centerRight,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width - 60.h,
+                decoration: AppDecoration.fillBlue100.copyWith(
+                  borderRadius: BorderRadiusStyle.roundedBorder7,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 16.v,
+                      width: (MediaQuery.of(context).size.width - 60.h) *
+                          (teamPercentage / 100),
+                      // width: 200,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary,
+                        borderRadius: BorderRadius.circular(
+                          8.h,
                         ),
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.only(
-                      //     top: 2.v,
-                      //     right: 6.h,
-                      //   ),
-                      //   child: Text(
-                      //     "${teamPercentage.toStringAsFixed(2)}%",
-                      //     style: theme.textTheme.labelLarge,
-                      //   ),
-                      // ),
-                    ],
-                  ),
+                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(
+                    //     top: 2.v,
+                    //     right: 6.h,
+                    //   ),
+                    //   child: Text(
+                    //     "${teamPercentage.toStringAsFixed(2)}%",
+                    //     style: theme.textTheme.labelLarge,
+                    //   ),
+                    // ),
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0.h),
-                  child: Text(
-                    "${teamPercentage.toStringAsFixed(2)}%",
-                    style: theme.textTheme.labelLarge,
-                  ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0.h),
+                child: Text(
+                  "${teamPercentage.toStringAsFixed(2)}%",
+                  style: theme.textTheme.labelLarge,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Visibility(visible: isTeamToggled, child: SizedBox(height: 3.v)),
+          SizedBox(height: 3.v),
         ],
       ),
     );

@@ -46,4 +46,18 @@ class GeneralHelper {
     }
     return false;
   }
+
+  static int getQuarter(DateTime date) {
+    late int q;
+    if (date.month >= 1 && date.month <= 3) {
+      q = 1;
+    } else if (date.month >= 4 && date.month <= 6) {
+      q = 2;
+    } else if (date.month >= 7 && date.month <= 9) {
+      q = 3;
+    } else {
+      q = 4;
+    }
+    return q;
+  }
 }

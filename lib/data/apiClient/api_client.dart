@@ -15,7 +15,8 @@ import 'package:mina_s_application5/presentation/questions_screen/models/categor
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/calendar_container_screen/models/vsit_model.dart';
-import '../../presentation/team_analytics_screen/models/analysis_model.dart';
+import '../../presentation/team_analytics_screen/models/rep_analysis_model.dart';
+import '../../presentation/team_analytics_screen/models/team_analysis_model.dart';
 import 'network_interceptor.dart';
 
 class ApiClient {
@@ -472,7 +473,8 @@ class ApiClient {
     return isSend;
   }
 
-  Future<List<AnalysisModel>> getAnalysis(String date, String dateScope) async {
+  Future<List<TeamAnalysisModel>> getTeamAnalysis(
+      String date, String dateScope) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -490,9 +492,48 @@ class ApiClient {
         options: Options(headers: headers),
       );
       if (_isSuccessCall(response)) {
-        List<AnalysisModel> models = [];
+        List<TeamAnalysisModel> models = [];
         for (int i = 0; i < response.data["data"].length; i++) {
-          models.add(AnalysisModel.fromMap(response.data["data"][i]));
+          models.add(TeamAnalysisModel.fromMap(response.data["data"][i]));
+        }
+        return models;
+      } else {
+        throw response.data != null
+            ? RepModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      // ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<List<RepAnalysisModel>> getRepAnalysis(
+      String date, String dateScope) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+    Map<String, dynamic> queryParams = {
+      "date": date,
+      "date_scope": dateScope,
+    };
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/new-feedback',
+        queryParameters: queryParams,
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        List<RepAnalysisModel> models = [];
+        for (int i = 0; i < response.data["data"].length; i++) {
+          models.add(RepAnalysisModel.fromMap(response.data["data"][i]));
         }
         return models;
       } else {
@@ -510,3 +551,570 @@ class ApiClient {
     }
   }
 }
+
+List z = [
+  {
+    "category": "Personal Attributes",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 80,
+        "Mar": 45,
+        "Apr": 63,
+        "May": 55,
+        "Jun": 23,
+        "Jul": 65,
+        "Aug": 88,
+        "Sep": 98,
+        "Oct": 13,
+        "Nov": 78,
+        "Dec": 56
+      },
+      "974": {
+        "Jan": 83,
+        "Feb": 83,
+        "Mar": 83,
+        "Apr": 83,
+        "May": 83,
+        "Jun": 83,
+        "Jul": 83,
+        "Aug": 83,
+        "Sep": 83,
+        "Oct": 83,
+        "Nov": 83,
+        "Dec": 83
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "Pharmacy Feedback",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 66,
+        "Feb": 66,
+        "Mar": 66,
+        "Apr": 66,
+        "May": 66,
+        "Jun": 66,
+        "Jul": 66,
+        "Aug": 66,
+        "Sep": 66,
+        "Oct": 66,
+        "Nov": 66,
+        "Dec": 66
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "Pre-Call Planning",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 66,
+        "Feb": 66,
+        "Mar": 66,
+        "Apr": 66,
+        "May": 66,
+        "Jun": 66,
+        "Jul": 66,
+        "Aug": 66,
+        "Sep": 66,
+        "Oct": 66,
+        "Nov": 66,
+        "Dec": 66
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "Opening / Rapport",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 77,
+        "Feb": 77,
+        "Mar": 77,
+        "Apr": 77,
+        "May": 77,
+        "Jun": 77,
+        "Jul": 77,
+        "Aug": 77,
+        "Sep": 77,
+        "Oct": 77,
+        "Nov": 77,
+        "Dec": 77
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "Uncovering Needs",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "Positioning Brand Benefits",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 83,
+        "Feb": 83,
+        "Mar": 83,
+        "Apr": 83,
+        "May": 83,
+        "Jun": 83,
+        "Jul": 83,
+        "Aug": 83,
+        "Sep": 83,
+        "Oct": 83,
+        "Nov": 83,
+        "Dec": 83
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "Answering Customer Questions & Concerns(APACT)",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "Closing",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 66,
+        "Feb": 66,
+        "Mar": 66,
+        "Apr": 66,
+        "May": 66,
+        "Jun": 66,
+        "Jul": 66,
+        "Aug": 66,
+        "Sep": 66,
+        "Oct": 66,
+        "Nov": 66,
+        "Dec": 66
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "Bridging To Next Product(s)",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "Reminder Product",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "Post Call Analysis",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  },
+  {
+    "category": "End of the day question",
+    "reps": {
+      "973": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "974": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      },
+      "975": {
+        "Jan": 100,
+        "Feb": 100,
+        "Mar": 100,
+        "Apr": 100,
+        "May": 100,
+        "Jun": 100,
+        "Jul": 100,
+        "Aug": 100,
+        "Sep": 100,
+        "Oct": 100,
+        "Nov": 100,
+        "Dec": 100
+      }
+    }
+  }
+];
