@@ -233,7 +233,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         if (!BlocProvider.of<QuestionsCubit>(context)
             .areAllBlockQuestionsAnswered()) {
           ProgressDialogUtils.showWarningDialog(
-              context, 'Keep Note!', 'Some questions were not answered');
+              context, 'Keep Note!', 'Some questions are not answered');
           return;
         }
 

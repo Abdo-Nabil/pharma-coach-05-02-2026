@@ -18,15 +18,15 @@ class ListOnePage extends StatefulWidget {
 
   @override
   ListOnePageState createState() => ListOnePageState();
-  static Widget builder(BuildContext context) {
-    return BlocProvider<ListOneBloc>(
-      create: (context) => ListOneBloc(ListOneState(
-        listOneModelObj: ListOneModel(),
-      ))
-        ..add(ListOneInitialEvent()),
-      child: ListOnePage(),
-    );
-  }
+  // static Widget builder(BuildContext context) {
+  //   return BlocProvider<ListOneBloc>(
+  //     create: (context) => ListOneBloc(ListOneState(
+  //       listOneModelObj: ListOneModel(),
+  //     ))
+  //       ..add(ListOneInitialEvent()),
+  //     child: ListOnePage(),
+  //   );
+  // }
 }
 
 class ListOnePageState extends State<ListOnePage>
@@ -98,11 +98,12 @@ class ListOnePageState extends State<ListOnePage>
                 );
               },
               itemCount: BlocProvider.of<ListTabContainerCubit>(context)
-                  .pmLocations
+                  .filteredPmLocations
                   .length,
               itemBuilder: (context, index) {
                 final locations =
-                    BlocProvider.of<ListTabContainerCubit>(context).pmLocations;
+                    BlocProvider.of<ListTabContainerCubit>(context)
+                        .filteredPmLocations;
 
                 final isVisitCreated =
                     BlocProvider.of<ListTabContainerCubit>(context)

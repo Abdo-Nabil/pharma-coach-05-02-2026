@@ -1,4 +1,5 @@
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
+import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/home_page/home_page.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/build_rep_analysis_widget.dart';
@@ -44,8 +45,13 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   int? selectedRepId;
   bool isTeamToggled = true;
+  //
+  final pref = PrefUtils();
+  late final date = pref.getLastVisitDateForThisRep(GeneralData.selectedRepId);
   late final dateController = TextEditingController(
-      text: GeneralHelper.formatDateForDisplay1(DateTime.now()));
+      // text: GeneralHelper.formatDateForDisplay1(DateTime.now()));
+      text: GeneralHelper.formatDateForDisplay1(date));
+  //
   DateFilter dateFilter = DateFilter.day;
   DateTime? pickedDate = DateTime.now();
   //
@@ -282,7 +288,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                         },
                       ),
                       FilterButton(
-                        label: 'Year',
+                        label: 'YTD',
                         isSelected: dateFilter.name == DateFilter.year.name,
                         onTap: () {
                           setState(() {
@@ -735,7 +741,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.h),
                 child: Text(
-                  "${repPercentage.toStringAsFixed(2)}%",
+                  "${repPercentage.toStringAsFixed(1)}%",
                   style: theme.textTheme.labelLarge,
                 ),
               ),
@@ -781,7 +787,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0.h),
                 child: Text(
-                  "${teamPercentage.toStringAsFixed(2)}%",
+                  "${teamPercentage.toStringAsFixed(1)}%",
                   style: theme.textTheme.labelLarge,
                 ),
               ),

@@ -164,7 +164,7 @@ class LastQuestionScreen extends StatelessWidget {
                           //
                         } else {
                           ProgressDialogUtils.showWarningDialog(context,
-                              'Keep Note!', 'Some questions were not answered');
+                              'Keep Note!', 'Some questions are not answered');
                           return;
                         }
                       },

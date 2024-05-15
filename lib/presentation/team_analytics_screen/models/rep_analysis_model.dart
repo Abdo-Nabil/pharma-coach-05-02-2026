@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 
 final z = {
@@ -19,23 +21,20 @@ final z = {
 class RepAnalysisModel {
   final String category;
   final Map<String, dynamic> reps;
+  final Map<String, dynamic> averageRepPercentages;
 
   const RepAnalysisModel({
     required this.category,
     required this.reps,
+    required this.averageRepPercentages,
   });
 
-  factory RepAnalysisModel.fromMap(Map<String, dynamic> map) {
+  factory RepAnalysisModel.fromMap(
+      Map<String, dynamic> map, Map<String, dynamic> avgRepPercentage) {
     return RepAnalysisModel(
       category: map['category'] as String,
       reps: map['reps'],
+      averageRepPercentages: avgRepPercentage,
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'category': this.category,
-      'reps': this.reps,
-    };
   }
 }

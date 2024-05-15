@@ -1,5 +1,6 @@
 import 'package:mina_s_application5/presentation/list_one_page/widgets/listone_item_widget.dart';
 import 'package:mina_s_application5/presentation/list_tab_container_screen/cubit/list_tap_container_cubit.dart';
+import 'package:mina_s_application5/presentation/list_tab_container_screen/list_tab_container_screen.dart';
 import 'package:mina_s_application5/widgets/custom_search_view.dart';
 import '../../general_cubit/general_cubit.dart';
 import '../../general_data.dart';
@@ -102,11 +103,12 @@ class ListPageState extends State<ListPage>
                 );
               },
               itemCount: BlocProvider.of<ListTabContainerCubit>(context)
-                  .amLocations
+                  .filteredAmLocations
                   .length,
               itemBuilder: (context, index) {
                 final locations =
-                    BlocProvider.of<ListTabContainerCubit>(context).amLocations;
+                    BlocProvider.of<ListTabContainerCubit>(context)
+                        .filteredAmLocations;
 
                 final isVisitCreated =
                     BlocProvider.of<ListTabContainerCubit>(context)

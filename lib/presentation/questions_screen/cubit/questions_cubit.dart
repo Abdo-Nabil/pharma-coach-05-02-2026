@@ -168,11 +168,17 @@ class QuestionsCubit extends Cubit<QuestionsState> {
     }
   }
 
+  _saveLastVisitDateForThisRep(int repId) async {
+    final pref = PrefUtils();
+    await pref.saveLastVisitDateForThisRep(repId);
+  }
+
   submitEndOfTheDay() async {
     //
     final pref = PrefUtils();
     await pref.setLastQuestionAsAnsweredToday();
     await _saveAllQuestionsInLocal();
+    await _saveLastVisitDateForThisRep(GeneralData.selectedRepId);
     await generalCubit.executeSubmitQuestionsAndRemoveVisitsFromLocal();
   }
 

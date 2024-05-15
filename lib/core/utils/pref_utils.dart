@@ -13,6 +13,8 @@ import '../../general_helper.dart';
 import '../../presentation/questions_screen/models/category_model.dart';
 import '../../presentation/questions_screen/models/question_answer_model.dart';
 
+const int planPeriod = 30;
+
 class PrefUtils {
   static SharedPreferences? _sharedPreferences;
 
@@ -162,7 +164,7 @@ class PrefUtils {
   Future<List<IntendedVisitModel>> getThisWeekIntendedVisits() async {
     final temp = DateTime.now();
     final dateNow = DateTime(temp.year, temp.month, temp.day);
-    final dateAfter8Days = dateNow.add(Duration(days: 8));
+    final dateAfter8Days = dateNow.add(Duration(days: planPeriod));
     //
     List<IntendedVisitModel> intendedVisits = await getIntendedVisits();
     intendedVisits = intendedVisits.where((visit) {
@@ -516,6 +518,22 @@ class PrefUtils {
 
     //
     return answers;
+  }
+
+  /////////////////////////
+  ////////////////////////////
+  saveLastVisitDateForThisRep(int repId) async {
+    await _sharedPreferences?.setString(
+        "lastSeen$repId", "${GeneralHelper.formatDateForApi(DateTime.now())}");
+  }
+
+  DateTime getLastVisitDateForThisRep(int repId) {
+    final result = _sharedPreferences?.getString("lastSeen$repId");
+    if (result == null) {
+      return DateTime.now();
+    } else {
+      return GeneralHelper.formatDateFromApi(result);
+    }
   }
 }
 

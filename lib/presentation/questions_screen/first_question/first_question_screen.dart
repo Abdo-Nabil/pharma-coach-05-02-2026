@@ -208,7 +208,7 @@ class _FirstQuestionScreenState extends State<FirstQuestionScreen> {
                                 ProgressDialogUtils.showWarningDialog(
                                     context,
                                     'Keep Note!',
-                                    'Some questions were not answered');
+                                    'Some questions are not answered');
                                 return;
                               } else {
                                 await BlocProvider.of<FirstQuestionCubit>(

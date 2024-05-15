@@ -46,6 +46,8 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
   List<VisitInfoModel> visits = [];
   List<LocationModel> amLocations = [];
   List<LocationModel> pmLocations = [];
+  List<LocationModel> filteredAmLocations = [];
+  List<LocationModel> filteredPmLocations = [];
   //
 /*  Future<int?> _getRepIdForIntendedVisitToday() async {
     final sharedPref = PrefUtils();
@@ -123,7 +125,8 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
     for (int i = 0; i < visits.length; i++) {
       createdVisitsLocationIds.add(visits[i].locationId);
     }
-
+    filteredAmLocations = amLocations;
+    filteredPmLocations = pmLocations;
     emit(ListTapContainerGetLocationsSuccessState(
         amLocations: amLocations, pmLocations: pmLocations));
   }
@@ -188,25 +191,26 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
   }*/
 
   searchInPmLocations(String value) {
-    final list = pmLocations
+    filteredPmLocations = pmLocations
         .where((element) => element.name.split('_').last.contains(value))
         .toList();
     emit(
       ListTapContainerGetLocationsSuccessState(
-        pmLocations: list,
-        amLocations: [],
+        amLocations: filteredAmLocations,
+        pmLocations: filteredPmLocations,
       ),
     );
   }
 
   searchInAmLocations(String value) {
-    final list = amLocations
+    filteredAmLocations = amLocations
         .where((element) => element.name.split('_').last.contains(value))
         .toList();
+
     emit(
       ListTapContainerGetLocationsSuccessState(
-        amLocations: list,
-        pmLocations: [],
+        amLocations: filteredAmLocations,
+        pmLocations: filteredPmLocations,
       ),
     );
   }
