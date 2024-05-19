@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/general_helper.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/category_title_container.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/cubit/rep_analysis_cubit/rep_analysis_cubit.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/expandable_row_for_month.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/select_medical_rep_alert.dart';
@@ -137,88 +138,57 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                             child: Column(
                               children: [
                                 widget.dateFilter != DateFilter.month
-                                    // ? Table(
-                                    //     border: TableBorder.all(
-                                    //       color: appTheme.orange300,
-                                    //       borderRadius:
-                                    //           BorderRadius.circular(8),
-                                    //     ),
-                                    //     // defaultColumnWidth: MaxIntrinsicWidth(),
-                                    //     columnWidths: const <int,
-                                    //         TableColumnWidth>{
-                                    //       // 0: IntrinsicColumnWidth(),
-                                    //       0: FlexColumnWidth(3),
-                                    //       1: FlexColumnWidth(),
-                                    //       2: FlexColumnWidth(),
-                                    //       // 2: FixedColumnWidth(),
-                                    //     },
-                                    //     defaultVerticalAlignment:
-                                    //         TableCellVerticalAlignment.middle,
-                                    //     children: [
-                                    //       /*  TableRow(
-                                    //         children: [
-                                    //           TableText(
-                                    //               text: "Category",
-                                    //               isHeader: true),
-                                    //           //
-                                    //           ...BlocProvider.of<
-                                    //                   RepAnalysisCubit>(context)
-                                    //               .repAnalysis[0]
-                                    //               .reps
-                                    //               .entries
-                                    //               .first
-                                    //               .value
-                                    //               .entries
-                                    //               .map(
-                                    //             (e) {
-                                    //               return TableText(
-                                    //                   text: e.key,
-                                    //                   isHeader: true);
-                                    //             },
-                                    //           ).toList(),
-                                    //         ],
-                                    //       ),*/
-                                    //       ...List.generate(
-                                    //         BlocProvider.of<RepAnalysisCubit>(
-                                    //                 context)
-                                    //             .repAnalysis
-                                    //             .length,
-                                    //         (index) {
-                                    //           return TableRow(
-                                    //             children: [
-                                    //               TableText(
-                                    //                   text:
-                                    //                       "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[index].category}"),
-                                    //               //
-                                    //               ...BlocProvider.of<
-                                    //                           RepAnalysisCubit>(
-                                    //                       context)
-                                    //                   .repAnalysis[index]
-                                    //                   .reps
-                                    //                   .entries
-                                    //                   .firstWhere((element) =>
-                                    //                       element.key ==
-                                    //                       "${widget.selectedRepId}")
-                                    //                   .value
-                                    //                   .entries
-                                    //                   .map(
-                                    //                 (e) {
-                                    //                   return TableText(
-                                    //                       text:
-                                    //                           '${e.value["rep_percentage"]}%');
-                                    //                 },
-                                    //               ).toList()
-                                    //             ],
-                                    //           );
-                                    //         },
-                                    //       ),
-                                    //     ],
-                                    //   )
                                     ? ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(8.h),
                                         child: Column(
                                           children: [
+                                            widget.dateFilter !=
+                                                    DateFilter.quarter
+                                                ? CategoryTitleContainer(
+                                                    category: "Items",
+                                                    isHeader: true,
+                                                    hasIcon: false,
+                                                    firstPartWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.700,
+                                                    secondChildInRow: TableText(
+                                                        isHeader: true,
+                                                        text:
+                                                            "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].reps["${widget.selectedRepId}"].keys.first}"),
+                                                  )
+                                                : CategoryTitleContainer(
+                                                    category: "Items",
+                                                    isHeader: true,
+                                                    hasIcon: false,
+                                                    firstPartWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.50,
+                                                    secondChildInRow: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: [
+                                                          ...BlocProvider.of<
+                                                                      RepAnalysisCubit>(
+                                                                  context)
+                                                              .repAnalysis[0]
+                                                              .reps[
+                                                                  "${widget.selectedRepId}"]
+                                                              .entries
+                                                              .map((e) {
+                                                            return TableText(
+                                                                isHeader: true,
+                                                                text:
+                                                                    "${e.key}");
+                                                          }).toList(),
+                                                        ]),
+                                                  ),
+                                            //
                                             ...List.generate(
                                               BlocProvider.of<RepAnalysisCubit>(
                                                       context)
@@ -230,9 +200,6 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                                             context)
                                                     .repAnalysis[index];
                                                 //
-                                                // final Map m = {"ss":44};
-                                                // debugPrint(
-                                                // "kkkkkkkkkkkkk ${repAnalysis.reps.entries.firstWhere((element) => element.key == "${widget.selectedRepId}").value.entries.toList()[0].value['rep_percentage']}");
                                                 return ExpandableRowForOther(
                                                   isQuarter:
                                                       widget.dateFilter ==
@@ -252,58 +219,54 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                                 );
                                               },
                                             ),
-                                            Container(
-                                              color: totalRowColor,
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width *
-                                                        (widget.dateFilter ==
-                                                                DateFilter
-                                                                    .quarter
-                                                            ? 0.55
-                                                            : 0.70),
-                                                    child: TableText(
-                                                      text: 'Total score',
-                                                    ),
+                                            //
+                                            widget.dateFilter !=
+                                                    DateFilter.quarter
+                                                ? CategoryTitleContainer(
+                                                    color: totalRowColor,
+                                                    category: "Total score",
+                                                    isHeader: true,
+                                                    hasIcon: false,
+                                                    firstPartWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.700,
+                                                    secondChildInRow: TableText(
+                                                        isHeader: true,
+                                                        text:
+                                                            "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].averageRepPercentages["${widget.selectedRepId}"]}%"),
+                                                  )
+                                                : CategoryTitleContainer(
+                                                    color: totalRowColor,
+                                                    category: "Total score",
+                                                    isHeader: true,
+                                                    hasIcon: false,
+                                                    firstPartWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.50,
+                                                    secondChildInRow: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: [
+                                                          ...BlocProvider.of<
+                                                                      RepAnalysisCubit>(
+                                                                  context)
+                                                              .repAnalysis[0]
+                                                              .averageRepPercentages[
+                                                                  "${widget.selectedRepId}"]
+                                                              .entries
+                                                              .map((e) {
+                                                            return TableText(
+                                                                isHeader: true,
+                                                                text:
+                                                                    "${e.value}%");
+                                                          }).toList(),
+                                                        ]),
                                                   ),
-                                                  // Container(width: 2.v, height: 4.h, color: Colors.grey),
-
-                                                  Container(
-                                                    child: widget.dateFilter !=
-                                                            DateFilter.quarter
-                                                        ? TableText(
-                                                            text:
-                                                                "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].averageRepPercentages["${widget.selectedRepId}"]}%")
-                                                        : Expanded(
-                                                            child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  ...BlocProvider.of<RepAnalysisCubit>(
-                                                                          context)
-                                                                      .repAnalysis[
-                                                                          0]
-                                                                      .averageRepPercentages[
-                                                                          "${widget.selectedRepId}"]
-                                                                      .entries
-                                                                      .map((e) {
-                                                                    return TableText(
-                                                                        text:
-                                                                            "${e.value}%");
-                                                                  }).toList(),
-                                                                ]),
-                                                          ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
                                           ],
                                         ),
                                       )
@@ -312,6 +275,20 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                             BorderRadius.circular(8.h),
                                         child: Column(
                                           children: [
+                                            CategoryTitleContainer(
+                                                category: "Items",
+                                                isHeader: true,
+                                                hasIcon: false,
+                                                firstPartWidth:
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.700,
+                                                secondChildInRow: TableText(
+                                                  text: monthsList[
+                                                      selectedMonthIndex],
+                                                  isHeader: true,
+                                                )),
                                             ...List.generate(
                                               BlocProvider.of<RepAnalysisCubit>(
                                                       context)
@@ -355,31 +332,20 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                                 );
                                               },
                                             ),
-                                            Container(
+                                            CategoryTitleContainer(
                                               color: totalRowColor,
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.750,
-                                                    child: TableText(
-                                                      text: 'Total score',
-                                                    ),
-                                                  ),
-                                                  // Container(width: 2.v, height: 4.h, color: Colors.grey),
-                                                  Container(
-                                                    // width: MediaQuery.of(context).size.width * 0.60,
-                                                    child: TableText(
-                                                      text:
-                                                          "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].averageRepPercentages["${widget.selectedRepId}"]['${monthsList[selectedMonthIndex]}']}%",
-                                                    ),
-                                                  ),
-                                                ],
+                                              category: "Total score",
+                                              isHeader: true,
+                                              hasIcon: false,
+                                              firstPartWidth:
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.700,
+                                              secondChildInRow: TableText(
+                                                isHeader: true,
+                                                text:
+                                                    "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].averageRepPercentages["${widget.selectedRepId}"]['${monthsList[selectedMonthIndex]}']}%",
                                               ),
                                             ),
                                           ],

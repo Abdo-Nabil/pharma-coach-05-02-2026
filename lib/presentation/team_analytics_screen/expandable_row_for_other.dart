@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/table_text.dart';
 
+import 'category_title_container.dart';
+
 class ExpandableRowForOther extends StatefulWidget {
   final String category;
   final List mapEntries;
@@ -24,7 +26,7 @@ class _ExpandableRowForOtherState extends State<ExpandableRowForOther> {
   Widget build(BuildContext context) {
     //
     final width =
-        MediaQuery.of(context).size.width * (widget.isQuarter ? 0.55 : 0.70);
+        MediaQuery.of(context).size.width * (widget.isQuarter ? 0.50 : 0.70);
     //
     ///
     ///
@@ -35,39 +37,16 @@ class _ExpandableRowForOtherState extends State<ExpandableRowForOther> {
       },
       child: Column(
         children: [
-          Container(
-            color: Colors.grey.withOpacity(0.20),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: width,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.info,
-                          size: 18.h,
-                          color: Colors.green,
-                        ),
-                        Expanded(
-                          child: TableText(
-                            text: '${widget.category}',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: widget.mapEntries.map((e) {
-                      return TableText(text: "${e.value['rep_percentage']}%");
-                    }).toList(),
-                  ),
-                ),
-              ],
+          CategoryTitleContainer(
+            category: '${widget.category}',
+            firstPartWidth: width,
+            secondChildInRow: Row(
+              mainAxisAlignment: widget.isQuarter
+                  ? MainAxisAlignment.spaceAround
+                  : MainAxisAlignment.center,
+              children: widget.mapEntries.map((e) {
+                return TableText(text: "${e.value['rep_percentage']}%");
+              }).toList(),
             ),
           ),
           Visibility(
@@ -98,7 +77,7 @@ class _ExpandableRowForOtherState extends State<ExpandableRowForOther> {
                   widget.isQuarter
                       ? Expanded(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               ...widget.mapEntries.map((entry) {
                                 return Column(
@@ -113,18 +92,21 @@ class _ExpandableRowForOtherState extends State<ExpandableRowForOther> {
                             ],
                           ),
                         )
-                      : Column(
-                          children: [
-                            ...widget
-                                .mapEntries.first.value['Questions'].entries
-                                .map(
-                              (e) {
-                                return TableText(
-                                  text: "${e.value}%",
-                                );
-                              },
-                            ),
-                          ],
+                      : Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ...widget
+                                  .mapEntries.first.value['Questions'].entries
+                                  .map(
+                                (e) {
+                                  return TableText(
+                                    text: "${e.value}%",
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                 ],
               ),

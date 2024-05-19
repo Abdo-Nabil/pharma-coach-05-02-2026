@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/category_title_container.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/table_text.dart';
 
 class ExpandableRowForMonth extends StatefulWidget {
@@ -32,34 +33,10 @@ class _ExpandableRowForMonthState extends State<ExpandableRowForMonth> {
       },
       child: Column(
         children: [
-          Container(
-            color: Colors.grey.withOpacity(0.20),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.750,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.info,
-                          size: 18.h,
-                          color: Colors.green,
-                        ),
-                        Expanded(
-                          child: TableText(
-                            text: '${widget.category}',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Container(width: 2.v, height: 4.h, color: Colors.grey),
-                TableText(text: "${widget.repPercentage}%"),
-              ],
-            ),
+          CategoryTitleContainer(
+            category: '${widget.category}',
+            firstPartWidth: MediaQuery.of(context).size.width * 0.700,
+            secondChildInRow: TableText(text: "${widget.repPercentage}%"),
           ),
           Visibility(
             visible: _isExpanded,

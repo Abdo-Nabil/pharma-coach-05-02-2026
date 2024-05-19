@@ -164,6 +164,8 @@ class ListTabContainerScreenState extends State<ListTabContainerScreen>
           child: TextButton(
             onPressed: canGoToLastQuestionScreen()
                 ? () async {
+                    await BlocProvider.of<QuestionsCubit>(context)
+                        .getSavedLocallyQuestions("normal");
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) {
                         return LastQuestionScreen();
