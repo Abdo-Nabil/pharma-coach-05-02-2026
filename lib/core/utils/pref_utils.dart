@@ -245,7 +245,6 @@ class PrefUtils {
     }
     await _sharedPreferences!.setStringList("monthlyIntendedVisits", temp);
   }
-
 /*  removeIntendedVisit(String isoDate) async {
     List<IntendedVisitModel> list = getIntendedVisits();
     list.removeWhere((item) {
@@ -253,8 +252,10 @@ class PrefUtils {
     });
     await _saveIntendedVisitsLocally(list);
   }*/
-
-  /// Handling the question logic in 3 screens starts from here
+  /// /////////////////////////////////////////////
+  /// If any problem appears, please uncomment the next lines and replace.
+  /// /////////////////////////////////////////////
+  /*  /// Handling the question logic in 3 screens starts from here
   setFirstCategoryAnswer(List<QuestionAnswerModel> answers) async {
     String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
     await _sharedPreferences!.setString("firstCategoryDate$todayDate",
@@ -282,6 +283,30 @@ class PrefUtils {
         return listOfMaps.cast<Map<String, dynamic>>();
       }
       return null;
+    }
+  }*/
+  /// /////////////////////////////////////////////
+
+  /// Handling the question logic in 3 screens starts from here
+  setFirstCategoryAnswer(List<QuestionAnswerModel> answers) async {
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    List<Map<String, dynamic>> maps = [];
+    for (int i = 0; i < answers.length; i++) {
+      maps.add(answers[i].toMap());
+    }
+    await _sharedPreferences!
+        .setString("firstCategory$todayDate", json.encode(maps));
+  }
+
+  //This return a list of two question of the first category
+  List<Map<String, dynamic>>? getFirstCategoryAnswer() {
+    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    String? answers = _sharedPreferences!.getString("firstCategory$todayDate");
+    if (answers == null) {
+      return null;
+    } else {
+      List<dynamic> listOfMaps = json.decode(answers);
+      return listOfMaps.cast<Map<String, dynamic>>();
     }
   }
 

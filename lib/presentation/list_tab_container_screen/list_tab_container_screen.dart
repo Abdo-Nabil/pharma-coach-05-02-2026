@@ -9,6 +9,8 @@ import 'package:mina_s_application5/presentation/list_page/list_page.dart';
 import 'package:mina_s_application5/presentation/list_one_page/list_one_page.dart';
 import 'package:mina_s_application5/widgets/custom_bottom_bar.dart';
 import '../../general_data.dart';
+import '../questions_screen/cubit/questions_cubit.dart';
+import '../questions_screen/last_question/last_question_screen.dart';
 import 'models/list_tab_container_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
@@ -139,6 +141,15 @@ class ListTabContainerScreenState extends State<ListTabContainerScreen>
     );
   }
 
+  bool canGoToLastQuestionScreen() {
+    final pref = PrefUtils();
+    if ((pref.getFirstCategoryAnswer()) != null &&
+        !pref.isLastQuestionTodayAnswered()) {
+      return true;
+    }
+    return false;
+  }
+
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
@@ -147,6 +158,30 @@ class ListTabContainerScreenState extends State<ListTabContainerScreen>
         text: "msg_medical_rep_list".tr,
         margin: EdgeInsets.only(left: 16.h),
       ),
+      actions: [
+        Padding(
+          padding: EdgeInsetsDirectional.only(end: 10.0.h),
+          child: TextButton(
+            onPressed: canGoToLastQuestionScreen()
+                ? () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) {
+                        return LastQuestionScreen();
+                      }),
+                    );
+                  }
+                : null,
+            child: Text(
+              "End of the day",
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 16.fSize,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 

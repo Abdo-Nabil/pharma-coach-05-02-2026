@@ -53,7 +53,7 @@ class AppRoutes {
         signInPropsalOneScreen: SignInPropsalOneScreen.builder,
         homeContainerScreen: HomeContainerScreen.builder,
         listTabContainerScreen: ListTabContainerScreen.builder,
-        questionsScreen: QuestionsScreen.builder,
+        questionsScreen: (_) => QuestionsScreen(),
         firstQuestionsScreen: FirstQuestionScreen.builder,
         lastQuestionsScreen: (_) => LastQuestionScreen(),
         finalQuestScreen: FinalQuestScreen.builder,

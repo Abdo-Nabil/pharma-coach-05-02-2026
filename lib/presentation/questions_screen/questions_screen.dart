@@ -3,6 +3,7 @@ import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
 import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 import 'package:mina_s_application5/presentation/final_quest_screen/final_quest_screen.dart';
+import 'package:mina_s_application5/presentation/home_page/home_page.dart';
 import 'package:mina_s_application5/presentation/questions_screen/cubit/questions_cubit.dart';
 import 'package:mina_s_application5/presentation/questions_screen/last_question/last_question_screen.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/category_model.dart';
@@ -16,6 +17,7 @@ import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:mina_s_application5/widgets/custom_elevated_button.dart';
 import 'package:mina_s_application5/widgets/custom_text_form_field.dart';
+import '../home_container_screen/home_container_screen.dart';
 import 'models/question_model.dart';
 import 'models/questions_model.dart';
 import 'package:flutter/material.dart';
@@ -37,13 +39,13 @@ class QuestionsScreen extends StatefulWidget {
   //     child: QuestionsScreen(),
   //   );
   // }
-  static Widget builder(BuildContext context) {
-    return BlocProvider<QuestionsCubit>(
-      create: (context) =>
-          QuestionsCubit(ApiClient(), BlocProvider.of<GeneralCubit>(context)),
-      child: QuestionsScreen(),
-    );
-  }
+  // static Widget builder(BuildContext context) {
+  //   return BlocProvider<QuestionsCubit>(
+  //     create: (context) =>
+  //         QuestionsCubit(ApiClient(), BlocProvider.of<GeneralCubit>(context)),
+  //     child: QuestionsScreen(),
+  //   );
+  // }
 
   @override
   State<QuestionsScreen> createState() => _QuestionsScreenState();
@@ -242,9 +244,23 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           onNextVisit: () async {
             BlocProvider.of<QuestionsCubit>(context)
                 .submitQuestionAnswersLocally(-1, locationId, locationType);
+            ///////////////////////////////////////////////
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(builder: (_) {
+            //     return BlocProvider.value(
+            //       value: BlocProvider.of<QuestionsCubit>(context),
+            //       child: HomeContainerScreen.builder(context),
+            //     );
+            //   }),
+            // );
+            // BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(1);
+            ///////////////////////////////////////////////
+            // correct way
             Navigator.pop(context);
             Navigator.pop(context);
             BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(1);
+            ///////////////////////////////////////////////
+
             // NavigatorService.pushReplacementNamed(
             //   AppRoutes.listTabContainerScreen,
             // );

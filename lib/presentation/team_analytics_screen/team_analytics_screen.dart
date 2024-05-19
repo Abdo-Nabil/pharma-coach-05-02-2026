@@ -47,16 +47,20 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   bool isTeamToggled = true;
   //
   final pref = PrefUtils();
-  late final date = pref.getLastVisitDateForThisRep(GeneralData.selectedRepId);
-  late final dateController = TextEditingController(
-      // text: GeneralHelper.formatDateForDisplay1(DateTime.now()));
-      text: GeneralHelper.formatDateForDisplay1(date));
+  late DateTime date;
+  late TextEditingController dateController;
   //
   DateFilter dateFilter = DateFilter.day;
   DateTime? pickedDate = DateTime.now();
   //
   late int quarterNumber = GeneralHelper.getQuarter(pickedDate!);
   //
+
+  setDateAndDateControllerBasedOnSelectedRep(int repId) {
+    date = pref.getLastVisitDateForThisRep(repId);
+    dateController =
+        TextEditingController(text: GeneralHelper.formatDateForDisplay1(date));
+  }
 
   //
   @override
@@ -69,9 +73,10 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   @override
   void initState() {
     BlocProvider.of<AnalysisCubit>(context).getTeamAnalysis(
-      DateTime.now(),
+      pickedDate!,
       dateFilter.name,
     );
+    setDateAndDateControllerBasedOnSelectedRep(-1);
     super.initState();
   }
 
@@ -105,8 +110,9 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           EdgeInsets.symmetric(horizontal: 16.h, vertical: 2.v),
                       value: selectedRepId,
                       onChanged: (int? newValue) {
+                        setDateAndDateControllerBasedOnSelectedRep(newValue!);
                         setState(() {
-                          selectedRepId = newValue!;
+                          selectedRepId = newValue;
                         });
                         debugPrint("$selectedRepId");
                       },
@@ -143,9 +149,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           pickedDate = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              firstDate: DateTime.now().subtract(
-                                Duration(days: 365),
-                              ),
+                              firstDate: DateTime(2023),
                               lastDate: DateTime(2080));
                           if (pickedDate != null) {
                             //
@@ -508,14 +512,19 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                 if (!isTeamToggled) {
                   BlocProvider.of<AnalysisCubit>(context)
                       .emit(RepAnalysisSuccess());
+
                   BlocProvider.of<RepAnalysisCubit>(context).getRepAnalysis(
-                    DateTime.now(),
-                    dateFilter.name,
+                    pickedDate!,
+                    dateFilter == DateFilter.quarter
+                        ? "q$quarterNumber"
+                        : dateFilter.name,
                   );
                 } else {
                   BlocProvider.of<AnalysisCubit>(context).getTeamAnalysis(
-                    DateTime.now(),
-                    dateFilter.name,
+                    pickedDate!,
+                    dateFilter == DateFilter.quarter
+                        ? "q$quarterNumber"
+                        : dateFilter.name,
                   );
                 }
               },

@@ -448,6 +448,7 @@ class ApiClient {
       if (_isSuccessCall(response)) {
         log(response.data.toString());
         isSend = true;
+        debugPrint("############### SUCCESSFULLY submitQuestionAnswers");
       } else {
         // throw response.data != null
         //     ? RepModel.fromMap(response.data)
@@ -519,6 +520,7 @@ class ApiClient {
       'Accept': 'application/json',
       'Authorization': 'Bearer ${GeneralData.token!}',
     };
+
     Map<String, dynamic> queryParams = {
       "date": date,
       "date_scope": dateScope,

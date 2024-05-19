@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
 import 'package:mina_s_application5/general_cubit/general_cubit.dart';
+import 'package:mina_s_application5/presentation/questions_screen/cubit/questions_cubit.dart';
 import 'presentation/calendar_container_screen/widgets/calendar_widget.dart';
 import 'core/app_export.dart';
 
@@ -39,30 +40,36 @@ class MyApp extends StatelessWidget {
                 themeType: PrefUtils().getThemeData(),
               ),
             ),
-            child: BlocBuilder<ThemeBloc, ThemeState>(
-              builder: (context, state) {
-                return MaterialApp(
-                  theme: theme,
-                  title: 'mina_s_application5',
-                  navigatorKey: NavigatorService.navigatorKey,
-                  debugShowCheckedModeBanner: false,
-                  localizationsDelegates: [
-                    AppLocalizationDelegate(),
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                  ],
-                  supportedLocales: [
-                    Locale(
-                      'en',
-                      '',
-                    ),
-                  ],
-                  initialRoute: AppRoutes.initialRoute,
-                  routes: AppRoutes.routes,
-                  // home: CalendarScreen(),
-                );
-              },
+            child: BlocProvider<QuestionsCubit>(
+              create: (context) => QuestionsCubit(
+                ApiClient(),
+                BlocProvider.of<GeneralCubit>(context),
+              ),
+              child: BlocBuilder<ThemeBloc, ThemeState>(
+                builder: (context, state) {
+                  return MaterialApp(
+                    theme: theme,
+                    title: 'mina_s_application5',
+                    navigatorKey: NavigatorService.navigatorKey,
+                    debugShowCheckedModeBanner: false,
+                    localizationsDelegates: [
+                      AppLocalizationDelegate(),
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                    ],
+                    supportedLocales: [
+                      Locale(
+                        'en',
+                        '',
+                      ),
+                    ],
+                    initialRoute: AppRoutes.initialRoute,
+                    routes: AppRoutes.routes,
+                    // home: CalendarScreen(),
+                  );
+                },
+              ),
             ),
           ),
         );
