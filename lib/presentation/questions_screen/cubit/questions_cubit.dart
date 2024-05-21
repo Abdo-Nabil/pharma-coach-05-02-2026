@@ -71,16 +71,17 @@ class QuestionsCubit extends Cubit<QuestionsState> {
   }
 */
 
-  _getQuestions(String questionType) async {
+/*  _getQuestions(String questionType) async {
     questionsCategories = await apiClient.getQuestionCategories(questionType);
     questionsCategories.removeAt(0);
     _getNumberOfLastCategoryQuestions();
     lastCategory = questionsCategories.removeLast();
     _getNumberOfBlockQuestions();
-  }
+  }*/
 
   getSavedLocallyQuestions(String questionType) async {
     emit(QuestionsLoading());
+    answers = [];
     questionsCategories =
         await generalCubit.getQuestionsCategoriesForToday(questionType);
     questionsCategories.removeAt(0);

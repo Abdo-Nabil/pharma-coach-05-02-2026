@@ -143,7 +143,7 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                             BorderRadius.circular(8.h),
                                         child: Column(
                                           children: [
-                                            widget.dateFilter !=
+                                            /* widget.dateFilter !=
                                                     DateFilter.quarter
                                                 ? CategoryTitleContainer(
                                                     category: "Items",
@@ -187,7 +187,41 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                                                     "${e.key}");
                                                           }).toList(),
                                                         ]),
-                                                  ),
+                                                  ),*/
+
+                                            //
+                                            Visibility(
+                                              visible: widget.dateFilter ==
+                                                  DateFilter.quarter,
+                                              child: CategoryTitleContainer(
+                                                category: "",
+                                                isHeader: true,
+                                                hasIcon: false,
+                                                firstPartWidth:
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.50,
+                                                secondChildInRow: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      ...BlocProvider.of<
+                                                                  RepAnalysisCubit>(
+                                                              context)
+                                                          .repAnalysis[0]
+                                                          .reps[
+                                                              "${widget.selectedRepId}"]
+                                                          .entries
+                                                          .map((e) {
+                                                        return TableText(
+                                                            isHeader: true,
+                                                            text: "${e.key}");
+                                                      }).toList(),
+                                                    ]),
+                                              ),
+                                            ),
                                             //
                                             ...List.generate(
                                               BlocProvider.of<RepAnalysisCubit>(
@@ -275,7 +309,7 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                             BorderRadius.circular(8.h),
                                         child: Column(
                                           children: [
-                                            CategoryTitleContainer(
+                                            /*CategoryTitleContainer(
                                                 category: "Items",
                                                 isHeader: true,
                                                 hasIcon: false,
@@ -288,7 +322,7 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                                   text: monthsList[
                                                       selectedMonthIndex],
                                                   isHeader: true,
-                                                )),
+                                                )),*/
                                             ...List.generate(
                                               BlocProvider.of<RepAnalysisCubit>(
                                                       context)

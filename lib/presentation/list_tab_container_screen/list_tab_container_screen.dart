@@ -166,6 +166,8 @@ class ListTabContainerScreenState extends State<ListTabContainerScreen>
                 ? () async {
                     await BlocProvider.of<QuestionsCubit>(context)
                         .getSavedLocallyQuestions("normal");
+                    BlocProvider.of<QuestionsCubit>(context)
+                        .lastCategoryAnswers = [];
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) {
                         return LastQuestionScreen();
