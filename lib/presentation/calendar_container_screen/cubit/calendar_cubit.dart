@@ -68,11 +68,11 @@ class CalendarCubit extends Cubit<CalendarState> {
     final sharedPref = PrefUtils();
     everyRepIntendedVisits = await sharedPref.getThisWeekVisitsForEveryRep();
     //
-    await _getMonthlyIntendedVisits(sharedPref);
+    await _getIntendedVisits(sharedPref);
     emit(CalendarSuccess());
   }
 
-  _getMonthlyIntendedVisits(PrefUtils prefUtils) async {
+  _getIntendedVisits(PrefUtils prefUtils) async {
     List<IntendedVisitModel> intendedVisits =
         await prefUtils.getIntendedVisits();
     meetings = <Meeting>[];
@@ -126,7 +126,7 @@ class CalendarCubit extends Cubit<CalendarState> {
     await sharedPref.removeIntendedVisit(intendedVisitModel);
     everyRepIntendedVisits = await sharedPref.getThisWeekVisitsForEveryRep();
     //
-    await _getMonthlyIntendedVisits(sharedPref);
+    await _getIntendedVisits(sharedPref);
     emit(CalendarSuccess());
   }
 }

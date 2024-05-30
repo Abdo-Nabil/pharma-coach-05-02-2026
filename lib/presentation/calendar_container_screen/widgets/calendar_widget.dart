@@ -170,6 +170,20 @@ class CalendarWidget extends StatelessWidget {
             onSelectionChanged: (details) {
               GeneralData.selectedDate = details.date!;
             },
+            onTap: (calendarTapDetails) {
+              final isEmpty = calendarTapDetails.appointments?.isEmpty;
+              final now = DateTime.now();
+              //
+              if (isEmpty == false &&
+                  calendarTapDetails.date!
+                      .isBefore(DateTime(now.year, now.month, now.day))) {
+                //
+                final medicalRepName =
+                    calendarTapDetails.appointments?.first.eventName.toString();
+                ProgressDialogUtils.showInfoDialog(context, medicalRepName!);
+                //
+              }
+            },
             dataSource: MeetingDataSource(
                 BlocProvider.of<CalendarCubit>(context, listen: true).meetings),
             monthViewSettings: MonthViewSettings(

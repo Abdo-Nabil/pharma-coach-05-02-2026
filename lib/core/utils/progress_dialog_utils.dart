@@ -151,6 +151,26 @@ class ProgressDialogUtils {
       ..show();
   }
 
+  static showInfoDialog(BuildContext context, String title) {
+    AwesomeDialog(
+        context: context,
+        dialogType: DialogType.info,
+        animType: AnimType.rightSlide,
+        title: title,
+        // btnCancelOnPress: () {},
+        btnOkOnPress: () {},
+        btnOk: SizedBox(
+          height: 35,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("OK"),
+          ),
+        ))
+      ..show();
+  }
+
   static showCategoryInfo(BuildContext context, int categoryId) {
     debugPrint("cat id: $categoryId");
     if (categoryId > 12) {
