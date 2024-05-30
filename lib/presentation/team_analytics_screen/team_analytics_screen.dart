@@ -62,6 +62,21 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
         TextEditingController(text: GeneralHelper.formatDateForDisplay1(date));
   }
 
+  setSelectedRepIdBasedOnSelectedDate(DateTime date) {
+    final repId = pref.getRepForThisDate(date);
+    if (repId == -1) {
+      return;
+    }
+    final temp = BlocProvider.of<AnalysisCubit>(context).reps;
+    for (int i = 0; i < temp.length; i++) {
+      if (temp[i].id == repId) {
+        selectedRepId = repId;
+        setState(() {});
+        return;
+      }
+    }
+  }
+
   //
   @override
   void dispose() {
@@ -156,6 +171,9 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                             dateController.text =
                                 GeneralHelper.formatDateForDisplay1(
                                     pickedDate!);
+                            //
+                            setSelectedRepIdBasedOnSelectedDate(pickedDate!);
+                            //
                             if (isTeamToggled) {
                               BlocProvider.of<AnalysisCubit>(context)
                                   .getTeamAnalysis(

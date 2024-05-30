@@ -53,6 +53,8 @@ class ListOnePageState extends State<ListOnePage>
 
   @override
   Widget build(BuildContext context) {
+    final pref = PrefUtils();
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,

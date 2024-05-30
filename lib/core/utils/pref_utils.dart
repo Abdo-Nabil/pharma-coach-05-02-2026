@@ -550,6 +550,9 @@ class PrefUtils {
   saveLastVisitDateForThisRep(int repId) async {
     await _sharedPreferences?.setString(
         "lastSeen$repId", "${GeneralHelper.formatDateForApi(DateTime.now())}");
+
+    await _sharedPreferences?.setInt(
+        "lastSeen${GeneralHelper.formatDateForApi(DateTime.now())}", repId);
   }
 
   DateTime getLastVisitDateForThisRep(int repId) {
@@ -558,6 +561,16 @@ class PrefUtils {
       return DateTime.now();
     } else {
       return GeneralHelper.formatDateFromApi(result);
+    }
+  }
+
+  int getRepForThisDate(DateTime date) {
+    final result = _sharedPreferences
+        ?.getInt("lastSeen${GeneralHelper.formatDateForApi(date)}");
+    if (result == null) {
+      return -1;
+    } else {
+      return result;
     }
   }
 }
