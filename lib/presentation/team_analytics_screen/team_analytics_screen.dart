@@ -87,11 +87,15 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   //
   @override
   void initState() {
-    BlocProvider.of<AnalysisCubit>(context).getTeamAnalysis(
+    setDateAndDateControllerBasedOnSelectedRep(-1);
+    BlocProvider.of<AnalysisCubit>(context)
+        .getTeamAnalysis(
       pickedDate!,
       dateFilter.name,
-    );
-    setDateAndDateControllerBasedOnSelectedRep(-1);
+    )
+        .then((_) {
+      setSelectedRepIdBasedOnSelectedDate(DateTime.now());
+    });
     super.initState();
   }
 
@@ -126,10 +130,23 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                       value: selectedRepId,
                       onChanged: (int? newValue) {
                         setDateAndDateControllerBasedOnSelectedRep(newValue!);
+                        if (isTeamToggled) {
+                          BlocProvider.of<AnalysisCubit>(context)
+                              .getTeamAnalysis(
+                            date,
+                            dateFilter.name,
+                          );
+                        } else {
+                          BlocProvider.of<RepAnalysisCubit>(context)
+                              .getRepAnalysis(
+                            date,
+                            dateFilter.name,
+                          );
+                        }
                         setState(() {
                           selectedRepId = newValue;
                         });
-                        debugPrint("$selectedRepId");
+                        debugPrint("Rep id:: $selectedRepId");
                       },
                       items:
                           BlocProvider.of<AnalysisCubit>(context, listen: true)
@@ -161,13 +178,14 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           ),
                         ),
                         onTap: () async {
-                          pickedDate = await showDatePicker(
+                          final tempDate = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(2023),
                               lastDate: DateTime(2080));
-                          if (pickedDate != null) {
+                          if (tempDate != null) {
                             //
+                            pickedDate = tempDate;
                             dateController.text =
                                 GeneralHelper.formatDateForDisplay1(
                                     pickedDate!);
