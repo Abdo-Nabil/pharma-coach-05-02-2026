@@ -2,7 +2,9 @@ import 'package:mina_s_application5/data/apiClient/api_client.dart';
 import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/home_page/home_page.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/avg_screen.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/build_rep_analysis_widget.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/cubit/avg_screen_cubit/avg_screen_cubit.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/cubit/rep_analysis_cubit/rep_analysis_cubit.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/select_medical_rep_alert.dart';
 import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
@@ -533,37 +535,64 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
           Spacer(),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0.h),
-            child: CustomElevatedButton(
-              height: 40.v,
-              width: MediaQuery.of(context).size.width * 0.40,
-              // text: isTeamToggled ? "lbl_team".tr : "Medical rep",
-              text: isTeamToggled ? "Progress" : "Compare to team".tr,
-              // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
-              buttonStyle: isTeamToggled
-                  ? CustomButtonStyles.fillPink
-                  : CustomButtonStyles.fillPrimaryTL12,
-              buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
-              onPressed: () {
-                isTeamToggled = !isTeamToggled;
-                if (!isTeamToggled) {
-                  BlocProvider.of<AnalysisCubit>(context)
-                      .emit(RepAnalysisSuccess());
+            child: Row(
+              children: [
+                CustomElevatedButton(
+                  height: 40.v,
+                  width: MediaQuery.of(context).size.width * 0.33,
+                  text: "Comparison",
+                  // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+                  buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+                  buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (ctx) => BlocProvider(
+                                  create: (_) => AvgScreenCubit(ApiClient()),
+                                  child: AvgScreen(
+                                      reps: BlocProvider.of<AnalysisCubit>(
+                                    context,
+                                  ).reps),
+                                )));
+                  },
+                ),
+                SizedBox(
+                  width: 10.h,
+                ),
+                CustomElevatedButton(
+                  height: 40.v,
+                  width: MediaQuery.of(context).size.width * 0.33,
+                  // text: isTeamToggled ? "lbl_team".tr : "Medical rep",
+                  text: isTeamToggled ? "Progress" : "Compare to team".tr,
+                  // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+                  buttonStyle: isTeamToggled
+                      ? CustomButtonStyles.fillPink
+                      : CustomButtonStyles.fillPrimaryTL12,
+                  buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
+                  onPressed: () {
+                    isTeamToggled = !isTeamToggled;
+                    if (!isTeamToggled) {
+                      BlocProvider.of<AnalysisCubit>(context)
+                          .emit(RepAnalysisSuccess());
 
-                  BlocProvider.of<RepAnalysisCubit>(context).getRepAnalysis(
-                    pickedDate!,
-                    dateFilter == DateFilter.quarter
-                        ? "q$quarterNumber"
-                        : dateFilter.name,
-                  );
-                } else {
-                  BlocProvider.of<AnalysisCubit>(context).getTeamAnalysis(
-                    pickedDate!,
-                    dateFilter == DateFilter.quarter
-                        ? "q$quarterNumber"
-                        : dateFilter.name,
-                  );
-                }
-              },
+                      BlocProvider.of<RepAnalysisCubit>(context).getRepAnalysis(
+                        pickedDate!,
+                        dateFilter == DateFilter.quarter
+                            ? "q$quarterNumber"
+                            : dateFilter.name,
+                      );
+                    } else {
+                      BlocProvider.of<AnalysisCubit>(context).getTeamAnalysis(
+                        pickedDate!,
+                        dateFilter == DateFilter.quarter
+                            ? "q$quarterNumber"
+                            : dateFilter.name,
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
           ),
         ],

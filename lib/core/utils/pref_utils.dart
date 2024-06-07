@@ -581,6 +581,7 @@ class VisitInfoModel {
   final String visitTime;
   final String accurateVisitTime;
   final String shift;
+  final String questionType;
   final bool isQuestionSubmitted;
   final bool isVisitCreatedInServerAndQuestionSubmittedOnline;
 
@@ -590,6 +591,7 @@ class VisitInfoModel {
     required this.visitTime,
     required this.accurateVisitTime,
     required this.shift,
+    required this.questionType,
     required this.isQuestionSubmitted,
     this.isVisitCreatedInServerAndQuestionSubmittedOnline = false,
   });
@@ -601,6 +603,7 @@ class VisitInfoModel {
       'visitTime': this.visitTime,
       'accurateVisitTime': this.accurateVisitTime,
       'shift': this.shift,
+      'question_type': this.questionType,
       'isQuestionSubmitted': this.isQuestionSubmitted,
       'isVisitCreatedInServerAndQuestionSubmittedOnline':
           this.isVisitCreatedInServerAndQuestionSubmittedOnline,
@@ -614,6 +617,7 @@ class VisitInfoModel {
       visitTime: map['visitTime'] as String,
       accurateVisitTime: map['accurateVisitTime'] as String,
       shift: map['shift'] as String,
+      questionType: map['question_type'] as String,
       isQuestionSubmitted: map['isQuestionSubmitted'] as bool,
       isVisitCreatedInServerAndQuestionSubmittedOnline:
           map['isVisitCreatedInServerAndQuestionSubmittedOnline'] as bool,

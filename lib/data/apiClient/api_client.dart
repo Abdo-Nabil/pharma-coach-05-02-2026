@@ -339,8 +339,8 @@ class ApiClient {
     }
   }
 
-  Future<int?> createVisit(
-      int repId, int locationId, String visitTime, String shift) async {
+  Future<int?> createVisit(int repId, int locationId, String visitTime,
+      String shift, String questionType) async {
     //
     int? visitId;
     //
@@ -353,6 +353,7 @@ class ApiClient {
       "rep_id": repId,
       "location_id": locationId,
       "shift": shift,
+      "question_type": questionType,
       "visit_time": visitTime,
       "name": "eg.visit name",
     };

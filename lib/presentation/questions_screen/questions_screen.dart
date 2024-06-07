@@ -244,7 +244,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           context,
           onNextVisit: () async {
             BlocProvider.of<QuestionsCubit>(context)
-                .submitQuestionAnswersLocally(-1, locationId, locationType);
+                .submitQuestionAnswersLocally(
+                    -1, locationId, locationType, questionType);
             ///////////////////////////////////////////////
             // Navigator.of(context).push(
             //   MaterialPageRoute(builder: (_) {
@@ -269,7 +270,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           onEndOfTheDay: () {
             //
             BlocProvider.of<QuestionsCubit>(context)
-                .submitQuestionAnswersLocally(-1, locationId, locationType);
+                .submitQuestionAnswersLocally(
+                    -1, locationId, locationType, questionType);
             //
             Navigator.pop(context);
             Navigator.of(context).pushReplacement(
