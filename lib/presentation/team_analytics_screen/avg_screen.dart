@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/build_avg_analysis_widget.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/checkbox_widget.dart';
+import 'package:mina_s_application5/presentation/team_analytics_screen/table_text.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/team_analytics_screen.dart';
 
 import '../../core/utils/pref_utils.dart';
@@ -8,7 +11,11 @@ import '../../general_helper.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import 'build_rep_analysis_widget.dart';
+import 'category_title_container.dart';
 import 'cubit/avg_screen_cubit/avg_screen_cubit.dart';
+import 'cubit/rep_analysis_cubit/rep_analysis_cubit.dart';
+import 'expandable_row_for_month.dart';
+import 'expandable_row_for_other.dart';
 
 class AvgScreen extends StatefulWidget {
   final List<TinyRepModel> reps;
@@ -20,17 +27,16 @@ class AvgScreen extends StatefulWidget {
 
 class _AvgScreenState extends State<AvgScreen> {
   //
-  List<int> selectedReps = [];
   //
   final pref = PrefUtils();
-  late DateTime date = DateTime.now();
-  late TextEditingController dateController =
-      TextEditingController(text: '06-2024');
+  DateTime pickedDate = DateTime.now();
+  late TextEditingController dateController = TextEditingController(
+      text: GeneralHelper.formatDateForAvgScreen(pickedDate));
   //
   DateFilter dateFilter = DateFilter.month;
-  DateTime? pickedDate = DateTime.now();
   //
-  late int quarterNumber = GeneralHelper.getQuarter(pickedDate!);
+  late int quarterNumber = GeneralHelper.getQuarter(pickedDate);
+  late int selectedMonthIndex = pickedDate.month;
 
   //
   @override
@@ -42,16 +48,23 @@ class _AvgScreenState extends State<AvgScreen> {
   //
   @override
   void initState() {
-    BlocProvider.of<AvgScreenCubit>(context).getRepAnalysis(
-      date,
-      dateFilter.name,
-    );
+    BlocProvider.of<AvgScreenCubit>(context).selectedMonthIndex =
+        pickedDate.month - 1;
+    BlocProvider.of<AvgScreenCubit>(context).selectedQuarter =
+        GeneralHelper.getQuarter(pickedDate);
     super.initState();
   }
 
   //
   @override
   Widget build(BuildContext context) {
+    //
+    final selectedMonthIndex =
+        BlocProvider.of<AvgScreenCubit>(context, listen: true)
+            .selectedMonthIndex;
+    final selectedQuarter =
+        BlocProvider.of<AvgScreenCubit>(context, listen: true).selectedQuarter;
+    //
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
@@ -73,11 +86,28 @@ class _AvgScreenState extends State<AvgScreen> {
                 child: ListView.builder(
                   itemCount: widget.reps.length,
                   itemBuilder: (context, index) {
-                    return CheckboxListTile(
-                      value: true,
-                      onChanged: (value) {},
-                      title: Text(widget.reps[index].username),
-                    );
+                    return CheckBoxWidget(
+                        title: widget.reps[index].username,
+                        onChange: () {
+                          BlocProvider.of<AvgScreenCubit>(context)
+                              .addOrRemoveMedicalRep(widget.reps[index].id);
+                          //
+                          if (BlocProvider.of<AvgScreenCubit>(context)
+                              .selectedRepsIds
+                              .isEmpty) {
+                            return;
+                          }
+                          //
+                          if (dateFilter == DateFilter.quarter) {
+                            BlocProvider.of<AvgScreenCubit>(context)
+                                .getAvgRepAnalysis(pickedDate,
+                                    "q${GeneralHelper.getQuarter(pickedDate)}");
+                            return;
+                          }
+                          //
+                          BlocProvider.of<AvgScreenCubit>(context)
+                              .getAvgRepAnalysis(pickedDate, dateFilter.name);
+                        });
                   },
                 ),
               ),
@@ -101,33 +131,16 @@ class _AvgScreenState extends State<AvgScreen> {
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2023),
                           lastDate: DateTime(2080));
-/*
                       if (tempDate != null) {
                         //
                         pickedDate = tempDate;
                         dateController.text =
-                            GeneralHelper.formatDateForDisplay1(
-                                pickedDate!);
+                            GeneralHelper.formatDateForAvgScreen(pickedDate);
                         //
-                        setSelectedRepIdBasedOnSelectedDate(pickedDate!);
-                        //
-                        if (isTeamToggled) {
-                          BlocProvider.of<AnalysisCubit>(context)
-                              .getTeamAnalysis(
-                            pickedDate!,
-                            dateFilter.name,
-                          );
-                          quarterNumber =
-                              GeneralHelper.getQuarter(pickedDate!);
-                        } else {
-                          BlocProvider.of<RepAnalysisCubit>(context)
-                              .getRepAnalysis(
-                            pickedDate!,
-                            dateFilter.name,
-                          );
-                        }
+                        BlocProvider.of<AvgScreenCubit>(context)
+                            .getAvgRepAnalysis(pickedDate, dateFilter.name);
+                        quarterNumber = GeneralHelper.getQuarter(pickedDate);
                       }
-*/
                     },
                   ),
                 ),
@@ -146,11 +159,8 @@ class _AvgScreenState extends State<AvgScreen> {
                           setState(() {
                             dateFilter = DateFilter.month;
                           });
-                          // BlocProvider.of<RepAnalysisCubit>(context)
-                          //     .getRepAnalysis(
-                          //   pickedDate!,
-                          //   dateFilter.name,
-                          // );
+                          BlocProvider.of<AvgScreenCubit>(context)
+                              .getAvgRepAnalysis(pickedDate, dateFilter.name);
                         },
                       ),
                       FilterButton(
@@ -160,11 +170,11 @@ class _AvgScreenState extends State<AvgScreen> {
                           setState(() {
                             dateFilter = DateFilter.quarter;
                           });
-                          // BlocProvider.of<RepAnalysisCubit>(context)
-                          //     .getRepAnalysis(
-                          //   pickedDate!,
-                          //   dateFilter.name,
-                          // );
+                          BlocProvider.of<AvgScreenCubit>(context)
+                              .getAvgRepAnalysis(
+                            pickedDate,
+                            "q$quarterNumber",
+                          );
                         },
                       ),
                       FilterButton(
@@ -174,11 +184,11 @@ class _AvgScreenState extends State<AvgScreen> {
                           setState(() {
                             dateFilter = DateFilter.year;
                           });
-                          // BlocProvider.of<RepAnalysisCubit>(context)
-                          //     .getRepAnalysis(
-                          //   pickedDate!,
-                          //   dateFilter.name,
-                          // );
+                          BlocProvider.of<AvgScreenCubit>(context)
+                              .getAvgRepAnalysis(
+                            pickedDate,
+                            dateFilter.name,
+                          );
                         },
                       ),
                     ],
@@ -186,45 +196,114 @@ class _AvgScreenState extends State<AvgScreen> {
                 ),
               ),
               SizedBox(height: 16.v),
-              Expanded(
-                child: BlocBuilder<AvgScreenCubit, AvgScreenState>(
-                    builder: (context, state) {
-                  //
-                  if (state is AvgLoading) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  //
-                  else if (state is AvgNoAnalysis) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.info,
-                            color: appTheme.orange300,
-                            size: 50,
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "No Analysis found!",
-                            style: TextStyle(fontSize: 20.fSize),
-                          ),
-                        ],
-                      ),
+              Visibility(
+                visible: dateFilter == DateFilter.quarter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: List.generate(4, (index) {
+                    return FilterButton(
+                      label: "Q${index + 1}",
+                      isSelected: selectedQuarter == index + 1,
+                      onTap: () {
+                        setState(() {
+                          BlocProvider.of<AvgScreenCubit>(context)
+                              .selectedQuarter = index + 1;
+                        });
+                        BlocProvider.of<AvgScreenCubit>(context)
+                            .getAvgRepAnalysis(
+                          pickedDate,
+                          'q${index + 1}',
+                        );
+                      },
                     );
-                  }
-                  ////
-                  else if (state is AvgSuccess) {
-                    return BuildRepAnalysisWidget(
-                      dateFilter: dateFilter,
-                      pickedDate: pickedDate!,
-                      selectedRepId: 375,
-                    );
-                  }
-                  //
-                  return Center(child: CircularProgressIndicator());
-                }),
+                  }),
+                ),
               ),
+              Visibility(
+                visible: dateFilter == DateFilter.month,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: List.generate(monthsList.length, (index) {
+                      return FilterButton(
+                        label: "${monthsList[index]}",
+                        isSelected: selectedMonthIndex == index,
+                        onTap: () {
+                          setState(() {
+                            BlocProvider.of<AvgScreenCubit>(context)
+                                .selectedMonthIndex = index;
+                          });
+                        },
+                      );
+                    }),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: dateFilter == DateFilter.quarter ||
+                    dateFilter == DateFilter.month,
+                child: SizedBox(height: 20.v),
+              ),
+              BlocProvider.of<AvgScreenCubit>(context).selectedRepsIds.isEmpty
+                  ? Expanded(
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.info,
+                              color: appTheme.orange300,
+                              size: 50,
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              'Please, select medical reps.',
+                              style: TextStyle(fontSize: 20.fSize),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                      child: BlocBuilder<AvgScreenCubit, AvgScreenState>(
+                          builder: (context, state) {
+                        //
+                        if (state is AvgLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        //
+                        else if (state is AvgNoAnalysis) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.info,
+                                  color: appTheme.orange300,
+                                  size: 50,
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "No Analysis found!",
+                                  style: TextStyle(fontSize: 20.fSize),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        ////
+                        else if (state is AvgSuccess) {
+                          return BuildAvgAnalysisWidget(
+                            pickedDate: pickedDate,
+                            dateFilter: dateFilter,
+                          );
+                        }
+                        //
+                        return Center(child: CircularProgressIndicator());
+                      }),
+                    ),
             ],
           ),
         ),

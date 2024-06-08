@@ -208,6 +208,13 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                 pickedDate!,
                                 dateFilter.name,
                               );
+                              quarterNumber =
+                                  GeneralHelper.getQuarter(pickedDate!);
+                              BlocProvider.of<RepAnalysisCubit>(context)
+                                  .selectedMonthIndex = pickedDate!.month - 1;
+                              BlocProvider.of<RepAnalysisCubit>(context)
+                                      .selectedQuarter =
+                                  GeneralHelper.getQuarter(pickedDate!);
                             }
                           }
                         },

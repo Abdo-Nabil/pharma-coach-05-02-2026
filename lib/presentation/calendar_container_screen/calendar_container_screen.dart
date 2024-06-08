@@ -203,9 +203,9 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
         //   return;
         // }
         if (GeneralData.selectedDate.weekday == DateTime.friday) {
-          // ProgressDialogUtils.showWarningDialog(
-          //     context, "Sorry!", "You can't create visits on friday");
-          // return;
+          ProgressDialogUtils.showWarningDialog(
+              context, "Sorry!", "You can't create visits on friday");
+          return;
         } else if (GeneralData.selectedDate.isBefore(yesterday)) {
           ProgressDialogUtils.showWarningDialog(
               context, "Sorry!", "You can't create visits in the past");

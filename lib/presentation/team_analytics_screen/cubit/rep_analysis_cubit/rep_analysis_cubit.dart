@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import '../../../../data/apiClient/api_client.dart';
 import '../../../../general_helper.dart';
 import '../../models/rep_analysis_model.dart';
+import '../../team_analytics_screen.dart';
 
 part 'rep_analysis_state.dart';
 
@@ -14,7 +15,10 @@ class RepAnalysisCubit extends Cubit<RepAnalysisState> {
   RepAnalysisCubit(this.apiClient) : super(RepAnalysisInitial());
 
   List<RepAnalysisModel> repAnalysis = [];
-
+  late int selectedQuarter;
+  late int selectedMonthIndex;
+  DateFilter dateFilter = DateFilter.year;
+  //
   getRepAnalysis(
     DateTime date,
     String dateScope,

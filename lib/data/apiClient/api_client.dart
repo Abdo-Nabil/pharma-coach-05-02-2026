@@ -536,8 +536,62 @@ class ApiClient {
       if (_isSuccessCall(response)) {
         List<RepAnalysisModel> models = [];
         for (int i = 0; i < response.data["data"].length; i++) {
-          models.add(RepAnalysisModel.fromMap(response.data["data"][i],
-              response.data["average_rep_percentages"]));
+          models.add(RepAnalysisModel.fromMap(
+              response.data["data"][i],
+              response.data["average_rep_percentages"],
+              response.data["normal_calls %"]));
+        }
+        // for (int i = 0; i < data.length; i++) {
+        //   models.add(RepAnalysisModel.fromMap(data[i], avg));
+        // }
+        return models;
+      } else {
+        throw response.data != null
+            ? RepModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      // ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<List<RepAnalysisModel>> getAvgRepAnalysis(
+      String date, String dateScope, List<int> selectedRepIds) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+
+    Map<String, dynamic> queryParams = {
+      "date": date,
+      "date_scope": dateScope,
+    };
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/new-feedback',
+        queryParameters: queryParams,
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        List<RepAnalysisModel> models = [];
+        // for (int i = 0; i < response.data["data"].length; i++) {
+        //   models.add(RepAnalysisModel.fromMap(
+        //       response.data["data"][i],
+        //       response.data["average_rep_percentages"],
+        //       response.data["normal_calls %"]));
+        // }
+        for (int i = 0; i < avgsDataMonth["data"].length; i++) {
+          models.add(RepAnalysisModel.fromMap(
+              avgsDataMonth["data"][i],
+              avgsDataMonth["average_rep_percentages"],
+              avgsDataMonth["normal_calls %"]));
         }
         // for (int i = 0; i < data.length; i++) {
         //   models.add(RepAnalysisModel.fromMap(data[i], avg));
@@ -558,6 +612,323 @@ class ApiClient {
     }
   }
 }
+
+final Map avgsDataYear = {
+  "status": "Success",
+  "statusCode": 200,
+  "message": "Feedback Retrieved successfully",
+  "data": [
+    {
+      "category": "Personal Attributes",
+      "reps": {
+        "avg": {
+          "2024": {
+            "Questions": {"Punctuality": 100, "Dress code": 100},
+            "rep_percentage": 100
+          }
+        },
+      }
+    },
+    {
+      "category": "Pharmacy Feedback",
+      "reps": {
+        "avg": {
+          "2024": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 50
+            },
+            "rep_percentage": 50
+          }
+        },
+      }
+    },
+    {
+      "category": "Pre-Call Planning",
+      "reps": {
+        "avg": {
+          "2024": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 50
+            },
+            "rep_percentage": 25
+          }
+        },
+      }
+    },
+  ],
+  "normal_calls %": {
+    "avg": 92.2,
+  },
+  "average_rep_percentages": {
+    "avg": 74.4,
+  }
+};
+
+final Map avgsDataMonth = {
+  "status": "Success",
+  "statusCode": 200,
+  "message": "Feedback Retrieved successfully",
+  "data": [
+    {
+      "category": "Personal Attributes",
+      "reps": {
+        "avg": {
+          "January": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 0
+          },
+          "February": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 0
+          },
+          "March": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 0
+          },
+          "April": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 0
+          },
+          "May": {
+            "Questions": {"Punctuality": 97.8, "Dress code": 88.9},
+            "rep_percentage": 94.4
+          },
+          "June": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 50,
+          },
+          "July": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 0
+          },
+          "August": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 0
+          },
+          "September": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 0
+          },
+          "October": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 0
+          },
+          "November": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 0
+          },
+          "December": {
+            "Questions": {"Punctuality": 0, "Dress code": 0},
+            "rep_percentage": 0
+          }
+        },
+      }
+    },
+    {
+      "category": "Pharmacy Feedback",
+      "reps": {
+        "avg": {
+          "May": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 97.6
+            },
+            "rep_percentage": 100
+          },
+          "January": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          },
+          "February": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          },
+          "March": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          },
+          "April": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          },
+          "June": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          },
+          "July": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          },
+          "August": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          },
+          "September": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          },
+          "October": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          },
+          "November": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          },
+          "December": {
+            "Questions": {
+              "Rate / Stock our Brands Vs Rate / Stock Competitors": 0
+            },
+            "rep_percentage": 0
+          }
+        },
+      }
+    },
+    {
+      "category": "Pre-Call Planning",
+      "reps": {
+        "avg": {
+          "May": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 90.1,
+              "Set SMART call objectives": 89.9
+            },
+            "rep_percentage": 95.2
+          },
+          "January": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          },
+          "February": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          },
+          "March": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          },
+          "April": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          },
+          "June": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          },
+          "July": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          },
+          "August": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          },
+          "September": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          },
+          "October": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          },
+          "November": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          },
+          "December": {
+            "Questions": {
+              "Review customer  Potentiality / Adoption / Rx Habit": 0,
+              "Set SMART call objectives": 0
+            },
+            "rep_percentage": 0
+          }
+        },
+      }
+    },
+  ],
+  "normal_calls %": {
+    "avg": {
+      "Jan": 0,
+      "Feb": 0,
+      "Mar": 0,
+      "Apr": 0,
+      "May": 0,
+      "Jun": 66.7,
+      "Jul": 0,
+      "Aug": 0,
+      "Sep": 0,
+      "Oct": 0,
+      "Nov": 0,
+      "Dec": 0
+    },
+  },
+  "average_rep_percentages": {
+    "avg": {
+      "Jan": 0,
+      "Feb": 0,
+      "Mar": 0,
+      "Apr": 0,
+      "May": 0,
+      "Jun": 96,
+      "Jul": 0,
+      "Aug": 0,
+      "Sep": 0,
+      "Oct": 0,
+      "Nov": 0,
+      "Dec": 0
+    },
+  }
+};
 
 final avg = {
   "973": {"April": 0, "May": 73, "June": 0},

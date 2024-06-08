@@ -171,7 +171,9 @@ class PrimaryColors {
   // Teal
   Color get teal50 => Color(0XFFDEEBF2);
 
-  //
+  Color get totalRowColor => orange300.withOpacity(0.50);
+
+//
 }
 
 PrimaryColors get appTheme => ThemeHelper().themeColor();

@@ -10,10 +10,14 @@ part 'avg_screen_state.dart';
 class AvgScreenCubit extends Cubit<AvgScreenState> {
   final ApiClient apiClient;
   AvgScreenCubit(this.apiClient) : super(AvgScreenInitial());
-
+  //
+  List<int> selectedRepsIds = [];
+  //
   List<RepAnalysisModel> repAnalysis = [];
-
-  getRepAnalysis(
+  late int selectedQuarter;
+  late int selectedMonthIndex;
+  //
+  getAvgRepAnalysis(
     DateTime date,
     String dateScope,
   ) async {
@@ -21,13 +25,21 @@ class AvgScreenCubit extends Cubit<AvgScreenState> {
     //
     emit(AvgLoading());
     //
-    await Future.delayed(const Duration(seconds: 3));
-    repAnalysis = await apiClient.getRepAnalysis(dateAsString, dateScope);
+    repAnalysis = await apiClient.getAvgRepAnalysis(
+        dateAsString, dateScope, selectedRepsIds);
     if (repAnalysis.isEmpty) {
       emit(AvgNoAnalysis());
       return;
     }
     // reps = await apiClient.getMedicalReps();
     emit(AvgSuccess());
+  }
+
+  addOrRemoveMedicalRep(int repId) {
+    if (selectedRepsIds.contains(repId)) {
+      selectedRepsIds.remove(repId);
+    } else {
+      selectedRepsIds.add(repId);
+    }
   }
 }

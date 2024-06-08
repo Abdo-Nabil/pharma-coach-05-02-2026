@@ -20,6 +20,10 @@ class GeneralHelper {
     return DateFormat(format).parse(date);
   }
 
+  static String formatDateForAvgScreen(DateTime date) {
+    return DateFormat("M-yyyy").format(date);
+  }
+
   static String formatDateForDisplay1(DateTime date) {
     return DateFormat("EEE d-M-yyyy").format(date);
   }
