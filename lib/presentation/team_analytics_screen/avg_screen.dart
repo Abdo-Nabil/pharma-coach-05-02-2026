@@ -35,8 +35,6 @@ class _AvgScreenState extends State<AvgScreen> {
   //
   DateFilter dateFilter = DateFilter.month;
   //
-  late int quarterNumber = GeneralHelper.getQuarter(pickedDate);
-  late int selectedMonthIndex = pickedDate.month;
 
   //
   @override
@@ -88,7 +86,7 @@ class _AvgScreenState extends State<AvgScreen> {
                   itemBuilder: (context, index) {
                     return CheckBoxWidget(
                         title: widget.reps[index].username,
-                        onChange: () {
+                        onChange: () async {
                           BlocProvider.of<AvgScreenCubit>(context)
                               .addOrRemoveMedicalRep(widget.reps[index].id);
                           //
@@ -138,8 +136,14 @@ class _AvgScreenState extends State<AvgScreen> {
                             GeneralHelper.formatDateForAvgScreen(pickedDate);
                         //
                         BlocProvider.of<AvgScreenCubit>(context)
+                            .selectedMonthIndex = pickedDate.month - 1;
+                        //
+                        BlocProvider.of<AvgScreenCubit>(context)
+                                .selectedQuarter =
+                            GeneralHelper.getQuarter(pickedDate);
+                        //
+                        BlocProvider.of<AvgScreenCubit>(context)
                             .getAvgRepAnalysis(pickedDate, dateFilter.name);
-                        quarterNumber = GeneralHelper.getQuarter(pickedDate);
                       }
                     },
                   ),
@@ -159,6 +163,11 @@ class _AvgScreenState extends State<AvgScreen> {
                           setState(() {
                             dateFilter = DateFilter.month;
                           });
+                          if (BlocProvider.of<AvgScreenCubit>(context)
+                              .selectedRepsIds
+                              .isEmpty) {
+                            return;
+                          }
                           BlocProvider.of<AvgScreenCubit>(context)
                               .getAvgRepAnalysis(pickedDate, dateFilter.name);
                         },
@@ -170,10 +179,15 @@ class _AvgScreenState extends State<AvgScreen> {
                           setState(() {
                             dateFilter = DateFilter.quarter;
                           });
+                          if (BlocProvider.of<AvgScreenCubit>(context)
+                              .selectedRepsIds
+                              .isEmpty) {
+                            return;
+                          }
                           BlocProvider.of<AvgScreenCubit>(context)
                               .getAvgRepAnalysis(
                             pickedDate,
-                            "q$quarterNumber",
+                            "q${BlocProvider.of<AvgScreenCubit>(context).selectedQuarter}",
                           );
                         },
                       ),
@@ -184,6 +198,11 @@ class _AvgScreenState extends State<AvgScreen> {
                           setState(() {
                             dateFilter = DateFilter.year;
                           });
+                          if (BlocProvider.of<AvgScreenCubit>(context)
+                              .selectedRepsIds
+                              .isEmpty) {
+                            return;
+                          }
                           BlocProvider.of<AvgScreenCubit>(context)
                               .getAvgRepAnalysis(
                             pickedDate,
@@ -205,10 +224,8 @@ class _AvgScreenState extends State<AvgScreen> {
                       label: "Q${index + 1}",
                       isSelected: selectedQuarter == index + 1,
                       onTap: () {
-                        setState(() {
-                          BlocProvider.of<AvgScreenCubit>(context)
-                              .selectedQuarter = index + 1;
-                        });
+                        BlocProvider.of<AvgScreenCubit>(context)
+                            .selectedQuarter = index + 1;
                         BlocProvider.of<AvgScreenCubit>(context)
                             .getAvgRepAnalysis(
                           pickedDate,

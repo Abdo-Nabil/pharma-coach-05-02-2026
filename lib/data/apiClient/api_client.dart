@@ -572,27 +572,31 @@ class ApiClient {
       "date": date,
       "date_scope": dateScope,
     };
+    for (int i = 0; i < selectedRepIds.length; i++) {
+      queryParams["rep_ids[]"] = selectedRepIds[i];
+    }
+    //
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
-        '$url/new-feedback',
+        '$url/new-feedback/with-rep-ids',
         queryParameters: queryParams,
         options: Options(headers: headers),
       );
       if (_isSuccessCall(response)) {
         List<RepAnalysisModel> models = [];
-        // for (int i = 0; i < response.data["data"].length; i++) {
-        //   models.add(RepAnalysisModel.fromMap(
-        //       response.data["data"][i],
-        //       response.data["average_rep_percentages"],
-        //       response.data["normal_calls %"]));
-        // }
-        for (int i = 0; i < avgsDataMonth["data"].length; i++) {
+        for (int i = 0; i < response.data["data"].length; i++) {
+          models.add(RepAnalysisModel.fromMap(
+              response.data["data"][i],
+              response.data["average_rep_percentages"],
+              response.data["normal_calls %"]));
+        }
+        /*for (int i = 0; i < avgsDataMonth["data"].length; i++) {
           models.add(RepAnalysisModel.fromMap(
               avgsDataMonth["data"][i],
               avgsDataMonth["average_rep_percentages"],
               avgsDataMonth["normal_calls %"]));
-        }
+        }*/
         // for (int i = 0; i < data.length; i++) {
         //   models.add(RepAnalysisModel.fromMap(data[i], avg));
         // }

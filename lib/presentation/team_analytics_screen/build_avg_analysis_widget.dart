@@ -228,8 +228,10 @@ class _BuildAvgAnalysisWidgetState extends State<BuildAvgAnalysisWidget> {
                                   MediaQuery.of(context).size.width * 0.700,
                               secondChildInRow: TableText(
                                 isHeader: true,
+
+                                ///
                                 text:
-                                    "${BlocProvider.of<AvgScreenCubit>(context).repAnalysis[0].normalCallsPercentages["avg"]['${monthsList2[selectedMonthIndex]}']}%",
+                                    "${BlocProvider.of<AvgScreenCubit>(context).repAnalysis[0].normalCallsPercentages["avg"]['${monthsList[selectedMonthIndex]}']}%",
                               ),
                             ),
                             //
@@ -242,8 +244,10 @@ class _BuildAvgAnalysisWidgetState extends State<BuildAvgAnalysisWidget> {
                                   MediaQuery.of(context).size.width * 0.700,
                               secondChildInRow: TableText(
                                 isHeader: true,
+
+                                ///
                                 text:
-                                    "${BlocProvider.of<AvgScreenCubit>(context).repAnalysis[0].averageRepPercentages["avg"]['${monthsList2[selectedMonthIndex]}']}%",
+                                    "${BlocProvider.of<AvgScreenCubit>(context).repAnalysis[0].averageRepPercentages["avg"]['${monthsList[selectedMonthIndex]}']}%",
                               ),
                             ),
                             //
