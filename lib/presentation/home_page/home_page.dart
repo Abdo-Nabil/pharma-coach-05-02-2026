@@ -121,22 +121,6 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              AppbarTitleImage(
-                imagePath: ImageConstant.imgPharcoCorpLogo,
-                margin: EdgeInsets.only(left: 17.h),
-              ),
-              Spacer(),
-              AppbarTrailingIconbutton(
-                onTap: () {
-                  BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(2);
-                },
-                imagePath: ImageConstant.imgCalendarText,
-                margin: EdgeInsets.only(
-                  left: 16.h,
-                  right: 16.h,
-                  bottom: 3.v,
-                ),
-              ),
               InkWell(
                 onTap: () async {
                   final shared = PrefUtils();
@@ -161,6 +145,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+              AppbarTrailingIconbutton(
+                onTap: () {
+                  BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(2);
+                },
+                imagePath: ImageConstant.imgCalendarText,
+                margin: EdgeInsets.only(
+                  left: 16.h,
+                  right: 16.h,
+                  bottom: 3.v,
+                ),
+              ),
+              AppbarTitleImage(
+                imagePath: ImageConstant.imgPharcoCorpLogo,
+                margin: EdgeInsets.only(right: 16.h),
+              ),
+              // Spacer(),
             ],
           ),
           SizedBox(height: 11.v),
