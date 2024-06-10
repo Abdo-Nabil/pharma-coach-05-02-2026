@@ -199,19 +199,19 @@ class _BuildAvgAnalysisWidgetState extends State<BuildAvgAnalysisWidget> {
                                   category: repAnalysis.category,
                                   //
                                   repPercentage:
-                                      "${repAnalysis.reps["avg"]["${monthsList[selectedMonthIndex]}"]['rep_percentage']}",
+                                      "${repAnalysis.reps["avg"]["${monthsList2[selectedMonthIndex]}"]['rep_percentage']}",
                                   //
                                   //
                                   keys: repAnalysis
                                       .reps["avg"]
-                                          ["${monthsList[selectedMonthIndex]}"]
+                                          ["${monthsList2[selectedMonthIndex]}"]
                                           ["Questions"]
                                       .keys
                                       .toList(),
                                   //
                                   values: repAnalysis
                                       .reps["avg"]
-                                          ["${monthsList[selectedMonthIndex]}"]
+                                          ["${monthsList2[selectedMonthIndex]}"]
                                           ["Questions"]
                                       .values
                                       .toList(),
@@ -231,7 +231,7 @@ class _BuildAvgAnalysisWidgetState extends State<BuildAvgAnalysisWidget> {
 
                                 ///
                                 text:
-                                    "${BlocProvider.of<AvgScreenCubit>(context).repAnalysis[0].normalCallsPercentages["avg"]['${monthsList[selectedMonthIndex]}']}%",
+                                    "${BlocProvider.of<AvgScreenCubit>(context).repAnalysis[0].normalCallsPercentages["avg"]['${monthsList2[selectedMonthIndex]}']}%",
                               ),
                             ),
                             //
@@ -247,7 +247,7 @@ class _BuildAvgAnalysisWidgetState extends State<BuildAvgAnalysisWidget> {
 
                                 ///
                                 text:
-                                    "${BlocProvider.of<AvgScreenCubit>(context).repAnalysis[0].averageRepPercentages["avg"]['${monthsList[selectedMonthIndex]}']}%",
+                                    "${BlocProvider.of<AvgScreenCubit>(context).repAnalysis[0].averageRepPercentages["avg"]['${monthsList2[selectedMonthIndex]}']}%",
                               ),
                             ),
                             //

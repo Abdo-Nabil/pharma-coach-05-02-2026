@@ -35,7 +35,6 @@ class _AvgScreenState extends State<AvgScreen> {
   //
   DateFilter dateFilter = DateFilter.month;
   //
-
   //
   @override
   void dispose() {
@@ -76,142 +75,155 @@ class _AvgScreenState extends State<AvgScreen> {
             children: [
               // SizedBox(height: 16.v),
               Container(
-                height: MediaQuery.of(context).size.height * 0.200,
+                height: MediaQuery.of(context).size.height * 0.070,
                 width: double.infinity,
                 decoration: AppDecoration.fillBlue50.copyWith(
                   borderRadius: BorderRadiusStyle.roundedBorder17,
                 ),
-                child: ListView.builder(
-                  itemCount: widget.reps.length,
-                  itemBuilder: (context, index) {
-                    return CheckBoxWidget(
-                        title: widget.reps[index].username,
-                        onChange: () async {
-                          BlocProvider.of<AvgScreenCubit>(context)
-                              .addOrRemoveMedicalRep(widget.reps[index].id);
-                          //
-                          if (BlocProvider.of<AvgScreenCubit>(context)
-                              .selectedRepsIds
-                              .isEmpty) {
-                            return;
-                          }
-                          //
-                          if (dateFilter == DateFilter.quarter) {
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  child: ListView.builder(
+                    itemCount: widget.reps.length,
+                    itemBuilder: (context, index) {
+                      return CheckBoxWidget(
+                          title: widget.reps[index].username,
+                          onChange: () async {
                             BlocProvider.of<AvgScreenCubit>(context)
-                                .getAvgRepAnalysis(pickedDate,
-                                    "q${GeneralHelper.getQuarter(pickedDate)}");
-                            return;
-                          }
-                          //
-                          BlocProvider.of<AvgScreenCubit>(context)
-                              .getAvgRepAnalysis(pickedDate, dateFilter.name);
-                        });
-                  },
+                                .addOrRemoveMedicalRep(widget.reps[index].id);
+                            //
+                            if (BlocProvider.of<AvgScreenCubit>(context)
+                                .selectedRepsIds
+                                .isEmpty) {
+                              return;
+                            }
+                            //
+                            if (dateFilter == DateFilter.quarter) {
+                              BlocProvider.of<AvgScreenCubit>(context)
+                                  .getAvgRepAnalysis(pickedDate,
+                                      "q${GeneralHelper.getQuarter(pickedDate)}");
+                              return;
+                            }
+                            //
+                            BlocProvider.of<AvgScreenCubit>(context)
+                                .getAvgRepAnalysis(pickedDate, dateFilter.name);
+                          });
+                    },
+                  ),
                 ),
               ),
               SizedBox(height: 16.v),
               SizedBox(
                 height: 48.v,
                 // width: MediaQuery.of(context).size.width * 0.5,
-                child: Center(
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    controller: dateController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.h),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      child: TextField(
+                        textAlign: TextAlign.center,
+                        controller: dateController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.h),
+                          ),
+                        ),
+                        onTap: () async {
+                          final tempDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2023),
+                              lastDate: DateTime(2080));
+                          if (tempDate != null) {
+                            //
+                            pickedDate = tempDate;
+                            dateController.text =
+                                GeneralHelper.formatDateForAvgScreen(
+                                    pickedDate);
+                            //
+                            BlocProvider.of<AvgScreenCubit>(context)
+                                .selectedMonthIndex = pickedDate.month - 1;
+                            //
+                            BlocProvider.of<AvgScreenCubit>(context)
+                                    .selectedQuarter =
+                                GeneralHelper.getQuarter(pickedDate);
+                            //
+                            BlocProvider.of<AvgScreenCubit>(context)
+                                .getAvgRepAnalysis(pickedDate, dateFilter.name);
+                          }
+                        },
                       ),
                     ),
-                    onTap: () async {
-                      final tempDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2023),
-                          lastDate: DateTime(2080));
-                      if (tempDate != null) {
-                        //
-                        pickedDate = tempDate;
-                        dateController.text =
-                            GeneralHelper.formatDateForAvgScreen(pickedDate);
-                        //
-                        BlocProvider.of<AvgScreenCubit>(context)
-                            .selectedMonthIndex = pickedDate.month - 1;
-                        //
-                        BlocProvider.of<AvgScreenCubit>(context)
-                                .selectedQuarter =
-                            GeneralHelper.getQuarter(pickedDate);
-                        //
-                        BlocProvider.of<AvgScreenCubit>(context)
-                            .getAvgRepAnalysis(pickedDate, dateFilter.name);
-                      }
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(height: 20.v),
-              Center(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      FilterButton(
-                        label: 'Month',
-                        isSelected: dateFilter.name == DateFilter.month.name,
-                        onTap: () {
-                          setState(() {
-                            dateFilter = DateFilter.month;
-                          });
-                          if (BlocProvider.of<AvgScreenCubit>(context)
-                              .selectedRepsIds
-                              .isEmpty) {
-                            return;
-                          }
-                          BlocProvider.of<AvgScreenCubit>(context)
-                              .getAvgRepAnalysis(pickedDate, dateFilter.name);
-                        },
+                    SizedBox(width: 8.h),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            FilterButton(
+                              label: 'Month',
+                              isSelected:
+                                  dateFilter.name == DateFilter.month.name,
+                              onTap: () {
+                                setState(() {
+                                  dateFilter = DateFilter.month;
+                                });
+                                if (BlocProvider.of<AvgScreenCubit>(context)
+                                    .selectedRepsIds
+                                    .isEmpty) {
+                                  return;
+                                }
+                                BlocProvider.of<AvgScreenCubit>(context)
+                                    .getAvgRepAnalysis(
+                                        pickedDate, dateFilter.name);
+                              },
+                            ),
+                            FilterButton(
+                              label: 'Quarter',
+                              isSelected:
+                                  dateFilter.name == DateFilter.quarter.name,
+                              onTap: () {
+                                setState(() {
+                                  dateFilter = DateFilter.quarter;
+                                });
+                                if (BlocProvider.of<AvgScreenCubit>(context)
+                                    .selectedRepsIds
+                                    .isEmpty) {
+                                  return;
+                                }
+                                BlocProvider.of<AvgScreenCubit>(context)
+                                    .getAvgRepAnalysis(
+                                  pickedDate,
+                                  "q${BlocProvider.of<AvgScreenCubit>(context).selectedQuarter}",
+                                );
+                              },
+                            ),
+                            FilterButton(
+                              label: 'YTD',
+                              isSelected:
+                                  dateFilter.name == DateFilter.year.name,
+                              onTap: () {
+                                setState(() {
+                                  dateFilter = DateFilter.year;
+                                });
+                                if (BlocProvider.of<AvgScreenCubit>(context)
+                                    .selectedRepsIds
+                                    .isEmpty) {
+                                  return;
+                                }
+                                BlocProvider.of<AvgScreenCubit>(context)
+                                    .getAvgRepAnalysis(
+                                  pickedDate,
+                                  dateFilter.name,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                      FilterButton(
-                        label: 'Quarter',
-                        isSelected: dateFilter.name == DateFilter.quarter.name,
-                        onTap: () {
-                          setState(() {
-                            dateFilter = DateFilter.quarter;
-                          });
-                          if (BlocProvider.of<AvgScreenCubit>(context)
-                              .selectedRepsIds
-                              .isEmpty) {
-                            return;
-                          }
-                          BlocProvider.of<AvgScreenCubit>(context)
-                              .getAvgRepAnalysis(
-                            pickedDate,
-                            "q${BlocProvider.of<AvgScreenCubit>(context).selectedQuarter}",
-                          );
-                        },
-                      ),
-                      FilterButton(
-                        label: 'YTD',
-                        isSelected: dateFilter.name == DateFilter.year.name,
-                        onTap: () {
-                          setState(() {
-                            dateFilter = DateFilter.year;
-                          });
-                          if (BlocProvider.of<AvgScreenCubit>(context)
-                              .selectedRepsIds
-                              .isEmpty) {
-                            return;
-                          }
-                          BlocProvider.of<AvgScreenCubit>(context)
-                              .getAvgRepAnalysis(
-                            pickedDate,
-                            dateFilter.name,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 16.v),
@@ -260,7 +272,7 @@ class _AvgScreenState extends State<AvgScreen> {
               Visibility(
                 visible: dateFilter == DateFilter.quarter ||
                     dateFilter == DateFilter.month,
-                child: SizedBox(height: 20.v),
+                child: SizedBox(height: 16.v),
               ),
               BlocProvider.of<AvgScreenCubit>(context).selectedRepsIds.isEmpty
                   ? Expanded(

@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> {
               textAlign: TextAlign.left,
             ),
           ),
-          SizedBox(height: 28.v)
+          SizedBox(height: 28.v),
         ],
       ),
     );
