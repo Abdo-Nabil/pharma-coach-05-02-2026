@@ -568,19 +568,25 @@ class ApiClient {
       'Authorization': 'Bearer ${GeneralData.token!}',
     };
 
-    Map<String, dynamic> queryParams = {
-      "date": date,
-      "date_scope": dateScope,
-    };
+    // Map<String, dynamic> queryParams = {
+    //   "date": date,
+    //   "date_scope": dateScope,
+    // };
+    // for (int i = 0; i < selectedRepIds.length; i++) {
+    //   queryParams["rep_ids[]"] = selectedRepIds[i];
+    // }
+    String link =
+        '$url/new-feedback/with-rep-ids?date=$date&date_scope=$dateScope';
     for (int i = 0; i < selectedRepIds.length; i++) {
-      queryParams["rep_ids[]"] = selectedRepIds[i];
+      link = '$link&rep_ids[]=${selectedRepIds[i]}';
     }
-    //
+
+    debugPrint("############### ${link}");
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
-        '$url/new-feedback/with-rep-ids',
-        queryParameters: queryParams,
+        link,
+        // queryParameters: queryParams,
         options: Options(headers: headers),
       );
       if (_isSuccessCall(response)) {
