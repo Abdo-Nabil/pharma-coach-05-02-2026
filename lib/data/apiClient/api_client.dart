@@ -8,6 +8,7 @@ import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/data/models/getLocations/get_get_locations_resp.dart';
 import 'package:mina_s_application5/data/models/loginUser/post_login_user_resp.dart';
 import 'package:mina_s_application5/general_data.dart';
+import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/answer_model.dart';
@@ -568,6 +569,332 @@ class ApiClient {
       'Authorization': 'Bearer ${GeneralData.token!}',
     };
 
+    Map<String, dynamic> queryParams = {
+      "date": date,
+      "date_scope": dateScope,
+    };
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/new-feedback',
+        queryParameters: queryParams,
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        List<RepAnalysisModel> models = [];
+        //
+        if (response.data['data'].isEmpty) {
+          return models;
+        }
+        //
+        final convertedSchema =
+            _convertSchema(response.data, dateScope, selectedRepIds);
+        // log('@@@@@######@@@@@ converted schema \n$convertedSchema');
+        for (int i = 0; i < convertedSchema["data"].length; i++) {
+          models.add(
+            RepAnalysisModel.fromMap(
+                convertedSchema["data"][i],
+                convertedSchema["average_rep_percentages"],
+                convertedSchema["normal_calls %"]),
+          );
+        }
+        // for (int i = 0; i < data.length; i++) {
+        //   models.add(RepAnalysisModel.fromMap(data[i], avg));
+        // }
+        return models;
+      } else {
+        throw response.data != null
+            ? RepModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      // ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Map<String, dynamic> _convertSchema(Map<String, dynamic> oldSchema,
+      String dateScope, List<int> selectedRepIds) {
+    if (dateScope == 'year') {
+      return _convertToYearSchema(oldSchema, selectedRepIds);
+    } else if (dateScope == 'month') {
+      return _convertToMonthOrQuarterSchema(oldSchema, selectedRepIds, 12);
+    } else {
+      return _convertToMonthOrQuarterSchema(oldSchema, selectedRepIds, 3);
+    }
+  }
+
+  Map<String, dynamic> _convertToYearSchema(
+      Map<String, dynamic> oldSchema, List<int> selectedRepIds) {
+    //
+    //
+    final oldDataListOfMaps = oldSchema["data"];
+    List<Map<String, dynamic>> newDataListOfMaps = [];
+    //
+    for (int i = 0; i < oldDataListOfMaps.length; i++) {
+      Map<String, dynamic> newMap = {};
+      newMap["category"] = oldDataListOfMaps[i]["category"];
+      // get number of question inside this category
+      final int numOfQuestions = oldDataListOfMaps[i]["reps"]
+          .entries
+          .first
+          .value
+          .entries
+          .first
+          .value["Questions"]
+          .entries
+          .length;
+      // variables to store sum
+      List sumForQuestionsList = List.generate(numOfQuestions, (index) => 0.0);
+      double sumForRepPercentage = 0;
+      //
+      for (int k = 0; k < selectedRepIds.length; k++) {
+        //
+        final Map? temp = oldDataListOfMaps[i]["reps"]["${selectedRepIds[k]}"];
+        if (temp != null) {
+          int index = 0;
+          temp.entries.first.value["Questions"].entries.forEach((mapEntry) {
+            sumForQuestionsList[index] += mapEntry.value;
+            index++;
+          });
+          sumForRepPercentage += temp.entries.first.value["rep_percentage"];
+        }
+      }
+      //
+      List avgForQuestionsList = sumForQuestionsList;
+      for (int z = 0; z < avgForQuestionsList.length; z++) {
+        if (avgForQuestionsList[z] != 0) {
+          avgForQuestionsList[z] = GeneralHelper.formatDoubleAsFixed(
+              avgForQuestionsList[z] / selectedRepIds.length);
+        }
+      }
+      //
+      Map oldQuestionsMap = oldDataListOfMaps[i]["reps"]
+          .entries
+          .first
+          .value
+          .entries
+          .first
+          .value["Questions"];
+
+      int index = 0;
+      Map newQuestionsMap = {};
+      oldQuestionsMap.forEach((key, value) {
+        newQuestionsMap[key] = avgForQuestionsList[index];
+        index++;
+      });
+
+      //
+      double avgForRepPercentage = 0;
+      if (sumForRepPercentage != 0) {
+        avgForRepPercentage = GeneralHelper.formatDoubleAsFixed(
+            sumForRepPercentage / selectedRepIds.length);
+      }
+      //
+      newMap["reps"] = {
+        "avg": {
+          "anyYear": {
+            "Questions": newQuestionsMap,
+            "rep_percentage": avgForRepPercentage,
+          },
+        },
+      };
+      // debugPrint("########## Year Result \n ${newMap}");
+      newDataListOfMaps.add(newMap);
+    }
+    //
+    //
+    double normalCalsAvg =
+        _getAvgOfYearDirectMap(oldSchema["normal_calls %"], selectedRepIds);
+    final newNormalCallsMap = {"avg": normalCalsAvg};
+    //
+    double repPercentageAvg = _getAvgOfYearDirectMap(
+        oldSchema["average_rep_percentages"], selectedRepIds);
+    final newAvgRepPercentageMap = {"avg": repPercentageAvg};
+    //
+    return {
+      "data": newDataListOfMaps,
+      "normal_calls %": newNormalCallsMap,
+      "average_rep_percentages": newAvgRepPercentageMap,
+    };
+  }
+
+  Map<String, dynamic> _convertToMonthOrQuarterSchema(
+      Map<String, dynamic> oldSchema,
+      List<int> selectedRepIds,
+      int numOfMonths) {
+    //
+    //
+    final oldDataListOfMaps = oldSchema["data"];
+    List<Map<String, dynamic>> newDataListOfMaps = [];
+    //
+    for (int i = 0; i < oldDataListOfMaps.length; i++) {
+      Map<String, dynamic> newMap = {};
+      newMap["category"] = oldDataListOfMaps[i]["category"];
+      // get number of question inside this category
+      final int numOfQuestions = oldDataListOfMaps[i]["reps"]
+          .entries
+          .first
+          .value
+          .entries
+          .first
+          .value["Questions"]
+          .entries
+          .length;
+      // variables to store sum
+      //This will be a nested list lie this for example for a category with 2 questions
+      // [ [ 95, 58] , [ 98, 63] , [ 85, 77], ...... ]
+      //
+
+      List sumForQuestionsList = List.generate(numOfMonths, (index) {
+        return List.generate(numOfQuestions, (index) => 0.0);
+      });
+      //
+      List sumForRepPercentage = List.generate(numOfMonths, (index) => 0.0);
+      //
+      for (int k = 0; k < selectedRepIds.length; k++) {
+        //
+        final Map? temp = oldDataListOfMaps[i]["reps"]["${selectedRepIds[k]}"];
+        if (temp != null) {
+          //
+          int outerIndex = 0;
+          temp.forEach((key, value) {
+            int innerIndex = 0;
+            value["Questions"].entries.forEach((mapEntry) {
+              sumForQuestionsList[outerIndex][innerIndex] += mapEntry.value;
+              innerIndex++;
+            });
+            sumForRepPercentage[outerIndex] += value["rep_percentage"];
+            outerIndex++;
+          });
+          //
+        }
+      }
+      //
+      List avgForQuestionsList = sumForQuestionsList;
+      for (int z = 0; z < avgForQuestionsList.length; z++) {
+        for (int x = 0; x < avgForQuestionsList[z].length; x++) {
+          if (avgForQuestionsList[z][x] != 0) {
+            avgForQuestionsList[z][x] = GeneralHelper.formatDoubleAsFixed(
+                avgForQuestionsList[z][x] / selectedRepIds.length);
+          }
+        }
+      }
+      //
+      //
+      List avgForRepPercentage = sumForRepPercentage;
+      for (int f = 0; f < avgForRepPercentage.length; f++) {
+        if (avgForRepPercentage[f] != 0) {
+          avgForRepPercentage[f] = GeneralHelper.formatDoubleAsFixed(
+              avgForRepPercentage[f] / selectedRepIds.length);
+        }
+      }
+      //
+      ///
+      Map tempOldMonthsMap = oldDataListOfMaps[i]["reps"].entries.first.value;
+
+      Map<String, dynamic> tempNewMonthsMap = {};
+      int outerIndex = 0;
+      tempOldMonthsMap.forEach((key, value) {
+        int innerIndex = 0;
+        Map<String, dynamic> questionsMap = {};
+        value["Questions"].forEach((key, value) {
+          questionsMap[key] = avgForQuestionsList[outerIndex][innerIndex];
+          innerIndex++;
+        });
+        tempNewMonthsMap[key] = {
+          "Questions": questionsMap,
+          "rep_percentage": avgForRepPercentage[outerIndex],
+        };
+        outerIndex++;
+      });
+      //
+      newMap["reps"] = {
+        "avg": tempNewMonthsMap,
+      };
+      //
+      // debugPrint("########## Quarter or Month Result \n ${newMap}");
+      newDataListOfMaps.add(newMap);
+    }
+    //
+    //
+    Map<String, dynamic> normalCalsAvg = _getAvgOfQuarterAndMonthMap(
+        oldSchema["normal_calls %"], selectedRepIds, numOfMonths);
+
+    Map<String, dynamic> repPercentageAvg = _getAvgOfQuarterAndMonthMap(
+        oldSchema["average_rep_percentages"], selectedRepIds, numOfMonths);
+    //
+    return {
+      "data": newDataListOfMaps,
+      "normal_calls %": normalCalsAvg,
+      "average_rep_percentages": repPercentageAvg,
+    };
+  }
+
+  double _getAvgOfYearDirectMap(
+      Map<String, dynamic> map, List<int> selectedRepIds) {
+    //
+    if (map.isEmpty) return 0.0;
+    //
+    double sum = 0;
+    for (int i = 0; i < selectedRepIds.length; i++) {
+      final temp = map['${selectedRepIds[i]}'];
+      if (temp != null) {
+        sum += temp;
+      }
+    }
+    if (sum == 0) {
+      return 0;
+    } else {
+      return GeneralHelper.formatDoubleAsFixed(sum / selectedRepIds.length);
+    }
+  }
+
+  Map<String, dynamic> _getAvgOfQuarterAndMonthMap(
+      Map<String, dynamic> map, List<int> selectedRepIds, int numOfMonths) {
+    //
+    if (map.isEmpty) return {};
+    //
+    List<double> sumOfQuartersList = List.generate(numOfMonths, (index) => 0.0);
+    for (int i = 0; i < selectedRepIds.length; i++) {
+      final Map? temp = map['${selectedRepIds[i]}'];
+      if (temp != null) {
+        int index = 0;
+        temp.forEach((key, value) {
+          sumOfQuartersList[index] += value;
+          index++;
+        });
+      }
+    }
+    //
+    List<double> avgOfQuartersList = sumOfQuartersList;
+    for (int i = 0; i < avgOfQuartersList.length; i++) {
+      if (avgOfQuartersList[i] != 0.0) {
+        avgOfQuartersList[i] = GeneralHelper.formatDoubleAsFixed(
+            avgOfQuartersList[i] / selectedRepIds.length);
+      }
+    }
+    Map<String, dynamic> newMap = {};
+    int index = 0;
+    map.entries.first.value.forEach((key, value) {
+      newMap[key] = avgOfQuartersList[index];
+      index++;
+    });
+    return {"avg": newMap};
+  }
+
+/*  Future<List<RepAnalysisModel>> getAvgRepAnalysis(
+      String date, String dateScope, List<int> selectedRepIds) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+
     // Map<String, dynamic> queryParams = {
     //   "date": date,
     //   "date_scope": dateScope,
@@ -597,12 +924,12 @@ class ApiClient {
               response.data["average_rep_percentages"],
               response.data["normal_calls %"]));
         }
-        /*for (int i = 0; i < avgsDataMonth["data"].length; i++) {
+        */ /*for (int i = 0; i < avgsDataMonth["data"].length; i++) {
           models.add(RepAnalysisModel.fromMap(
               avgsDataMonth["data"][i],
               avgsDataMonth["average_rep_percentages"],
               avgsDataMonth["normal_calls %"]));
-        }*/
+        }*/ /*
         // for (int i = 0; i < data.length; i++) {
         //   models.add(RepAnalysisModel.fromMap(data[i], avg));
         // }
@@ -620,7 +947,7 @@ class ApiClient {
       );
       rethrow;
     }
-  }
+  }*/
 }
 
 final Map avgsDataYear = {

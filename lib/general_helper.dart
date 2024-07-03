@@ -6,6 +6,7 @@ import 'core/utils/progress_dialog_utils.dart';
 
 class GeneralHelper {
   static String format = "yyyy-MM-dd";
+  // static String format = "dd-MM-yyyy";
   static String format2 = "yyyy-MM-dd HH:mm:ss";
 
   static String formatDateForApi(DateTime date) {
@@ -63,5 +64,11 @@ class GeneralHelper {
       q = 4;
     }
     return q;
+  }
+
+  static double formatDoubleAsFixed(double number) {
+    String formattedString = number.toStringAsFixed(1);
+    double formattedNumber = double.parse(formattedString);
+    return formattedNumber;
   }
 }

@@ -199,19 +199,19 @@ class _BuildAvgAnalysisWidgetState extends State<BuildAvgAnalysisWidget> {
                                   category: repAnalysis.category,
                                   //
                                   repPercentage:
-                                      "${repAnalysis.reps["avg"]["${monthsList2[selectedMonthIndex]}"]['rep_percentage']}",
+                                      "${repAnalysis.reps["avg"]["${monthsList[selectedMonthIndex]}"]['rep_percentage']}",
                                   //
                                   //
                                   keys: repAnalysis
                                       .reps["avg"]
-                                          ["${monthsList2[selectedMonthIndex]}"]
+                                          ["${monthsList[selectedMonthIndex]}"]
                                           ["Questions"]
                                       .keys
                                       .toList(),
                                   //
                                   values: repAnalysis
                                       .reps["avg"]
-                                          ["${monthsList2[selectedMonthIndex]}"]
+                                          ["${monthsList[selectedMonthIndex]}"]
                                           ["Questions"]
                                       .values
                                       .toList(),

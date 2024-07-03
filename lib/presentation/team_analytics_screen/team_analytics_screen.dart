@@ -132,17 +132,22 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                       value: selectedRepId,
                       onChanged: (int? newValue) {
                         setDateAndDateControllerBasedOnSelectedRep(newValue!);
+                        quarterNumber = GeneralHelper.getQuarter(pickedDate!);
                         if (isTeamToggled) {
                           BlocProvider.of<AnalysisCubit>(context)
                               .getTeamAnalysis(
                             date,
-                            dateFilter.name,
+                            dateFilter.name == DateFilter.quarter.name
+                                ? "q$quarterNumber"
+                                : dateFilter.name,
                           );
                         } else {
                           BlocProvider.of<RepAnalysisCubit>(context)
                               .getRepAnalysis(
                             date,
-                            dateFilter.name,
+                            dateFilter.name == DateFilter.quarter.name
+                                ? "q$quarterNumber"
+                                : dateFilter.name,
                           );
                         }
                         setState(() {
@@ -193,23 +198,25 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                     pickedDate!);
                             //
                             setSelectedRepIdBasedOnSelectedDate(pickedDate!);
+                            quarterNumber =
+                                GeneralHelper.getQuarter(pickedDate!);
                             //
                             if (isTeamToggled) {
                               BlocProvider.of<AnalysisCubit>(context)
                                   .getTeamAnalysis(
                                 pickedDate!,
-                                dateFilter.name,
+                                dateFilter.name == DateFilter.quarter.name
+                                    ? "q$quarterNumber"
+                                    : dateFilter.name,
                               );
-                              quarterNumber =
-                                  GeneralHelper.getQuarter(pickedDate!);
                             } else {
                               BlocProvider.of<RepAnalysisCubit>(context)
                                   .getRepAnalysis(
                                 pickedDate!,
-                                dateFilter.name,
+                                dateFilter.name == DateFilter.quarter.name
+                                    ? "q$quarterNumber"
+                                    : dateFilter.name,
                               );
-                              quarterNumber =
-                                  GeneralHelper.getQuarter(pickedDate!);
                               BlocProvider.of<RepAnalysisCubit>(context)
                                   .selectedMonthIndex = pickedDate!.month - 1;
                               BlocProvider.of<RepAnalysisCubit>(context)
@@ -321,6 +328,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           setState(() {
                             dateFilter = DateFilter.quarter;
                           });
+                          quarterNumber = GeneralHelper.getQuarter(pickedDate!);
                           if (isTeamToggled) {
                             BlocProvider.of<AnalysisCubit>(context)
                                 .getTeamAnalysis(
@@ -582,7 +590,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                     if (!isTeamToggled) {
                       BlocProvider.of<AnalysisCubit>(context)
                           .emit(RepAnalysisSuccess());
-
+                      quarterNumber = GeneralHelper.getQuarter(pickedDate!);
                       BlocProvider.of<RepAnalysisCubit>(context).getRepAnalysis(
                         pickedDate!,
                         dateFilter == DateFilter.quarter

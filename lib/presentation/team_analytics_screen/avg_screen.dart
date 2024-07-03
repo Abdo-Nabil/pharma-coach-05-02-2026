@@ -149,7 +149,12 @@ class _AvgScreenState extends State<AvgScreen> {
                                 GeneralHelper.getQuarter(pickedDate);
                             //
                             BlocProvider.of<AvgScreenCubit>(context)
-                                .getAvgRepAnalysis(pickedDate, dateFilter.name);
+                                .getAvgRepAnalysis(
+                              pickedDate,
+                              dateFilter.name == DateFilter.quarter.name
+                                  ? "q${GeneralHelper.getQuarter(pickedDate)}"
+                                  : dateFilter.name,
+                            );
                           }
                         },
                       ),
