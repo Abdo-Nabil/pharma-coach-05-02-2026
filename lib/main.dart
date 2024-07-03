@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
                 builder: (context, state) {
                   return MaterialApp(
                     theme: theme,
-                    title: 'mina_s_application5',
+                    title: 'Pharco',
                     navigatorKey: NavigatorService.navigatorKey,
                     debugShowCheckedModeBanner: false,
                     localizationsDelegates: [
