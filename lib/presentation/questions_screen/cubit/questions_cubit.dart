@@ -150,11 +150,19 @@ class QuestionsCubit extends Cubit<QuestionsState> {
 
   _saveAllQuestionsInLocal() async {
     final pref = PrefUtils();
-    final firstCategoryQuestions = pref.getFirstCategoryAnswer()!;
-    final List<Map<String, dynamic>> lastCategoryQuestions = [];
+    //
+    final normalCategories = pref.getQuestionsCategories('normal');
+    final flashCategories = pref.getQuestionsCategories('flash');
+    final normalFirstCategoryQuestions = normalCategories.first.questions;
+    final normalLastCategoryQuestions = normalCategories.last.questions;
+    final flashFirstCategoryQuestions = flashCategories.first.questions;
+    final flashLastCategoryQuestions = flashCategories.last.questions;
+    //
+    final firstCategoryQuestionsAnswers = pref.getFirstCategoryAnswer()!;
+    final List<Map<String, dynamic>> lastCategoryQuestionsAnswers = [];
     //
     for (int i = 0; i < lastCategoryAnswers.length; i++) {
-      lastCategoryQuestions.add(lastCategoryAnswers[i].toMap());
+      lastCategoryQuestionsAnswers.add(lastCategoryAnswers[i].toMap());
     }
     //
     final visits = await pref.getVisitsInLocalForToday();
@@ -164,8 +172,49 @@ class QuestionsCubit extends Cubit<QuestionsState> {
       final result = pref.getQuestionsBlockForSingleVisit(visits[i].locationId);
 
       allQuestions.addAll(result);
-      allQuestions.addAll(firstCategoryQuestions);
-      allQuestions.addAll(lastCategoryQuestions);
+
+      /// We must edit first and last category number && also the entire questions ids to be compatible with normal or flash visits
+      /// flash categories  => from 13 to 24
+      /// normal categories => from 1 to 12
+      /// ///
+      /// To make the work dynamic we will use these variables:
+      ///     normalFirstCategoryQuestions, normalLastCategoryQuestions,
+      ///     flashFirstCategoryQuestions,flashLastCategoryQuestions
+      ///
+      //
+      List<Map<String, dynamic>> newFirstCategoryQuestions = [];
+      List<Map<String, dynamic>> newLastCategoryQuestions = [];
+      //
+      //
+      final bool isNormal = visits[i].questionType == 'normal';
+      //
+      //
+      for (int i = 0; i < firstCategoryQuestionsAnswers.length; i++) {
+        Map<String, dynamic> newCategory = firstCategoryQuestionsAnswers[i];
+        newCategory['category_id'] = isNormal
+            ? normalFirstCategoryQuestions[i].categoryId
+            : flashFirstCategoryQuestions[i].categoryId;
+        newCategory['question_id'] = isNormal
+            ? normalFirstCategoryQuestions[i].id
+            : flashFirstCategoryQuestions[i].id;
+        newFirstCategoryQuestions.add(newCategory);
+      }
+      //
+      for (int i = 0; i < lastCategoryQuestionsAnswers.length; i++) {
+        Map<String, dynamic> newCategory = lastCategoryQuestionsAnswers[i];
+        newCategory['category_id'] = isNormal
+            ? normalLastCategoryQuestions[i].categoryId
+            : flashLastCategoryQuestions[i].categoryId;
+        newCategory['question_id'] = isNormal
+            ? normalLastCategoryQuestions[i].id
+            : flashLastCategoryQuestions[i].id;
+        newFirstCategoryQuestions.add(newCategory);
+      }
+      //
+      //
+      //
+      allQuestions.addAll(newFirstCategoryQuestions);
+      allQuestions.addAll(newLastCategoryQuestions);
       //
       await pref.saveSingleVisitQuestionsAnswersLocally(
           allQuestions, visits[i].locationId);
