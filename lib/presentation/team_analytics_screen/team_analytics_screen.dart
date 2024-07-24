@@ -475,14 +475,24 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                         teamTotal += value;
                                       });
                                       //
-                                      if (analysis.reps.length > 1) {
+                                      if (analysis.reps.length > 0) {
+                                        //
+                                        late double valueToSubtract;
+                                        if (analysis.reps["$selectedRepId"] !=
+                                                null &&
+                                            analysis.reps.length == 1) {
+                                          valueToSubtract = 0;
+                                        } else {
+                                          valueToSubtract =
+                                              analysis.reps["$selectedRepId"] ==
+                                                      null
+                                                  ? 0
+                                                  : 1;
+                                        }
+
                                         teamAvg = (teamTotal - repPercentage) /
                                             (analysis.reps.length -
-                                                (analysis.reps[
-                                                            "$selectedRepId"] ==
-                                                        null
-                                                    ? 0
-                                                    : 1));
+                                                valueToSubtract);
                                       }
                                       //
                                       return BuildTeamAnalysisView(
