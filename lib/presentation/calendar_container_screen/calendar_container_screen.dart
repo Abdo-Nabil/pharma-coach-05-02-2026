@@ -202,6 +202,7 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
         //       context, "Sorry!", "You can't create visits on thursday");
         //   return;
         // }
+        //TODO:///////////////////////////////////////////////////////
         if (GeneralData.selectedDate.weekday == DateTime.friday) {
           ProgressDialogUtils.showWarningDialog(
               context, "Sorry!", "You can't create visits on friday");

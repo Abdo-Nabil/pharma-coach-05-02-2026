@@ -257,6 +257,41 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                               ),
                                             ),
                                             //
+                                            Visibility(
+                                              visible: widget.dateFilter ==
+                                                  DateFilter.day,
+                                              child: CategoryTitleContainer(
+                                                color: appTheme.totalRowColor,
+                                                category: "",
+                                                isHeader: true,
+                                                hasIcon: false,
+                                                firstPartWidth:
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.60,
+                                                secondChildInRow: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    TableText(
+                                                        isHeader: true,
+                                                        text: "TD"),
+                                                    if (BlocProvider.of<
+                                                                RepAnalysisCubit>(
+                                                            context)
+                                                        .lastVisitRepAnalysisForDayOnly
+                                                        .isNotEmpty)
+                                                      TableText(
+                                                          isHeader: true,
+                                                          text: "LV"),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            //
+
                                             ...List.generate(
                                               BlocProvider.of<RepAnalysisCubit>(
                                                       context)
@@ -269,6 +304,8 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                                     .repAnalysis[index];
                                                 //
                                                 return ExpandableRowForOther(
+                                                  isDay: widget.dateFilter ==
+                                                      DateFilter.day,
                                                   isQuarter:
                                                       widget.dateFilter ==
                                                           DateFilter.quarter,
@@ -283,6 +320,26 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                                       .value
                                                       .entries
                                                       .toList(),
+                                                  mapEntries2InCaseOfDay: BlocProvider
+                                                              .of<RepAnalysisCubit>(
+                                                                  context)
+                                                          .lastVisitRepAnalysisForDayOnly
+                                                          .isEmpty
+                                                      ? []
+                                                      : BlocProvider
+                                                              .of<
+                                                                      RepAnalysisCubit>(
+                                                                  context)
+                                                          .lastVisitRepAnalysisForDayOnly[
+                                                              index]
+                                                          .reps
+                                                          .entries
+                                                          .firstWhere((element) =>
+                                                              element.key ==
+                                                              "${widget.selectedRepId}")
+                                                          .value
+                                                          .entries
+                                                          .toList(),
                                                   //
                                                 );
                                               },
@@ -296,15 +353,46 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                                         "Normal calls percentage",
                                                     isHeader: true,
                                                     hasIcon: false,
-                                                    firstPartWidth:
-                                                        MediaQuery.of(context)
+                                                    firstPartWidth: widget
+                                                                .dateFilter !=
+                                                            DateFilter.day
+                                                        ? MediaQuery.of(context)
                                                                 .size
                                                                 .width *
-                                                            0.700,
-                                                    secondChildInRow: TableText(
-                                                        isHeader: true,
-                                                        text:
-                                                            "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].normalCallsPercentages["${widget.selectedRepId}"]}%"),
+                                                            0.700
+                                                        : MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.600,
+                                                    secondChildInRow: widget
+                                                                .dateFilter !=
+                                                            DateFilter.day
+                                                        ? TableText(
+                                                            isHeader: true,
+                                                            text:
+                                                                "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].normalCallsPercentages["${widget.selectedRepId}"]}%")
+                                                        : Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              TableText(
+                                                                  isHeader:
+                                                                      true,
+                                                                  text:
+                                                                      "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].normalCallsPercentages["${widget.selectedRepId}"]}%"),
+                                                              if (BlocProvider.of<
+                                                                          RepAnalysisCubit>(
+                                                                      context)
+                                                                  .lastVisitRepAnalysisForDayOnly
+                                                                  .isNotEmpty)
+                                                                TableText(
+                                                                    isHeader:
+                                                                        true,
+                                                                    text:
+                                                                        "${BlocProvider.of<RepAnalysisCubit>(context).lastVisitRepAnalysisForDayOnly[0].normalCallsPercentages["${widget.selectedRepId}"]}%"),
+                                                            ],
+                                                          ),
                                                   )
                                                 : CategoryTitleContainer(
                                                     category:
@@ -346,15 +434,46 @@ class _BuildRepAnalysisWidgetState extends State<BuildRepAnalysisWidget> {
                                                     category: "Total score",
                                                     isHeader: true,
                                                     hasIcon: false,
-                                                    firstPartWidth:
-                                                        MediaQuery.of(context)
+                                                    firstPartWidth: widget
+                                                                .dateFilter !=
+                                                            DateFilter.day
+                                                        ? MediaQuery.of(context)
                                                                 .size
                                                                 .width *
-                                                            0.700,
-                                                    secondChildInRow: TableText(
-                                                        isHeader: true,
-                                                        text:
-                                                            "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].averageRepPercentages["${widget.selectedRepId}"]}%"),
+                                                            0.700
+                                                        : MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.600,
+                                                    secondChildInRow: widget
+                                                                .dateFilter !=
+                                                            DateFilter.day
+                                                        ? TableText(
+                                                            isHeader: true,
+                                                            text:
+                                                                "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].averageRepPercentages["${widget.selectedRepId}"]}%")
+                                                        : Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              TableText(
+                                                                  isHeader:
+                                                                      true,
+                                                                  text:
+                                                                      "${BlocProvider.of<RepAnalysisCubit>(context).repAnalysis[0].averageRepPercentages["${widget.selectedRepId}"]}%"),
+                                                              if (BlocProvider.of<
+                                                                          RepAnalysisCubit>(
+                                                                      context)
+                                                                  .lastVisitRepAnalysisForDayOnly
+                                                                  .isNotEmpty)
+                                                                TableText(
+                                                                    isHeader:
+                                                                        true,
+                                                                    text:
+                                                                        "${BlocProvider.of<RepAnalysisCubit>(context).lastVisitRepAnalysisForDayOnly[0].averageRepPercentages["${widget.selectedRepId}"]}%"),
+                                                            ],
+                                                          ),
                                                   )
                                                 : CategoryTitleContainer(
                                                     color:

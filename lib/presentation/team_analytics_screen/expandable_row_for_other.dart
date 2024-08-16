@@ -7,11 +7,15 @@ import 'category_title_container.dart';
 class ExpandableRowForOther extends StatefulWidget {
   final String category;
   final List mapEntries;
+  final List mapEntries2InCaseOfDay;
   final bool isQuarter;
+  final bool isDay;
   const ExpandableRowForOther({
     required this.category,
     required this.mapEntries,
+    this.mapEntries2InCaseOfDay = const [],
     required this.isQuarter,
+    this.isDay = false,
   });
 
   @override
@@ -25,8 +29,9 @@ class _ExpandableRowForOtherState extends State<ExpandableRowForOther> {
   @override
   Widget build(BuildContext context) {
     //
-    final width =
+    double width =
         MediaQuery.of(context).size.width * (widget.isQuarter ? 0.50 : 0.70);
+    width = widget.isDay ? MediaQuery.of(context).size.width * 0.60 : width;
     //
     ///
     ///
@@ -41,12 +46,18 @@ class _ExpandableRowForOtherState extends State<ExpandableRowForOther> {
             category: '${widget.category}',
             firstPartWidth: width,
             secondChildInRow: Row(
-              mainAxisAlignment: widget.isQuarter
+              mainAxisAlignment: widget.isQuarter || widget.isDay
                   ? MainAxisAlignment.spaceAround
                   : MainAxisAlignment.center,
-              children: widget.mapEntries.map((e) {
-                return TableText(text: "${e.value['rep_percentage']}%");
-              }).toList(),
+              children: [
+                ...widget.mapEntries.map((e) {
+                  return TableText(text: "${e.value['rep_percentage']}%");
+                }).toList(),
+                if (widget.isDay)
+                  ...widget.mapEntries2InCaseOfDay.map((e) {
+                    return TableText(text: "${e.value['rep_percentage']}%");
+                  }).toList(),
+              ],
             ),
           ),
           Visibility(
@@ -93,18 +104,39 @@ class _ExpandableRowForOtherState extends State<ExpandableRowForOther> {
                           ),
                         )
                       : Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              ...widget
-                                  .mapEntries.first.value['Questions'].entries
-                                  .map(
-                                (e) {
-                                  return TableText(
-                                    text: "${e.value}%",
-                                  );
-                                },
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ...widget.mapEntries.first.value['Questions']
+                                      .entries
+                                      .map(
+                                    (e) {
+                                      return TableText(
+                                        text: "${e.value}%",
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
+                              if (widget.isDay &&
+                                  widget.mapEntries2InCaseOfDay.isNotEmpty)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    ...widget.mapEntries2InCaseOfDay.first
+                                        .value['Questions'].entries
+                                        .map(
+                                      (e) {
+                                        return TableText(
+                                          text: "${e.value}%",
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                             ],
                           ),
                         ),

@@ -97,6 +97,7 @@ class GeneralCubit extends Cubit<GeneralState> {
         final isSent = await apiClient.submitQuestionAnswers(answerModel);
         if (isSent) {
           await pref.updateSentVisitInLocalForToday(visits[i].locationId);
+          await pref.saveVisitToFinishedVisitsList(GeneralData.selectedRepId);
         }
         //
       } else {

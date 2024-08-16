@@ -573,6 +573,31 @@ class PrefUtils {
       return result;
     }
   }
+
+  ///
+  /// Code to handle the new column added in case of selecting the Day as a filter
+  /// to show both the current day visit and the last visit
+
+  saveVisitToFinishedVisitsList(int repId) {
+    final date = GeneralHelper.formatDateForApi(DateTime.now());
+    final result = _sharedPreferences?.getStringList('$repId-finishedVisits');
+    if (result == null) {
+      _sharedPreferences?.setStringList('$repId-finishedVisits', [date]);
+    } else {
+      if (result.contains(date) == false) {
+        result.add(date);
+        _sharedPreferences?.setStringList('$repId-finishedVisits', result);
+      }
+    }
+  }
+
+  String? getBeforeLastVisitDate(int repId) {
+    final result = _sharedPreferences?.getStringList('$repId-finishedVisits');
+    if (result == null) {
+      return null;
+    }
+    return result[(result.length) - 1];
+  }
 }
 
 class VisitInfoModel {

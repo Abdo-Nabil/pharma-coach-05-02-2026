@@ -148,6 +148,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                             dateFilter.name == DateFilter.quarter.name
                                 ? "q$quarterNumber"
                                 : dateFilter.name,
+                            isDayFilter: dateFilter.name == DateFilter.day.name,
                           );
                         }
                         setState(() {
@@ -216,6 +217,8 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                 dateFilter.name == DateFilter.quarter.name
                                     ? "q$quarterNumber"
                                     : dateFilter.name,
+                                isDayFilter:
+                                    dateFilter.name == DateFilter.day.name,
                               );
                               BlocProvider.of<RepAnalysisCubit>(context)
                                   .selectedMonthIndex = pickedDate!.month - 1;
@@ -295,6 +298,8 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                 .getRepAnalysis(
                               pickedDate!,
                               dateFilter.name,
+                              isDayFilter:
+                                  dateFilter.name == DateFilter.day.name,
                             );
                           }
                         },
@@ -317,6 +322,8 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                 .getRepAnalysis(
                               pickedDate!,
                               dateFilter.name,
+                              isDayFilter:
+                                  dateFilter.name == DateFilter.day.name,
                             );
                           }
                         },
@@ -340,6 +347,8 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                 .getRepAnalysis(
                               pickedDate!,
                               "q$quarterNumber",
+                              isDayFilter:
+                                  dateFilter.name == DateFilter.day.name,
                             );
                           }
                         },
@@ -362,6 +371,8 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                 .getRepAnalysis(
                               pickedDate!,
                               dateFilter.name,
+                              isDayFilter:
+                                  dateFilter.name == DateFilter.day.name,
                             );
                           }
                         },
@@ -606,6 +617,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                         dateFilter == DateFilter.quarter
                             ? "q$quarterNumber"
                             : dateFilter.name,
+                        isDayFilter: dateFilter.name == DateFilter.day.name,
                       );
                     } else {
                       BlocProvider.of<AnalysisCubit>(context).getTeamAnalysis(
