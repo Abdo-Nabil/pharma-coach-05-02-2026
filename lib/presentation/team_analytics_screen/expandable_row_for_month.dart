@@ -45,7 +45,7 @@ class _ExpandableRowForMonthState extends State<ExpandableRowForMonth> {
               child: Row(
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.750,
+                    width: MediaQuery.of(context).size.width * 0.700,
                     child: Visibility(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16.0),
@@ -64,16 +64,18 @@ class _ExpandableRowForMonthState extends State<ExpandableRowForMonth> {
                       ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      ...widget.values.map(
-                        (e) {
-                          return TableText(
-                            text: "$e%",
-                          );
-                        },
-                      ),
-                    ],
+                  Expanded(
+                    child: Column(
+                      children: [
+                        ...widget.values.map(
+                          (e) {
+                            return TableText(
+                              text: "$e%",
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

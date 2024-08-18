@@ -173,7 +173,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
               Row(
                 children: [
                   SizedBox(
-                    height: 48.v,
+                    height: 40.v,
                     width: MediaQuery.of(context).size.width * 0.5,
                     child: Center(
                       child: TextField(
@@ -181,6 +181,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                         controller: dateController,
                         readOnly: true,
                         decoration: InputDecoration(
+                          contentPadding: EdgeInsets.zero,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16.h),
                           ),
@@ -236,7 +237,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                   Row(
                     children: [
                       Container(
-                        height: 48.v,
+                        height: 40.v,
                         width: MediaQuery.of(context).size.width * 0.17,
                         // padding: EdgeInsets.fromLTRB(16.h, 14.v, 16.h, 14.v),
                         decoration: AppDecoration.fillPurple.copyWith(
@@ -253,7 +254,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                         width: 14.h,
                       ),
                       Container(
-                        height: 48.v,
+                        height: 40.v,
                         width: MediaQuery.of(context).size.width * 0.17,
                         // padding: EdgeInsets.fromLTRB(16.h, 14.v, 16.h, 14.v),
                         decoration: AppDecoration.fillBlue100.copyWith(
@@ -600,7 +601,8 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                   height: 40.v,
                   width: MediaQuery.of(context).size.width * 0.33,
                   // text: isTeamToggled ? "lbl_team".tr : "Medical rep",
-                  text: isTeamToggled ? "Progress" : "Compare to team".tr,
+                  text:
+                      isTeamToggled ? "Compare to self" : "Compare to team".tr,
                   // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
                   buttonStyle: isTeamToggled
                       ? CustomButtonStyles.fillPink
