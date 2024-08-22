@@ -854,7 +854,8 @@ class BuildTeamAnalysisView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.h),
                 child: Text(
-                  "${repPercentage.toStringAsFixed(1)}%",
+                  // "${repPercentage.toStringAsFixed(1)}%",
+                  "${GeneralHelper.formatDoubleAsRoundedInt(repPercentage)}%",
                   style: theme.textTheme.labelLarge,
                 ),
               ),
@@ -900,7 +901,9 @@ class BuildTeamAnalysisView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0.h),
                 child: Text(
-                  "${teamPercentage.toStringAsFixed(1)}%",
+                  // "${teamPercentage.toStringAsFixed(1)}%",
+                  "${GeneralHelper.formatDoubleAsRoundedInt(teamPercentage)}%",
+
                   style: theme.textTheme.labelLarge,
                 ),
               ),
