@@ -670,7 +670,7 @@ class ApiClient {
       List avgForQuestionsList = sumForQuestionsList;
       for (int z = 0; z < avgForQuestionsList.length; z++) {
         if (avgForQuestionsList[z] != 0) {
-          avgForQuestionsList[z] = GeneralHelper.formatDoubleAsFixed(
+          avgForQuestionsList[z] = GeneralHelper.formatDoubleAsRoundedInt(
               avgForQuestionsList[z] / selectedRepIds.length);
         }
       }
@@ -693,15 +693,15 @@ class ApiClient {
       //
       double avgForRepPercentage = 0;
       if (sumForRepPercentage != 0) {
-        avgForRepPercentage = GeneralHelper.formatDoubleAsFixed(
-            sumForRepPercentage / selectedRepIds.length);
+        avgForRepPercentage = sumForRepPercentage / selectedRepIds.length;
       }
       //
       newMap["reps"] = {
         "avg": {
           "anyYear": {
             "Questions": newQuestionsMap,
-            "rep_percentage": avgForRepPercentage,
+            "rep_percentage":
+                GeneralHelper.formatDoubleAsRoundedInt(avgForRepPercentage),
           },
         },
       };
@@ -710,11 +710,11 @@ class ApiClient {
     }
     //
     //
-    double normalCalsAvg =
+    int normalCalsAvg =
         _getAvgOfYearDirectMap(oldSchema["normal_calls %"], selectedRepIds);
     final newNormalCallsMap = {"avg": normalCalsAvg};
     //
-    double repPercentageAvg = _getAvgOfYearDirectMap(
+    int repPercentageAvg = _getAvgOfYearDirectMap(
         oldSchema["average_rep_percentages"], selectedRepIds);
     final newAvgRepPercentageMap = {"avg": repPercentageAvg};
     //
@@ -781,8 +781,8 @@ class ApiClient {
       for (int z = 0; z < avgForQuestionsList.length; z++) {
         for (int x = 0; x < avgForQuestionsList[z].length; x++) {
           if (avgForQuestionsList[z][x] != 0) {
-            avgForQuestionsList[z][x] = GeneralHelper.formatDoubleAsFixed(
-                avgForQuestionsList[z][x] / selectedRepIds.length);
+            avgForQuestionsList[z][x] =
+                avgForQuestionsList[z][x] / selectedRepIds.length;
           }
         }
       }
@@ -791,8 +791,8 @@ class ApiClient {
       List avgForRepPercentage = sumForRepPercentage;
       for (int f = 0; f < avgForRepPercentage.length; f++) {
         if (avgForRepPercentage[f] != 0) {
-          avgForRepPercentage[f] = GeneralHelper.formatDoubleAsFixed(
-              avgForRepPercentage[f] / selectedRepIds.length);
+          avgForRepPercentage[f] =
+              avgForRepPercentage[f] / selectedRepIds.length;
         }
       }
       //
@@ -805,12 +805,14 @@ class ApiClient {
         int innerIndex = 0;
         Map<String, dynamic> questionsMap = {};
         value["Questions"].forEach((key, value) {
-          questionsMap[key] = avgForQuestionsList[outerIndex][innerIndex];
+          questionsMap[key] = GeneralHelper.formatDoubleAsRoundedInt(
+              avgForQuestionsList[outerIndex][innerIndex]);
           innerIndex++;
         });
         tempNewMonthsMap[key] = {
           "Questions": questionsMap,
-          "rep_percentage": avgForRepPercentage[outerIndex],
+          "rep_percentage": GeneralHelper.formatDoubleAsRoundedInt(
+              avgForRepPercentage[outerIndex]),
         };
         outerIndex++;
       });
@@ -837,10 +839,10 @@ class ApiClient {
     };
   }
 
-  double _getAvgOfYearDirectMap(
+  int _getAvgOfYearDirectMap(
       Map<String, dynamic> map, List<int> selectedRepIds) {
     //
-    if (map.isEmpty) return 0.0;
+    if (map.isEmpty) return 0;
     //
     double sum = 0;
     for (int i = 0; i < selectedRepIds.length; i++) {
@@ -852,7 +854,8 @@ class ApiClient {
     if (sum == 0) {
       return 0;
     } else {
-      return GeneralHelper.formatDoubleAsFixed(sum / selectedRepIds.length);
+      return GeneralHelper.formatDoubleAsRoundedInt(
+          sum / selectedRepIds.length);
     }
   }
 
@@ -876,14 +879,14 @@ class ApiClient {
     List<double> avgOfQuartersList = sumOfQuartersList;
     for (int i = 0; i < avgOfQuartersList.length; i++) {
       if (avgOfQuartersList[i] != 0.0) {
-        avgOfQuartersList[i] = GeneralHelper.formatDoubleAsFixed(
-            avgOfQuartersList[i] / selectedRepIds.length);
+        avgOfQuartersList[i] = avgOfQuartersList[i] / selectedRepIds.length;
       }
     }
     Map<String, dynamic> newMap = {};
     int index = 0;
     map.entries.first.value.forEach((key, value) {
-      newMap[key] = avgOfQuartersList[index];
+      newMap[key] =
+          GeneralHelper.formatDoubleAsRoundedInt(avgOfQuartersList[index]);
       index++;
     });
     return {"avg": newMap};

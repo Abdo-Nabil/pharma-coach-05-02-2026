@@ -66,9 +66,13 @@ class GeneralHelper {
     return q;
   }
 
-  static double formatDoubleAsFixed(double number) {
-    String formattedString = number.toStringAsFixed(1);
-    double formattedNumber = double.parse(formattedString);
-    return formattedNumber;
+  // static double formatDoubleAsFixed(double number) {
+  //   String formattedString = number.toStringAsFixed(1);
+  //   double formattedNumber = double.parse(formattedString);
+  //   return formattedNumber;
+  // }
+
+  static int formatDoubleAsRoundedInt(double number) {
+    return number.round();
   }
 }

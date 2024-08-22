@@ -118,12 +118,14 @@ class _AvgScreenState extends State<AvgScreen> {
                 child: Row(
                   children: [
                     SizedBox(
+                      height: 33.v,
                       width: MediaQuery.of(context).size.width * 0.25,
                       child: TextField(
                         textAlign: TextAlign.center,
                         controller: dateController,
                         readOnly: true,
                         decoration: InputDecoration(
+                          contentPadding: EdgeInsets.zero,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16.h),
                           ),
