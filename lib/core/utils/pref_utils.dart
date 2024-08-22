@@ -591,12 +591,22 @@ class PrefUtils {
     }
   }
 
-  String? getBeforeLastVisitDate(int repId) {
+  String? getBeforeLastVisitDate(int repId, DateTime lastVisitDate) {
     final result = _sharedPreferences?.getStringList('$repId-finishedVisits');
     if (result == null) {
       return null;
     }
-    return result[(result.length) - 1];
+    if (result.length == 1) {
+      return null;
+    }
+    //
+    for (int i = result.length - 1; i >= 0; i--) {
+      final visitAsDateTime = GeneralHelper.formatDateFromApi(result[i]);
+      if (visitAsDateTime.isBefore(lastVisitDate)) {
+        return result[i];
+      }
+    }
+    return null;
   }
 }
 
