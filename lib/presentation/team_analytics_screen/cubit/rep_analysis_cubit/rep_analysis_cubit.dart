@@ -31,6 +31,7 @@ class RepAnalysisCubit extends Cubit<RepAnalysisState> {
     // await Future.delayed(const Duration(seconds: 3));
     //
     if (isDayFilter) {
+      lastVisitRepAnalysisForDayOnly.clear();
       final pref = PrefUtils();
       final date2 =
           await pref.getBeforeLastVisitDate(GeneralData.selectedRepId, date);

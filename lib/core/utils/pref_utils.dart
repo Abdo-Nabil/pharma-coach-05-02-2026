@@ -578,20 +578,31 @@ class PrefUtils {
   /// Code to handle the new column added in case of selecting the Day as a filter
   /// to show both the current day visit and the last visit
 
-  saveVisitToFinishedVisitsList(int repId) {
+  saveVisitToFinishedVisitsList(int repId) async {
     final date = GeneralHelper.formatDateForApi(DateTime.now());
     final result = _sharedPreferences?.getStringList('$repId-finishedVisits');
     if (result == null) {
-      _sharedPreferences?.setStringList('$repId-finishedVisits', [date]);
+      await _sharedPreferences?.setStringList('$repId-finishedVisits', [date]);
     } else {
       if (result.contains(date) == false) {
         result.add(date);
-        _sharedPreferences?.setStringList('$repId-finishedVisits', result);
+        await _sharedPreferences?.setStringList(
+            '$repId-finishedVisits', result);
       }
     }
   }
 
   String? getBeforeLastVisitDate(int repId, DateTime lastVisitDate) {
+    final DateTime lastVisitDateOnlyWithoutHoursAndMins = DateTime(
+      lastVisitDate.year,
+      lastVisitDate.month,
+      lastVisitDate.day,
+      0,
+      0,
+      0,
+      0,
+      0,
+    );
     final result = _sharedPreferences?.getStringList('$repId-finishedVisits');
     if (result == null) {
       return null;
@@ -602,7 +613,7 @@ class PrefUtils {
     //
     for (int i = result.length - 1; i >= 0; i--) {
       final visitAsDateTime = GeneralHelper.formatDateFromApi(result[i]);
-      if (visitAsDateTime.isBefore(lastVisitDate)) {
+      if (visitAsDateTime.isBefore(lastVisitDateOnlyWithoutHoursAndMins)) {
         return result[i];
       }
     }
