@@ -44,15 +44,16 @@ class GeneralCubit extends Cubit<GeneralState> {
     final pref = PrefUtils();
     List<LocationModel> locations = [];
     //
-    locations = pref.getLocationsOfTodayForMedicalRep();
     final repId = pref.getRepIdForToday();
     GeneralData.selectedRepId = repId;
-
+    locations = pref.getLocationsOfTodayForMedicalRep(repId);
     if (locations.isEmpty) {
       //
+      debugPrint('xxxxxxxxxxxxxxxxxxxxxxxxxxx locations are empty');
+      debugPrint('xxxxxxxxxxxxxxxxxxxxxxxxxxx Rep id :: $repId');
       if (repId != -1) {
         locations = await apiClient.getRepLocations(repId);
-        await pref.saveLocationsOfTodayForMedicalRep(locations);
+        await pref.saveLocationsOfTodayForMedicalRep(locations, repId);
       }
       //
     }

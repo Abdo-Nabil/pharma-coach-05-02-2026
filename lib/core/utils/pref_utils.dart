@@ -406,22 +406,23 @@ class PrefUtils {
     return categories;
   }
 
-  saveLocationsOfTodayForMedicalRep(List<LocationModel> locations) async {
+  saveLocationsOfTodayForMedicalRep(
+      List<LocationModel> locations, int repId) async {
     List<String> encodedList = [];
     for (int i = 0; i < locations.length; i++) {
       encodedList.add(json.encode(locations[i].toMap()));
     }
     String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
     await _sharedPreferences!
-        .setStringList("locationsFor$todayDate", encodedList);
+        .setStringList("locationsFor-$repId-$todayDate", encodedList);
   }
 
-  List<LocationModel> getLocationsOfTodayForMedicalRep() {
+  List<LocationModel> getLocationsOfTodayForMedicalRep(int repId) {
     List<LocationModel> locations = [];
     //
     String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
     List<String>? encodedLocations =
-        _sharedPreferences!.getStringList("locationsFor$todayDate");
+        _sharedPreferences!.getStringList("locationsFor-$repId-$todayDate");
     //
     if (encodedLocations != null) {
       for (int i = 0; i < encodedLocations.length; i++) {
