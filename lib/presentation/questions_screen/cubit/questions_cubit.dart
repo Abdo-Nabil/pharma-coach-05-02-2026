@@ -1,7 +1,4 @@
-import 'dart:developer';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/general_helper.dart';
@@ -10,7 +7,6 @@ import 'package:mina_s_application5/presentation/questions_screen/models/questio
 
 import '../../../data/apiClient/api_client.dart';
 import '../../../general_cubit/general_cubit.dart';
-import '../models/answer_model.dart';
 
 part 'questions_state.dart';
 
@@ -226,12 +222,18 @@ class QuestionsCubit extends Cubit<QuestionsState> {
     await pref.saveLastVisitDateForThisRep(repId);
   }
 
+  _markVisitAsGreenInCalendar(int repId) async {
+    final pref = PrefUtils();
+    await pref.markVisitAsGreenInCalendar(repId);
+  }
+
   submitEndOfTheDay() async {
     //
     final pref = PrefUtils();
     await pref.setLastQuestionAsAnsweredToday();
     await _saveAllQuestionsInLocal();
     await _saveLastVisitDateForThisRep(GeneralData.selectedRepId);
+    await _markVisitAsGreenInCalendar(GeneralData.selectedRepId);
     await generalCubit.executeSubmitQuestionsAndRemoveVisitsFromLocal();
   }
 

@@ -1,12 +1,9 @@
 //ignore: unused_import
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
-import 'package:mina_s_application5/presentation/questions_screen/models/answer_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../general_helper.dart';
@@ -373,7 +370,11 @@ class PrefUtils {
       return false;
     },
         orElse: () => IntendedVisitModel(
-            repName: "repName", stringDate: "stringDate", repId: -1));
+              repName: "repName",
+              stringDate: "stringDate",
+              repId: -1,
+              endOfTheDayClicked: true,
+            ));
 
     return intendedVisit.repId;
   }
@@ -619,6 +620,22 @@ class PrefUtils {
       }
     }
     return null;
+  }
+
+  markVisitAsGreenInCalendar(int repId) async {
+    final date = GeneralHelper.formatDateForApi(DateTime.now());
+
+    List<IntendedVisitModel> list = getIntendedVisits();
+    int index = list.indexWhere((item) {
+      return date == item.stringDate && repId == item.repId;
+    });
+    //not found
+    if (index == -1) {
+      return;
+    } else {
+      list[index] = list[index].copyWith(endOfTheDayClicked: true);
+    }
+    await _saveIntendedVisitsLocally(list);
   }
 }
 

@@ -22,6 +22,7 @@ class RepDialogItem extends StatelessWidget {
           repName: repModel.username,
           stringDate: GeneralHelper.formatDateForApi(GeneralData.selectedDate),
           repId: repModel.id,
+          endOfTheDayClicked: false,
         ));
       },
       child: Container(

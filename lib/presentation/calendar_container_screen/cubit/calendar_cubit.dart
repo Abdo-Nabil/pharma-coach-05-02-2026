@@ -1,15 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:mina_s_application5/core/app_export.dart';
-import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
-import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
-import 'package:mina_s_application5/presentation/calendar_container_screen/models/vsit_model.dart';
 
 import '../../../data/apiClient/api_client.dart';
-import '../../../theme/theme_helper.dart';
 import '../widgets/calendar_widget.dart';
 
 part 'calendar_state.dart';
@@ -82,7 +76,9 @@ class CalendarCubit extends Cubit<CalendarState> {
           intendedVisits[i].repName,
           DateTime.parse(intendedVisits[i].stringDate),
           DateTime.parse(intendedVisits[i].stringDate),
-          appTheme.amber700,
+          intendedVisits[i].endOfTheDayClicked
+              ? appTheme.lightGreenA70001
+              : appTheme.amber700,
           true,
         ),
       );
