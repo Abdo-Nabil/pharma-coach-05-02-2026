@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/data/models/getLocations/get_get_locations_resp.dart';
@@ -13,9 +13,8 @@ import 'package:mina_s_application5/presentation/calendar_container_screen/model
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/answer_model.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/category_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import '../../presentation/calendar_container_screen/models/vsit_model.dart';
 import '../../presentation/team_analytics_screen/models/rep_analysis_model.dart';
 import '../../presentation/team_analytics_screen/models/team_analysis_model.dart';
 import 'network_interceptor.dart';
@@ -39,7 +38,18 @@ class ApiClient {
         "Accept": "application/json",
         "Content-Type": "application/json"
       }))
-    ..interceptors.add(NetworkInterceptor());
+    ..interceptors.addAll([
+      NetworkInterceptor(),
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: true,
+        error: true,
+        compact: true,
+        maxWidth: 90,
+      ),
+    ]);
 
   ///method can be used for checking internet connection
   ///returns [bool] based on availability of internet
