@@ -648,6 +648,7 @@ class VisitInfoModel {
   final String questionType;
   final bool isQuestionSubmitted;
   final bool isVisitCreatedInServerAndQuestionSubmittedOnline;
+  final String? comment;
 
   const VisitInfoModel({
     required this.repId,
@@ -658,6 +659,7 @@ class VisitInfoModel {
     required this.questionType,
     required this.isQuestionSubmitted,
     this.isVisitCreatedInServerAndQuestionSubmittedOnline = false,
+    required this.comment,
   });
 
   Map<String, dynamic> toMap() {
@@ -671,6 +673,7 @@ class VisitInfoModel {
       'isQuestionSubmitted': this.isQuestionSubmitted,
       'isVisitCreatedInServerAndQuestionSubmittedOnline':
           this.isVisitCreatedInServerAndQuestionSubmittedOnline,
+      'comment': this.comment,
     };
   }
 
@@ -685,6 +688,7 @@ class VisitInfoModel {
       isQuestionSubmitted: map['isQuestionSubmitted'] as bool,
       isVisitCreatedInServerAndQuestionSubmittedOnline:
           map['isVisitCreatedInServerAndQuestionSubmittedOnline'] as bool,
+      comment: map['comment'] == null ? null : map['comment'] as String,
     );
   }
 }

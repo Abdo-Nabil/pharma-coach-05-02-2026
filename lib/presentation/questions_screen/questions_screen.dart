@@ -1,28 +1,14 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
-import 'package:mina_s_application5/data/apiClient/api_client.dart';
-import 'package:mina_s_application5/general_cubit/general_cubit.dart';
-import 'package:mina_s_application5/presentation/final_quest_screen/final_quest_screen.dart';
-import 'package:mina_s_application5/presentation/home_page/home_page.dart';
-import 'package:mina_s_application5/presentation/questions_screen/cubit/questions_cubit.dart';
-import 'package:mina_s_application5/presentation/questions_screen/last_question/last_question_screen.dart';
-import 'package:mina_s_application5/presentation/questions_screen/models/category_model.dart';
-import 'package:mina_s_application5/presentation/questions_screen/models/question_answer_model.dart';
-import 'package:mina_s_application5/presentation/questions_screen/widgets/block_build_category_with_questions.dart';
-import 'package:mina_s_application5/widgets/custom_icon_button.dart';
-import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
-import 'package:mina_s_application5/widgets/app_bar/appbar_leading_image.dart';
-import 'package:mina_s_application5/widgets/app_bar/appbar_title.dart';
-import 'package:another_stepper/widgets/another_stepper.dart';
-import 'package:another_stepper/dto/stepper_data.dart';
-import 'package:mina_s_application5/widgets/custom_elevated_button.dart';
-import 'package:mina_s_application5/widgets/custom_text_form_field.dart';
-import '../home_container_screen/home_container_screen.dart';
-import 'models/question_model.dart';
-import 'models/questions_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
-import 'bloc/questions_bloc.dart';
+import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
+import 'package:mina_s_application5/presentation/questions_screen/cubit/questions_cubit.dart';
+import 'package:mina_s_application5/presentation/questions_screen/last_question/last_question_screen.dart';
+import 'package:mina_s_application5/presentation/questions_screen/widgets/block_build_category_with_questions.dart';
+import 'package:mina_s_application5/widgets/app_bar/appbar_leading_image.dart';
+import 'package:mina_s_application5/widgets/app_bar/appbar_title.dart';
+import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
+import 'package:mina_s_application5/widgets/custom_elevated_button.dart';
 
 class QuestionsScreen extends StatefulWidget {
   const QuestionsScreen({Key? key})
@@ -73,6 +59,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     }
   }*/
 
+  //
+  final _commentController = TextEditingController();
+  //
   handleScreenData() async {
     BlocProvider.of<QuestionsCubit>(context)
         .getSavedLocallyQuestions(questionType);
@@ -99,6 +88,13 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   //
   @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  //
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -107,7 +103,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       },
       child: SafeArea(
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           appBar: _buildAppBar(context),
           body: BlocBuilder<QuestionsCubit, QuestionsState>(
             builder: (context, state) {
@@ -167,12 +163,42 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                         Expanded(
                           child: ListView.separated(
                             itemCount: BlocProvider.of<QuestionsCubit>(context)
-                                .questionsCategories
-                                .length,
+                                    .questionsCategories
+                                    .length +
+                                1,
                             separatorBuilder: (context, index) {
                               return SizedBox(height: 16.v);
                             },
                             itemBuilder: (context, index) {
+                              /// for comments field
+                              if (index ==
+                                  BlocProvider.of<QuestionsCubit>(context)
+                                      .questionsCategories
+                                      .length) {
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 8.0.v),
+                                  child: TextField(
+                                    controller: _commentController,
+                                    maxLines: 3,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16.h),
+                                      ),
+                                      hintText: "lbl_additional_comments".tr,
+                                      hintStyle:
+                                          theme.textTheme.bodyMedium!.copyWith(
+                                        color: appTheme.gray700,
+                                      ),
+                                    ),
+                                    style: theme.textTheme.bodyMedium!.copyWith(
+                                      color: appTheme.black900,
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              ///
                               final questions =
                                   BlocProvider.of<QuestionsCubit>(context)
                                       .questionsCategories;
@@ -181,13 +207,12 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                             },
                           ),
                         ),
-                        SizedBox(height: 12.v),
-                        SizedBox(height: 8.v),
+                        SizedBox(height: 20.v),
                         Visibility(
                             visible: BlocProvider.of<QuestionsCubit>(context)
                                 .questionsCategories
                                 .isNotEmpty,
-                            child: _buildSubmit(context)),
+                            child: _buildSubmit(context, _commentController)),
                         SizedBox(height: 15.v),
                       ],
                     ),
@@ -226,7 +251,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   }
 
   /// Section Widget
-  Widget _buildSubmit(BuildContext context) {
+  Widget _buildSubmit(
+      BuildContext context, TextEditingController commentController) {
     // just to reload the index at 1
     BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(0);
     return CustomElevatedButton(
@@ -244,8 +270,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           context,
           onNextVisit: () async {
             BlocProvider.of<QuestionsCubit>(context)
-                .submitQuestionAnswersLocally(
-                    -1, locationId, locationType, questionType);
+                .submitQuestionAnswersLocally(-1, locationId, locationType,
+                    questionType, commentController.text);
             ///////////////////////////////////////////////
             // Navigator.of(context).push(
             //   MaterialPageRoute(builder: (_) {
@@ -269,9 +295,10 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           },
           onEndOfTheDay: () {
             //
+
             BlocProvider.of<QuestionsCubit>(context)
-                .submitQuestionAnswersLocally(
-                    -1, locationId, locationType, questionType);
+                .submitQuestionAnswersLocally(-1, locationId, locationType,
+                    questionType, commentController.text);
             //
             Navigator.pop(context);
             Navigator.of(context).pushReplacement(

@@ -116,6 +116,7 @@ final Map<String, String> enUs = {
   "lbl_score": "SCORE",
   "lbl_search": "Search",
   "lbl_submit": "Submit",
+  "lbl_additional_comments": "Additional Comments",
   "lbl_sun_20_5_2024": "Sun 20-5-2024",
   "msg_medical_rep_s_name": "Medical Rep’s Name",
   "msg_personal_attributes": "Personal attributes",

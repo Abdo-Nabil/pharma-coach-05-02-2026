@@ -4,8 +4,6 @@ import 'package:mina_s_application5/general_cubit/general_cubit.dart';
 
 import '../../../../core/utils/pref_utils.dart';
 import '../../../../data/apiClient/api_client.dart';
-import '../../../../general_data.dart';
-import '../../../../general_helper.dart';
 import '../../models/category_model.dart';
 import '../../models/question_answer_model.dart';
 
@@ -73,7 +71,7 @@ class FirstQuestionCubit extends Cubit<FirstQuestionState> {
     emit(FirstQuestionsSuccess());
   }
 
-  _createTheVisitLocally(
+/*  _createTheVisitLocally(
       int locationId, String locationType, String questionType) async {
     final shift = locationType == "Hospital" ? "am" : "pm";
     final pref = PrefUtils();
@@ -86,7 +84,7 @@ class FirstQuestionCubit extends Cubit<FirstQuestionState> {
       questionType: questionType,
       isQuestionSubmitted: true,
     ));
-  }
+  }*/
 
   submitFirstQuestion() async {
     final pref = PrefUtils();

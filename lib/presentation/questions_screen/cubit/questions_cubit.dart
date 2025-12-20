@@ -119,27 +119,33 @@ class QuestionsCubit extends Cubit<QuestionsState> {
     return isSend;
   }*/
 
-  _createTheVisitLocally(
-      int locationId, String locationType, String questionType) async {
+  _createTheVisitLocally(int locationId, String locationType,
+      String questionType, String comment) async {
     final shift = locationType == "Hospital" ? "am" : "pm";
     final pref = PrefUtils();
-    await pref.addVisitInLocalForToday(VisitInfoModel(
-      repId: GeneralData.selectedRepId,
-      locationId: locationId,
-      visitTime: GeneralHelper.formatDateForApi(DateTime.now()),
-      accurateVisitTime: GeneralHelper.formatAccurateDateForApi(DateTime.now()),
-      shift: shift,
-      questionType: questionType,
-      isQuestionSubmitted: true,
-    ));
+
+    await pref.addVisitInLocalForToday(
+      VisitInfoModel(
+        repId: GeneralData.selectedRepId,
+        locationId: locationId,
+        visitTime: GeneralHelper.formatDateForApi(DateTime.now()),
+        accurateVisitTime:
+            GeneralHelper.formatAccurateDateForApi(DateTime.now()),
+        shift: shift,
+        questionType: questionType,
+        isQuestionSubmitted: true,
+        comment: comment,
+      ),
+    );
   }
 
   //
-  submitQuestionAnswersLocally(
-      int visitId, locationId, locationType, String questionType) async {
+  submitQuestionAnswersLocally(int visitId, locationId, locationType,
+      String questionType, String comment) async {
     //
     final pref = PrefUtils();
-    await _createTheVisitLocally(locationId, locationType, questionType);
+    await _createTheVisitLocally(
+        locationId, locationType, questionType, comment);
     await pref.saveQuestionsBlockForSingleVisit(locationId, answers);
     // await pref.saveSubmittedVisitId(visitId);
   }

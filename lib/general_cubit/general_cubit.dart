@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mina_s_application5/core/app_export.dart';
@@ -85,6 +84,7 @@ class GeneralCubit extends Cubit<GeneralState> {
         visits[i].accurateVisitTime,
         visits[i].shift,
         visits[i].questionType,
+        visits[i].comment ?? '',
       );
 
       if (visitId != null) {
