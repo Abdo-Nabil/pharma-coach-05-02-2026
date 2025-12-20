@@ -5,9 +5,9 @@ class GetGetLocationsResp {
   LocationData? data; // Marked as nullable
 
   GetGetLocationsResp({
-     this.status,
-     this.statusCode,
-     this.message,
+    this.status,
+    this.statusCode,
+    this.message,
     this.data,
 
     // Nullable

@@ -47,15 +47,13 @@ class SignInPropsalOneBloc
     add(
       CreateLoginEvent(
         onCreateLoginEventSuccess: () {
-          _onLoginUserEventSuccess(
-
-          );
+          _onLoginUserEventSuccess();
         },
       ),
     );
     // NavigatorService.popAndPushNamed(
     //   AppRoutes.homeContainerScreen,
-   // );
+    // );
   }
 
   /// Calls [{{baseUrl}}/login] with the provided event and emits the state.

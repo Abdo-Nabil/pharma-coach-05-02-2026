@@ -142,18 +142,18 @@ class SignInPropsalOneScreen extends StatelessWidget {
                     SizedBox(height: 19.v),
                     BlocBuilder<SignInPropsalOneBloc, SignInPropsalOneState>(
                       builder: (context, state) {
-                        return  CustomElevatedButton(
+                        return CustomElevatedButton(
                           text: "lbl_sign_in".tr,
                           buttonStyle: CustomButtonStyles.fillPrimary,
-                          onPressed: (){
+                          onPressed: () {
                             print(state.userNameController?.text.toString());
-                            ApiClient().loginUser(state.userNameController!.text.toString(),state.passwordController!.text.toString());
-
+                            ApiClient().loginUser(
+                                state.userNameController!.text.toString(),
+                                state.passwordController!.text.toString());
                           },
                         );
                       },
                     ),
-
                     SizedBox(height: 5.v)
                   ],
                 ),
