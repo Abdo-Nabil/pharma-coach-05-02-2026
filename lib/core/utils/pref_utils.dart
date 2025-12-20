@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:mina_s_application5/data/models/loginUser/post_login_user_resp.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,6 +66,18 @@ class PrefUtils {
       return _sharedPreferences!.getString("username")!;
     } catch (e) {
       return "My name";
+    }
+  }
+
+  setUserType(String userType) {
+    return _sharedPreferences!.setString("userType", userType);
+  }
+
+  UserType getUserType() {
+    try {
+      return UserTypeX.fromString(_sharedPreferences!.getString("userType")!);
+    } catch (e) {
+      return UserType.dm;
     }
   }
 

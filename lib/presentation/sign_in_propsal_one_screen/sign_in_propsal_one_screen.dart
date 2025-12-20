@@ -1,11 +1,12 @@
-import 'package:mina_s_application5/core/utils/validation_functions.dart';
-import 'package:mina_s_application5/data/apiClient/api_client.dart';
-import 'package:mina_s_application5/widgets/custom_text_form_field.dart';
-import 'package:mina_s_application5/widgets/custom_elevated_button.dart';
-import 'models/sign_in_propsal_one_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
+import 'package:mina_s_application5/core/utils/validation_functions.dart';
+import 'package:mina_s_application5/data/apiClient/api_client.dart';
+import 'package:mina_s_application5/widgets/custom_elevated_button.dart';
+import 'package:mina_s_application5/widgets/custom_text_form_field.dart';
+
 import 'bloc/sign_in_propsal_one_bloc.dart';
+import 'models/sign_in_propsal_one_model.dart';
 
 // ignore_for_file: must_be_immutable
 class SignInPropsalOneScreen extends StatelessWidget {

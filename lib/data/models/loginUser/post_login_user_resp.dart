@@ -31,6 +31,32 @@ class PostLoginUserResp {
   }
 }
 
+enum UserType { dm, nsm }
+
+extension UserTypeX on UserType {
+  /// API / storage value
+  String get value {
+    switch (this) {
+      case UserType.dm:
+        return 'DM';
+      case UserType.nsm:
+        return 'NSM';
+    }
+  }
+
+  /// Strict parsing (throws on invalid input)
+  static UserType fromString(String value) {
+    switch (value.toUpperCase()) {
+      case 'DM':
+        return UserType.dm;
+      case 'NSM':
+        return UserType.nsm;
+      default:
+        throw ArgumentError('Invalid UserType: $value');
+    }
+  }
+}
+
 class Data {
   int? id;
   String? firstName;
@@ -40,16 +66,18 @@ class Data {
   String? createdAt;
   String? updatedAt;
   String? authToken;
-
-  Data(
-      {this.id,
-      this.firstName,
-      this.lastName,
-      this.email,
-      this.emailVerifiedAt,
-      this.createdAt,
-      this.updatedAt,
-      this.authToken});
+  UserType? userType;
+  Data({
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.emailVerifiedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.authToken,
+    this.userType,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -60,6 +88,9 @@ class Data {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     authToken = json['authToken'];
+    userType = json['user_type'] != null
+        ? UserTypeX.fromString(json['user_type'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -87,6 +118,9 @@ class Data {
     }
     if (authToken != null) {
       data['authToken'] = authToken;
+    }
+    if (userType != null) {
+      data['user_type'] = userType?.value;
     }
     return data;
   }

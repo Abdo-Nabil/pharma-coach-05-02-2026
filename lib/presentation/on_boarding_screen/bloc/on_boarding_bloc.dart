@@ -1,8 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/general_data.dart';
-import '/core/app_export.dart';
 import 'package:mina_s_application5/presentation/on_boarding_screen/models/on_boarding_model.dart';
+
+import '/core/app_export.dart';
+
 part 'on_boarding_event.dart';
 part 'on_boarding_state.dart';
 
@@ -27,8 +29,10 @@ class OnBoardingBloc extends Bloc<OnBoardingEvent, OnBoardingState> {
         );
       } else {
         final username = pref.getUsername();
+        final userType = pref.getUserType();
         GeneralData.token = token;
         GeneralData.userName = username;
+        GeneralData.userType = userType;
         NavigatorService.popAndPushNamed(
           AppRoutes.homeContainerScreen,
         );
