@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/general_cubit/general_cubit.dart';
@@ -61,6 +62,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   //
   final _commentController = TextEditingController();
+  final _scrollController = ScrollController();
   //
   handleScreenData() async {
     BlocProvider.of<QuestionsCubit>(context)
@@ -90,6 +92,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   @override
   void dispose() {
     _commentController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -162,6 +165,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                         SizedBox(height: 24.v),
                         Expanded(
                           child: ListView.separated(
+                            controller: _scrollController,
                             itemCount: BlocProvider.of<QuestionsCubit>(context)
                                     .questionsCategories
                                     .length +
@@ -176,24 +180,10 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                                       .questionsCategories
                                       .length) {
                                 return Padding(
-                                  padding: EdgeInsets.only(bottom: 8.0.v),
-                                  child: TextField(
+                                  padding: EdgeInsets.only(bottom: 12.0.v),
+                                  child: CommentTextFieldWidget(
                                     controller: _commentController,
-                                    maxLines: 3,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(16.h),
-                                      ),
-                                      hintText: "lbl_additional_comments".tr,
-                                      hintStyle:
-                                          theme.textTheme.bodyMedium!.copyWith(
-                                        color: appTheme.gray700,
-                                      ),
-                                    ),
-                                    style: theme.textTheme.bodyMedium!.copyWith(
-                                      color: appTheme.black900,
-                                    ),
+                                    scrollController: _scrollController,
                                   ),
                                 );
                               }
@@ -326,6 +316,112 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         //   ProgressDialogUtils.hideProgressDialog();
         //   ProgressDialogUtils.showErrorDialog(context);
         // }
+      },
+    );
+  }
+}
+
+class CommentTextFieldWidget extends StatefulWidget {
+  final TextEditingController controller;
+  final ScrollController scrollController;
+  const CommentTextFieldWidget(
+      {required this.controller, required this.scrollController, Key? key});
+
+  @override
+  State<CommentTextFieldWidget> createState() => _CommentTextFieldWidgetState();
+}
+
+class _CommentTextFieldWidgetState extends State<CommentTextFieldWidget>
+    with WidgetsBindingObserver {
+  //
+  TextDirection _direction = TextDirection.ltr;
+  final _focusNode = FocusNode();
+
+  //
+  TextDirection detectDirection(String text) {
+    if (text.trim().isEmpty) {
+      return TextDirection.ltr;
+    }
+
+    return intl.Bidi.detectRtlDirectionality(text)
+        ? TextDirection.rtl
+        : TextDirection.ltr;
+  }
+
+  //
+  // Called when keyboard opens/closes
+  @override
+  void didChangeMetrics() {
+    if (!mounted) return;
+    final bottomInset = View.of(context).viewInsets.bottom;
+
+    if (bottomInset > 0 && _focusNode.hasFocus) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToBottom();
+      });
+    }
+  }
+
+  //
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+    widget.controller.addListener(() {
+      final newDirection = detectDirection(widget.controller.text);
+
+      if (newDirection != _direction) {
+        setState(() => _direction = newDirection);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  //
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!widget.scrollController.hasClients) return;
+
+      widget.scrollController.animateTo(
+        widget.scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  //
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: widget.controller,
+      focusNode: _focusNode,
+      maxLines: 5,
+      textDirection: _direction,
+      textInputAction: TextInputAction.newline,
+      maxLength: 255,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16.h),
+        ),
+        hintText: "lbl_additional_comments".tr,
+        hintStyle: theme.textTheme.bodyMedium!.copyWith(
+          color: appTheme.gray700,
+        ),
+      ),
+      style: theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.black900,
+      ),
+      onTapOutside: (_) {
+        FocusScope.of(context).unfocus();
       },
     );
   }
