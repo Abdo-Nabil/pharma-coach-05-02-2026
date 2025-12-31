@@ -376,7 +376,7 @@ class ApiClient {
       'Accept': 'application/json',
       'Authorization': 'Bearer ${GeneralData.token!}',
     };
-    Map<String, dynamic> queryParams = {
+    Map<String, dynamic> body = {
       "rep_id": repId,
       "location_id": locationId,
       "shift": shift,
@@ -388,9 +388,9 @@ class ApiClient {
     //
     try {
       // await isNetworkConnected();
-      Response response = await _dio.get(
+      Response response = await _dio.post(
         isNSM() ? '$url/visits/create-NSM' : '$url/visits/create',
-        queryParameters: queryParams,
+        data: body,
         options: Options(headers: headers),
       );
       if (_isSuccessCall(response)) {
@@ -468,7 +468,7 @@ class ApiClient {
     log("###################### ${encodedData}");
     try {
       // await isNetworkConnected();
-      Response response = await _dio.get(
+      Response response = await _dio.post(
         isNSM() ? '$url/questions/answer-NSM' : '$url/questions/answer',
         queryParameters: queryParams,
         options: Options(headers: headers),
