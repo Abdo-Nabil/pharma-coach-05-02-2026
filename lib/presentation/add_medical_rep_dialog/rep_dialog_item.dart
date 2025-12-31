@@ -5,11 +5,13 @@ import 'package:mina_s_application5/presentation/calendar_container_screen/inten
 import '../../core/app_export.dart';
 import '../../general_helper.dart';
 import '../calendar_container_screen/models/rep_model.dart';
+import 'add_medical_rep_dialog.dart';
 import 'cubit/add_medical_rep_cubit.dart';
 
 class RepDialogItem extends StatelessWidget {
   final TinyRepModel repModel;
-  const RepDialogItem({required this.repModel});
+  final bool isNSM;
+  const RepDialogItem({required this.repModel, required this.isNSM, Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +19,27 @@ class RepDialogItem extends StatelessWidget {
       onTap: () async {
         // await BlocProvider.of<AddMedicalRepCubit>(context)
         //     .getRepLocations(repModel.id);
-        await BlocProvider.of<AddMedicalRepCubit>(context)
-            .addIntendedVisit(IntendedVisitModel(
-          repName: repModel.username,
-          stringDate: GeneralHelper.formatDateForApi(GeneralData.selectedDate),
-          repId: repModel.id,
-          endOfTheDayClicked: false,
-        ));
+        if (isNSM) {
+          // repModel.id is DM id in this case because NSM is selecting DM
+          GeneralData.selectedDistrictManager = repModel.id;
+          Navigator.pop(context);
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AddMedicalRepDialog.builder(context, isNSM: false);
+            },
+          );
+        } else {
+          await BlocProvider.of<AddMedicalRepCubit>(context)
+              .addIntendedVisit(IntendedVisitModel(
+            districtManagerId: GeneralData.selectedDistrictManager,
+            repName: repModel.username,
+            stringDate:
+                GeneralHelper.formatDateForApi(GeneralData.selectedDate),
+            repId: repModel.id,
+            endOfTheDayClicked: false,
+          ));
+        }
       },
       child: Container(
         margin: EdgeInsets.only(

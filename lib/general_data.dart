@@ -9,5 +9,10 @@ class GeneralData {
   static DateTime selectedDate = DateTime.now();
   static late CalendarCubit calendarCubit;
   static late int selectedRepId;
+  static int? selectedDistrictManager;
   // static late int selectedVisitId;
+
+  static bool isNSM() {
+    return userType == UserType.nsm;
+  }
 }

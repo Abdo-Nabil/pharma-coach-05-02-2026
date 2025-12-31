@@ -1,21 +1,16 @@
-import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
-import 'package:mina_s_application5/data/apiClient/api_client.dart';
-import 'package:mina_s_application5/presentation/add_medical_rep_dialog/rep_dialog_item.dart';
-import 'package:mina_s_application5/presentation/calendar_container_screen/cubit/calendar_cubit.dart';
-import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
-import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
-import 'package:mina_s_application5/widgets/custom_search_view.dart';
-import '../../general_data.dart';
-import 'cubit/add_medical_rep_cubit.dart';
-import 'location_dialog_item.dart';
-import 'models/add_medical_rep_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
-import 'bloc/add_medical_rep_bloc.dart';
+import 'package:mina_s_application5/data/apiClient/api_client.dart';
+import 'package:mina_s_application5/presentation/add_medical_rep_dialog/rep_dialog_item.dart';
+
+import '../../general_data.dart';
+import '../calendar_container_screen/models/rep_model.dart';
+import 'cubit/add_medical_rep_cubit.dart';
 
 // ignore_for_file: must_be_immutable
 class AddMedicalRepDialog extends StatefulWidget {
-  const AddMedicalRepDialog({Key? key})
+  final bool isNSM;
+  const AddMedicalRepDialog({required this.isNSM, Key? key})
       : super(
           key: key,
         );
@@ -29,13 +24,13 @@ class AddMedicalRepDialog extends StatefulWidget {
   //     child: AddMedicalRepDialog(),
   //   );
   // }
-  static Widget builder(BuildContext context) {
+  static Widget builder(BuildContext context, {required bool isNSM}) {
     return BlocProvider<AddMedicalRepCubit>(
       create: (context) => AddMedicalRepCubit(
         apiClient: ApiClient(),
         calendarCubit: GeneralData.calendarCubit,
       ),
-      child: AddMedicalRepDialog(),
+      child: AddMedicalRepDialog(isNSM: isNSM),
     );
   }
 
@@ -48,7 +43,9 @@ class _AddMedicalRepDialogState extends State<AddMedicalRepDialog> {
   // bool isLoading = true;
   @override
   void initState() {
-    BlocProvider.of<AddMedicalRepCubit>(context).getMedicalReps();
+    widget.isNSM
+        ? BlocProvider.of<AddMedicalRepCubit>(context).getDistrictManagers()
+        : BlocProvider.of<AddMedicalRepCubit>(context).getMedicalReps();
     super.initState();
   }
 
@@ -72,36 +69,39 @@ class _AddMedicalRepDialogState extends State<AddMedicalRepDialog> {
             child: Column(
               // mainAxisSize: MainAxisSize.min,
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 84.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 8.v),
-                          child: Text(
-                            "lbl_add_medical_rep".tr,
-                            style: CustomTextStyles.titleSmallBlack900,
-                          ),
-                        ),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgXBlueGray900,
-                          height: 24.adaptSize,
-                          width: 24.adaptSize,
-                          margin: EdgeInsets.only(
-                            left: 59.h,
-                            bottom: 2.v,
-                          ),
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Opacity(
+                      opacity: 0.0,
+                      child: CustomImageView(
+                        imagePath: ImageConstant.imgXBlueGray900,
+                        height: 24.adaptSize,
+                        width: 24.adaptSize,
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
-                  ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.v),
+                      child: Text(
+                        widget.isNSM
+                            ? "lbl_select_dm".tr
+                            : "lbl_add_medical_rep".tr,
+                        style: CustomTextStyles.titleSmallBlack900,
+                      ),
+                    ),
+                    CustomImageView(
+                      imagePath: ImageConstant.imgXBlueGray900,
+                      height: 24.adaptSize,
+                      width: 24.adaptSize,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
                 ),
                 SizedBox(height: 16.v),
                 // Padding(
@@ -146,15 +146,57 @@ class _AddMedicalRepDialogState extends State<AddMedicalRepDialog> {
                       ).reps;
                       return SizedBox(
                         height: MediaQuery.of(context).size.height * 0.30,
-                        child: ListView.separated(
-                          itemCount: repList.length,
-                          separatorBuilder: (context, index) {
-                            return SizedBox(height: 5.v);
-                          },
-                          itemBuilder: (context, index) {
-                            return RepDialogItem(repModel: repList[index]);
-                          },
-                        ),
+                        child: repList.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'lbl_no_medical_reps_found'.tr,
+                                  style: CustomTextStyles.titleLargeBluegray900,
+                                ),
+                              )
+                            : ListView.separated(
+                                itemCount: repList.length,
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(height: 5.v);
+                                },
+                                itemBuilder: (context, index) {
+                                  return RepDialogItem(
+                                    repModel: repList[index],
+                                    isNSM: false,
+                                  );
+                                },
+                              ),
+                      );
+                    }
+                    //
+                    else if (state is GetDistrictManagersSuccessState) {
+                      final districtManagers =
+                          BlocProvider.of<AddMedicalRepCubit>(
+                        context,
+                      ).districtManagers;
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.30,
+                        child: districtManagers.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'lbl_no_district_managers_found'.tr,
+                                  style: CustomTextStyles.titleLargeBluegray900,
+                                ),
+                              )
+                            : ListView.separated(
+                                itemCount: districtManagers.length,
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(height: 5.v);
+                                },
+                                itemBuilder: (context, index) {
+                                  return RepDialogItem(
+                                    repModel: TinyRepModel(
+                                        id: districtManagers[index].id,
+                                        username:
+                                            districtManagers[index].username),
+                                    isNSM: true,
+                                  );
+                                },
+                              ),
                       );
                     }
                     // else if (state is GetLocationsSuccessState) {

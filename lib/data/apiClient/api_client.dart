@@ -9,6 +9,7 @@ import 'package:mina_s_application5/data/models/getLocations/get_get_locations_r
 import 'package:mina_s_application5/data/models/loginUser/post_login_user_resp.dart';
 import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/general_helper.dart';
+import 'package:mina_s_application5/presentation/calendar_container_screen/models/district_manager_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/answer_model.dart';
@@ -130,9 +131,13 @@ class ApiClient {
       var response = await _dio.post(
         // '$url/login?email=a@b.com&password=adminadmin',
         // '$url/login?email=$us@pharcoo.com&password=$pass',
-        '$url/login?email=$us@gmail.com&password=$pass',
+        // '$url/login?email=$us@gmail.com&password=$pass',
         // data: requestData,
-
+        '$url/login',
+        data: {
+          'email': '$us@gmail.com',
+          'password': pass,
+        },
         options: Options(headers: headers),
       );
       // ProgressDialogUtils.hideProgressDialog();
@@ -250,13 +255,15 @@ class ApiClient {
   }
 */
 
-  Future<List<TinyRepModel>> getMedicalReps() async {
+  Future<List<TinyRepModel>> getMedicalReps(int? districtManagerId) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer ${GeneralData.token!}',
     };
-    Map<String, dynamic> queryParams = const {};
+    Map<String, dynamic> queryParams = {
+      if (districtManagerId != null) "manager_id": districtManagerId
+    };
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
@@ -332,7 +339,8 @@ class ApiClient {
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
-        isNSM() ? '$url/locations-NSM' : '$url/locations',
+        // isNSM() ? '$url/locations-NSM' : '$url/locations',
+        '$url/locations',
         queryParameters: queryParams,
         options: Options(headers: headers),
       );
@@ -624,6 +632,42 @@ class ApiClient {
       } else {
         throw response.data != null
             ? RepModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      // ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<List<DistrictManagerModel>> getDistrictManagersUnderNSM() async {
+    //
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        '$url/dm-nsm', // District Managers under NSM
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        List<DistrictManagerModel> districtManagers = [];
+        for (int i = 0; i < response.data["data"].length; i++) {
+          districtManagers
+              .add(DistrictManagerModel.fromMap(response.data["data"][i]));
+        }
+        return districtManagers;
+      } else {
+        throw response.data != null
+            ? DistrictManagerModel.fromMap(response.data)
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {

@@ -1,10 +1,12 @@
-import '../questions_one_dialog/questions_one_dialog.dart';
-import '../success_dialog/success_dialog.dart';
-import '../add_medical_rep_dialog/add_medical_rep_dialog.dart';
-import 'models/app_navigation_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
+import 'package:mina_s_application5/general_data.dart';
+
+import '../add_medical_rep_dialog/add_medical_rep_dialog.dart';
+import '../questions_one_dialog/questions_one_dialog.dart';
+import '../success_dialog/success_dialog.dart';
 import 'bloc/app_navigation_bloc.dart';
+import 'models/app_navigation_model.dart';
 
 class AppNavigationScreen extends StatelessWidget {
   const AppNavigationScreen({Key? key})
@@ -99,8 +101,12 @@ class AppNavigationScreen extends StatelessWidget {
                             _buildScreenTitle(
                               context,
                               screenTitle: "add medical rep - Dialog".tr,
-                              onTapScreenTitle: () => onTapDialogTitle(context,
-                                  AddMedicalRepDialog.builder(context)),
+                              onTapScreenTitle: () => onTapDialogTitle(
+                                  context,
+                                  AddMedicalRepDialog.builder(
+                                    context,
+                                    isNSM: GeneralData.isNSM(),
+                                  )),
                             ),
                             _buildScreenTitle(
                               context,

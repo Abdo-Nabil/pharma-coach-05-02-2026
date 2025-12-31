@@ -93,6 +93,9 @@ final Map<String, String> enUs = {
 
   // add medical rep Screen
   "lbl_add_medical_rep": "Add medical rep", "lbl_recent": "Recent",
+  "lbl_select_dm": "Select District Manager",
+  "lbl_no_medical_reps_found": "No medical reps found",
+  "lbl_no_district_managers_found": "No district managers found",
 
   // analytics - Tab Container Screen
   "lbl_monthly": "Monthly", "lbl_quarter": "Quarter", "lbl_today": "Today",

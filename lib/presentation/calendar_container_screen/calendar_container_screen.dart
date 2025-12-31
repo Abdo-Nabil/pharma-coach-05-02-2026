@@ -1,3 +1,6 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'package:flutter/material.dart';
+import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
 import 'package:mina_s_application5/general_data.dart';
@@ -6,18 +9,15 @@ import 'package:mina_s_application5/presentation/add_medical_rep_dialog/add_medi
 import 'package:mina_s_application5/presentation/calendar_container_screen/cubit/calendar_cubit.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/widgets/calendar_widget.dart';
 import 'package:mina_s_application5/presentation/home_page/home_page.dart';
-import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
 import 'package:mina_s_application5/widgets/app_bar/appbar_title.dart';
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'widgets/calendar_container_item_widget.dart';
-import 'models/calendarcontainer_item_model.dart';
-import 'models/calendar_container_model.dart';
+import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
 import 'package:mina_s_application5/widgets/custom_bottom_bar.dart';
 import 'package:mina_s_application5/widgets/custom_floating_button.dart';
-import 'package:flutter/material.dart';
-import 'package:mina_s_application5/core/app_export.dart';
+
 import 'bloc/calendar_container_bloc.dart';
+import 'models/calendar_container_model.dart';
+import 'models/calendarcontainer_item_model.dart';
+import 'widgets/calendar_container_item_widget.dart';
 
 class CalendarContainerScreen extends StatefulWidget {
   CalendarContainerScreen({Key? key})
@@ -224,7 +224,8 @@ class _CalendarContainerScreenState extends State<CalendarContainerScreen> {
         showDialog(
           context: context,
           builder: (context) {
-            return AddMedicalRepDialog.builder(context);
+            return AddMedicalRepDialog.builder(context,
+                isNSM: GeneralData.isNSM());
           },
         );
       },

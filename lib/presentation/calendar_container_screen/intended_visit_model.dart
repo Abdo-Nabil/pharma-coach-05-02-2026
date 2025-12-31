@@ -3,12 +3,14 @@ class IntendedVisitModel {
   final String stringDate;
   final int repId;
   final bool endOfTheDayClicked;
+  final int? districtManagerId;
 
   const IntendedVisitModel({
     required this.repName,
     required this.stringDate,
     required this.repId,
     required this.endOfTheDayClicked,
+    this.districtManagerId,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +19,7 @@ class IntendedVisitModel {
       'stringDate': this.stringDate,
       'repId': this.repId,
       'endOfTheDayClicked': this.endOfTheDayClicked,
+      'districtManagerId': this.districtManagerId,
     };
   }
 
@@ -28,6 +31,9 @@ class IntendedVisitModel {
       endOfTheDayClicked: map['endOfTheDayClicked'] == null
           ? false
           : map['endOfTheDayClicked'] as bool,
+      districtManagerId: map['districtManagerId'] != null
+          ? map['districtManagerId'] as int
+          : null,
     );
   }
 
@@ -36,12 +42,14 @@ class IntendedVisitModel {
     String? stringDate,
     int? repId,
     bool? endOfTheDayClicked,
+    int? districtManagerId,
   }) {
     return IntendedVisitModel(
       repName: repName ?? this.repName,
       stringDate: stringDate ?? this.stringDate,
       repId: repId ?? this.repId,
       endOfTheDayClicked: endOfTheDayClicked ?? this.endOfTheDayClicked,
+      districtManagerId: districtManagerId ?? this.districtManagerId,
     );
   }
 }

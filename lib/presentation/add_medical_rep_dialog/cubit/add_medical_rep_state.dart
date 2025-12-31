@@ -19,6 +19,11 @@ class GetRepsSuccessState extends AddMedicalRepState {
   List<Object> get props => [];
 }
 
+class GetDistrictManagersSuccessState extends AddMedicalRepState {
+  @override
+  List<Object> get props => [];
+}
+
 class GetLocationsSuccessState extends AddMedicalRepState {
   @override
   List<Object> get props => [];
