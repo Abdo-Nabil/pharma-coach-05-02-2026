@@ -70,10 +70,6 @@ class ApiClient {
     return false;
   }
 
-  bool isNSM() {
-    return GeneralData.userType == UserType.nsm;
-  }
-
   /// Performs API call for {{baseUrl}}/locations?page=1&per_page=5
   ///
   /// Sends a GET request to the server's '{{baseUrl}}/locations?page=1&per_page=5' endpoint
@@ -88,7 +84,7 @@ class ApiClient {
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
-        isNSM() ? '$url/locations-NSM' : '$url/locations',
+        GeneralData.isNSM() ? '$url/locations-NSM' : '$url/locations',
         queryParameters: queryParams,
         options: Options(headers: headers),
       );
@@ -267,7 +263,7 @@ class ApiClient {
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
-        isNSM() ? '$url/reps-NSM' : '$url/reps',
+        GeneralData.isNSM() ? '$url/reps-NSM' : '$url/reps',
         queryParameters: queryParams,
         options: Options(headers: headers),
       );
@@ -339,7 +335,7 @@ class ApiClient {
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
-        // isNSM() ? '$url/locations-NSM' : '$url/locations',
+        // GeneralData.isNSM() ? '$url/locations-NSM' : '$url/locations',
         '$url/locations',
         queryParameters: queryParams,
         options: Options(headers: headers),
@@ -388,11 +384,21 @@ class ApiClient {
     //
     try {
       // await isNetworkConnected();
-      Response response = await _dio.post(
-        isNSM() ? '$url/visits/create-NSM' : '$url/visits/create',
-        data: body,
-        options: Options(headers: headers),
-      );
+      late Response response;
+      if (GeneralData.isNSM()) {
+        response = await _dio.post(
+          '$url/visits/create-NSM',
+          data: body,
+          options: Options(headers: headers),
+        );
+      } else {
+        response = await _dio.get(
+          '$url/visits/create',
+          data: body,
+          options: Options(headers: headers),
+        );
+      }
+
       if (_isSuccessCall(response)) {
         //
         log("${response.data}");
@@ -427,7 +433,7 @@ class ApiClient {
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
-        isNSM() ? '$url/questions/all-NSM' : '$url/questions/all',
+        GeneralData.isNSM() ? '$url/questions/all-NSM' : '$url/questions/all',
         queryParameters: queryParams,
         options: Options(headers: headers),
       );
@@ -468,12 +474,23 @@ class ApiClient {
     log("###################### ${encodedData}");
     try {
       // await isNetworkConnected();
-      Response response = await _dio.post(
-        isNSM() ? '$url/questions/answer-NSM' : '$url/questions/answer',
-        queryParameters: queryParams,
-        options: Options(headers: headers),
-        data: encodedData,
-      );
+      late Response response;
+      if (GeneralData.isNSM()) {
+        response = await _dio.post(
+          '$url/questions/answer-NSM',
+          queryParameters: queryParams,
+          options: Options(headers: headers),
+          data: encodedData,
+        );
+      } else {
+        response = await _dio.get(
+          '$url/questions/answer',
+          queryParameters: queryParams,
+          options: Options(headers: headers),
+          data: encodedData,
+        );
+      }
+
       if (_isSuccessCall(response)) {
         log(response.data.toString());
         isSend = true;
@@ -517,7 +534,7 @@ class ApiClient {
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
-        isNSM() ? '$url/feedback-NSM' : '$url/feedback',
+        GeneralData.isNSM() ? '$url/feedback-NSM' : '$url/feedback',
         queryParameters: queryParams,
         options: Options(headers: headers),
       );
@@ -557,7 +574,7 @@ class ApiClient {
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
-        isNSM() ? '$url/new-feedback-NSM' : '$url/new-feedback',
+        GeneralData.isNSM() ? '$url/new-feedback-NSM' : '$url/new-feedback',
         queryParameters: queryParams,
         options: Options(headers: headers),
       );
@@ -603,7 +620,7 @@ class ApiClient {
     try {
       await isNetworkConnected();
       Response response = await _dio.get(
-        isNSM() ? '$url/new-feedback-NSM' : '$url/new-feedback',
+        GeneralData.isNSM() ? '$url/new-feedback-NSM' : '$url/new-feedback',
         queryParameters: queryParams,
         options: Options(headers: headers),
       );

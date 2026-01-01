@@ -49,7 +49,8 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   late DateTime date;
   late TextEditingController dateController;
   //
-  DateFilter dateFilter = DateFilter.day;
+  DateFilter dateFilter =
+      GeneralData.isNSM() ? DateFilter.month : DateFilter.day;
   DateTime? pickedDate = DateTime.now();
   //
   late int quarterNumber = GeneralHelper.getQuarter(pickedDate!);
