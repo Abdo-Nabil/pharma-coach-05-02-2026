@@ -345,10 +345,10 @@ packages:
     dependency: "direct main"
     description:
       name: month_picker_dialog
-      sha256: f77a42b2f738dc3e44cb0c838a9606e5a046cb7d14b549df1c5d92515bf6ec68
+      sha256: e3ca4b40121cae046f0d5babc1aec7f6c600b1437f74356ea82274aeb0c34c92
       url: "https://pub.dev"
     source: hosted
-    version: "2.12.0"
+    version: "2.0.0"
   nested:
     dependency: transitive
     description:
@@ -481,10 +481,10 @@ packages:
     dependency: transitive
     description:
       name: provider
-      sha256: c8a055ee5ce3fd98d6fc872478b03823ffdb448699c6ebdbbc71d59b596fd48c
+      sha256: "4e82183fa20e5ca25703ead7e05de9e4cceed1fbd1eadc1ac3cb6f565a09f272"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.2"
+    version: "6.1.5+1"
   rive:
     dependency: transitive
     description:

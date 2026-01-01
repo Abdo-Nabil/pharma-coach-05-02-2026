@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
 import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/general_helper.dart';
@@ -7,19 +9,14 @@ import 'package:mina_s_application5/presentation/team_analytics_screen/build_rep
 import 'package:mina_s_application5/presentation/team_analytics_screen/cubit/avg_screen_cubit/avg_screen_cubit.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/cubit/rep_analysis_cubit/rep_analysis_cubit.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/select_medical_rep_alert.dart';
-import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
 import 'package:mina_s_application5/widgets/app_bar/appbar_title.dart';
-import 'package:mina_s_application5/widgets/app_bar/appbar_trailing_iconbutton_one.dart';
-import 'package:mina_s_application5/widgets/app_bar/appbar_trailing_iconbutton.dart';
+import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
+import 'package:mina_s_application5/widgets/custom_bottom_bar.dart';
 import 'package:mina_s_application5/widgets/custom_elevated_button.dart';
-import 'package:mina_s_application5/widgets/custom_drop_down.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
+
 import 'cubit/analysis_cubit/analysis_cubit.dart';
 import 'cubit/analysis_cubit/analysis_state.dart';
-import 'models/team_analytics_model.dart';
-import 'package:mina_s_application5/widgets/custom_bottom_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:mina_s_application5/core/app_export.dart';
-import 'bloc/team_analytics_bloc.dart';
 
 enum DateFilter { day, month, year, quarter }
 
@@ -60,8 +57,10 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
 
   setDateAndDateControllerBasedOnSelectedRep(int repId) {
     date = pref.getLastVisitDateForThisRep(repId);
-    dateController =
-        TextEditingController(text: GeneralHelper.formatDateForDisplay1(date));
+    dateController = TextEditingController(
+        text: GeneralData.isNSM()
+            ? GeneralHelper.formatDateForDisplay2(date)
+            : GeneralHelper.formatDateForDisplay1(date));
   }
 
   setSelectedRepIdBasedOnSelectedDate(DateTime date) {
@@ -174,7 +173,8 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                 children: [
                   SizedBox(
                     height: 40.v,
-                    width: MediaQuery.of(context).size.width * 0.5,
+                    width: MediaQuery.of(context).size.width *
+                        (GeneralData.isNSM() ? 0.30 : 0.50),
                     child: Center(
                       child: TextField(
                         textAlign: TextAlign.center,
@@ -187,16 +187,33 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           ),
                         ),
                         onTap: () async {
-                          final tempDate = await showDatePicker(
+                          DateTime? tempDate;
+                          if (GeneralData.isNSM()) {
+                            tempDate = await showMonthPicker(
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(2023),
-                              lastDate: DateTime(2080));
+                              lastDate: DateTime(2100),
+                              selectedMonthBackgroundColor:
+                                  appTheme.amber700.withOpacity(0.70),
+                              selectedMonthTextColor: Colors.white,
+                            );
+                          } else {
+                            tempDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2023),
+                              lastDate: DateTime(2100),
+                            );
+                          }
+
                           if (tempDate != null) {
                             //
                             pickedDate = tempDate;
-                            dateController.text =
-                                GeneralHelper.formatDateForDisplay1(
+                            dateController.text = GeneralData.isNSM()
+                                ? GeneralHelper.formatDateForDisplay2(
+                                    pickedDate!)
+                                : GeneralHelper.formatDateForDisplay1(
                                     pickedDate!);
                             //
                             setSelectedRepIdBasedOnSelectedDate(pickedDate!);
@@ -232,45 +249,56 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                       ),
                     ),
                   ),
-                  Spacer(),
                   SizedBox(width: 10.h),
-                  Row(
-                    children: [
-                      Container(
-                        height: 40.v,
-                        width: MediaQuery.of(context).size.width * 0.17,
-                        // padding: EdgeInsets.fromLTRB(16.h, 14.v, 16.h, 14.v),
-                        decoration: AppDecoration.fillPurple.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder7 * 2,
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Rep",
-                            style: CustomTextStyles.labelLargeSFProTextBlack900,
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 40.v,
+                            // width: MediaQuery.of(context).size.width * 0.17,
+                            padding:
+                                EdgeInsets.fromLTRB(16.h, 14.v, 16.h, 14.v),
+                            decoration: AppDecoration.fillPurple.copyWith(
+                              borderRadius:
+                                  BorderRadiusStyle.roundedBorder7 * 2,
+                            ),
+                            child: Center(
+                              child: Text(
+                                GeneralData.isNSM() ? "NSM" : "Rep",
+                                style: CustomTextStyles
+                                    .labelLargeSFProTextBlack900,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 14.h,
-                      ),
-                      Container(
-                        height: 40.v,
-                        width: MediaQuery.of(context).size.width * 0.17,
-                        // padding: EdgeInsets.fromLTRB(16.h, 14.v, 16.h, 14.v),
-                        decoration: AppDecoration.fillBlue100.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder7 * 2,
+                        SizedBox(
+                          width: 14.h,
                         ),
-                        child: Center(
-                          child: Text(
-                            "Team",
-                            style: CustomTextStyles.labelLargeSFProTextBlack900,
+                        Expanded(
+                          child: Container(
+                            height: 40.v,
+                            // width: MediaQuery.of(context).size.width * 0.17,
+                            padding:
+                                EdgeInsets.fromLTRB(16.h, 14.v, 16.h, 14.v),
+                            decoration: AppDecoration.fillBlue100.copyWith(
+                              borderRadius:
+                                  BorderRadiusStyle.roundedBorder7 * 2,
+                            ),
+                            child: Center(
+                              child: Text(
+                                GeneralData.isNSM() ? "DM" : "Team",
+                                style: CustomTextStyles
+                                    .labelLargeSFProTextBlack900,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      // SizedBox(
-                      //   width: 16.h,
-                      // ),
-                    ],
+                        // SizedBox(
+                        //   width: 16.h,
+                        // ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -281,30 +309,34 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      FilterButton(
-                        label: 'Day',
-                        isSelected: dateFilter.name == DateFilter.day.name,
-                        onTap: () {
-                          setState(() {
-                            dateFilter = DateFilter.day;
-                          });
-                          if (isTeamToggled) {
-                            BlocProvider.of<AnalysisCubit>(context)
-                                .getTeamAnalysis(
-                              pickedDate!,
-                              dateFilter.name,
-                            );
-                          } else {
-                            BlocProvider.of<RepAnalysisCubit>(context)
-                                .getRepAnalysis(
-                              pickedDate!,
-                              dateFilter.name,
-                              isDayFilter:
-                                  dateFilter.name == DateFilter.day.name,
-                            );
-                          }
-                        },
-                      ),
+                      ///
+                      if (!GeneralData.isNSM())
+                        FilterButton(
+                          label: 'Day',
+                          isSelected: dateFilter.name == DateFilter.day.name,
+                          onTap: () {
+                            setState(() {
+                              dateFilter = DateFilter.day;
+                            });
+                            if (isTeamToggled) {
+                              BlocProvider.of<AnalysisCubit>(context)
+                                  .getTeamAnalysis(
+                                pickedDate!,
+                                dateFilter.name,
+                              );
+                            } else {
+                              BlocProvider.of<RepAnalysisCubit>(context)
+                                  .getRepAnalysis(
+                                pickedDate!,
+                                dateFilter.name,
+                                isDayFilter:
+                                    dateFilter.name == DateFilter.day.name,
+                              );
+                            }
+                          },
+                        ),
+
+                      ///
                       FilterButton(
                         label: 'Month',
                         isSelected: dateFilter.name == DateFilter.month.name,
@@ -421,30 +453,53 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                       BlocProvider.of<AnalysisCubit>(context)
                           .emit(NoAnalysisState());
                     }
-                    //
-                    double repScore = 0;
-                    int repCounter = 0;
-                    //
-                    double teamScore = 0;
-                    int teamCounter = 0;
-                    //
-                    for (int i = 0; i < temp.length; i++) {
-                      temp[i].reps.forEach((key, value) {
-                        if (key != "$selectedRepId") {
-                          teamScore += value;
-                          teamCounter++;
-                        } else {
-                          repScore += value;
-                          repCounter++;
-                        }
-                      });
-                    }
-                    double avgTeamScore = 0;
-                    double avgRepScore = 0;
 
-                    avgTeamScore =
-                        teamCounter == 0 ? 0.0 : (teamScore / teamCounter);
-                    avgRepScore = repCounter == 0 ? 0.0 : repScore / repCounter;
+                    ///
+                    /// In case of UserType == NSM or general user (DM)
+                    double repOrNSMScore = 0;
+                    int repOrNSMCounter = GeneralData.isNSM() ? temp.length : 0;
+                    //
+                    double teamOrDMScore = 0;
+                    int teamOrDMCounter = GeneralData.isNSM() ? temp.length : 0;
+                    //
+                    if (GeneralData.isNSM()) {
+                      for (int i = 0; i < temp.length; i++) {
+                        temp[i].reps.forEach((key, value) {
+                          if (key == "${selectedRepId}_NSM") {
+                            repOrNSMScore += value;
+                          }
+                          //
+                          else if (key == "${selectedRepId}") {
+                            teamOrDMScore += value;
+                          }
+                          //
+                        });
+                      }
+                    }
+                    //
+                    else {
+                      for (int i = 0; i < temp.length; i++) {
+                        temp[i].reps.forEach((key, value) {
+                          if (key != "$selectedRepId") {
+                            teamOrDMScore += value;
+                            teamOrDMCounter++;
+                          } else {
+                            repOrNSMScore += value;
+                            repOrNSMCounter++;
+                          }
+                        });
+                      }
+                    }
+                    //
+                    double avgTeamOrDMScore = 0;
+                    double avgRepOrNSMScore = 0;
+
+                    avgTeamOrDMScore = teamOrDMCounter == 0
+                        ? 0.0
+                        : (teamOrDMScore / teamOrDMCounter);
+                    avgRepOrNSMScore = repOrNSMCounter == 0
+                        ? 0.0
+                        : repOrNSMScore / repOrNSMCounter;
                     //
                     return Column(
                       children: [
@@ -453,19 +508,46 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                             ? Expanded(child: SelectMedicalRepAlert())
                             : Expanded(
                                 child: ListView.separated(
-                                    itemCount:
+                                  itemCount:
+                                      BlocProvider.of<AnalysisCubit>(context)
+                                          .teamAnalysis
+                                          .length,
+                                  separatorBuilder: (context, index) {
+                                    return SizedBox(height: 10.v);
+                                  },
+                                  itemBuilder: (context, index) {
+                                    //
+                                    final analysis =
                                         BlocProvider.of<AnalysisCubit>(context)
-                                            .teamAnalysis
-                                            .length,
-                                    separatorBuilder: (context, index) {
-                                      return SizedBox(height: 10.v);
-                                    },
-                                    itemBuilder: (context, index) {
+                                            .teamAnalysis[index];
+
+                                    ///
+                                    if (GeneralData.isNSM()) {
+                                      ///
+                                      final double nsm = analysis.reps[
+                                                  "${selectedRepId}_NSM"] ==
+                                              null
+                                          ? 0.0
+                                          : analysis
+                                              .reps["${selectedRepId}_NSM"];
                                       //
-                                      final analysis =
-                                          BlocProvider.of<AnalysisCubit>(
-                                                  context)
-                                              .teamAnalysis[index];
+                                      final double dm = analysis
+                                                  .reps["${selectedRepId}"] ==
+                                              null
+                                          ? 0.0
+                                          : analysis.reps["${selectedRepId}"];
+                                      //
+
+                                      return BuildTeamAnalysisView(
+                                        title: analysis.category,
+                                        repOrNSMPercentage: nsm,
+                                        teamOrDMPercentage: dm,
+                                      );
+
+                                      ///
+                                    }
+                                    //
+                                    else {
                                       //
                                       /* if (!analysis.reps
                                           .containsKey("$selectedRepId")) {
@@ -509,18 +591,20 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                       //
                                       return BuildTeamAnalysisView(
                                         title: analysis.category,
-                                        repPercentage: repPercentage,
-                                        teamPercentage: teamAvg,
+                                        repOrNSMPercentage: repPercentage,
+                                        teamOrDMPercentage: teamAvg,
                                       );
-                                    }),
+                                    }
+                                  },
+                                ),
                               ),
                         SizedBox(height: 8.v),
                         selectedRepId == null
                             ? Container()
                             : BuildTeamAnalysisView(
                                 title: "Total score",
-                                repPercentage: avgRepScore,
-                                teamPercentage: avgTeamScore,
+                                repOrNSMPercentage: avgRepOrNSMScore,
+                                teamOrDMPercentage: avgTeamOrDMScore,
                               ),
                         SizedBox(height: 12.v),
                       ],
@@ -570,70 +654,73 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
             margin: EdgeInsets.only(left: 16.h),
           ),
           Spacer(),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0.h),
-            child: Row(
-              children: [
-                CustomElevatedButton(
-                  height: 40.v,
-                  width: MediaQuery.of(context).size.width * 0.33,
-                  text: "Comparison",
-                  // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
-                  buttonStyle: CustomButtonStyles.fillPrimaryTL12,
-                  buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (ctx) => BlocProvider(
-                                  create: (_) => AvgScreenCubit(ApiClient()),
-                                  child: AvgScreen(
-                                      reps: BlocProvider.of<AnalysisCubit>(
-                                    context,
-                                  ).reps),
-                                )));
-                  },
-                ),
-                SizedBox(
-                  width: 10.h,
-                ),
-                CustomElevatedButton(
-                  height: 40.v,
-                  width: MediaQuery.of(context).size.width * 0.33,
-                  // text: isTeamToggled ? "lbl_team".tr : "Medical rep",
-                  text:
-                      isTeamToggled ? "Compare to self" : "Compare to team".tr,
-                  // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
-                  buttonStyle: isTeamToggled
-                      ? CustomButtonStyles.fillPink
-                      : CustomButtonStyles.fillPrimaryTL12,
-                  buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
-                  onPressed: () {
-                    isTeamToggled = !isTeamToggled;
-                    if (!isTeamToggled) {
-                      BlocProvider.of<AnalysisCubit>(context)
-                          .emit(RepAnalysisSuccess());
-                      quarterNumber = GeneralHelper.getQuarter(pickedDate!);
-                      BlocProvider.of<RepAnalysisCubit>(context).getRepAnalysis(
-                        pickedDate!,
-                        dateFilter == DateFilter.quarter
-                            ? "q$quarterNumber"
-                            : dateFilter.name,
-                        isDayFilter: dateFilter.name == DateFilter.day.name,
-                      );
-                    } else {
-                      BlocProvider.of<AnalysisCubit>(context).getTeamAnalysis(
-                        pickedDate!,
-                        dateFilter == DateFilter.quarter
-                            ? "q$quarterNumber"
-                            : dateFilter.name,
-                      );
-                    }
-                  },
-                ),
-              ],
+          if (!GeneralData.isNSM())
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0.h),
+              child: Row(
+                children: [
+                  CustomElevatedButton(
+                    height: 40.v,
+                    width: MediaQuery.of(context).size.width * 0.33,
+                    text: "Comparison",
+                    // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+                    buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+                    buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (ctx) => BlocProvider(
+                                    create: (_) => AvgScreenCubit(ApiClient()),
+                                    child: AvgScreen(
+                                        reps: BlocProvider.of<AnalysisCubit>(
+                                      context,
+                                    ).reps),
+                                  )));
+                    },
+                  ),
+                  SizedBox(
+                    width: 10.h,
+                  ),
+                  CustomElevatedButton(
+                    height: 40.v,
+                    width: MediaQuery.of(context).size.width * 0.33,
+                    // text: isTeamToggled ? "lbl_team".tr : "Medical rep",
+                    text: isTeamToggled
+                        ? "Compare to self"
+                        : "Compare to team".tr,
+                    // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+                    buttonStyle: isTeamToggled
+                        ? CustomButtonStyles.fillPink
+                        : CustomButtonStyles.fillPrimaryTL12,
+                    buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
+                    onPressed: () {
+                      isTeamToggled = !isTeamToggled;
+                      if (!isTeamToggled) {
+                        BlocProvider.of<AnalysisCubit>(context)
+                            .emit(RepAnalysisSuccess());
+                        quarterNumber = GeneralHelper.getQuarter(pickedDate!);
+                        BlocProvider.of<RepAnalysisCubit>(context)
+                            .getRepAnalysis(
+                          pickedDate!,
+                          dateFilter == DateFilter.quarter
+                              ? "q$quarterNumber"
+                              : dateFilter.name,
+                          isDayFilter: dateFilter.name == DateFilter.day.name,
+                        );
+                      } else {
+                        BlocProvider.of<AnalysisCubit>(context).getTeamAnalysis(
+                          pickedDate!,
+                          dateFilter == DateFilter.quarter
+                              ? "q$quarterNumber"
+                              : dateFilter.name,
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
         ],
       ),
       // actions: [
@@ -782,14 +869,17 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   }
 }
 
+///
+/// ******************************************************************
+///
 class BuildTeamAnalysisView extends StatelessWidget {
   final String title;
-  final double repPercentage;
-  final double teamPercentage;
+  final double repOrNSMPercentage;
+  final double teamOrDMPercentage;
   const BuildTeamAnalysisView({
     required this.title,
-    required this.repPercentage,
-    required this.teamPercentage,
+    required this.repOrNSMPercentage,
+    required this.teamOrDMPercentage,
   });
 
   @override
@@ -829,7 +919,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
                     Container(
                       height: 16.v,
                       width: (MediaQuery.of(context).size.width - 60.h) *
-                          (repPercentage / 100),
+                          (repOrNSMPercentage / 100),
                       // MediaQuery.of(context).size.width - 60.h
                       decoration: BoxDecoration(
                         color: appTheme.purple300,
@@ -855,7 +945,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 8.h),
                 child: Text(
                   // "${repPercentage.toStringAsFixed(1)}%",
-                  "${GeneralHelper.formatDoubleAsRoundedInt(repPercentage)}%",
+                  "${GeneralHelper.formatDoubleAsRoundedInt(repOrNSMPercentage)}%",
                   style: theme.textTheme.labelLarge,
                 ),
               ),
@@ -876,7 +966,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
                     Container(
                       height: 16.v,
                       width: (MediaQuery.of(context).size.width - 60.h) *
-                          (teamPercentage / 100),
+                          (teamOrDMPercentage / 100),
                       // width: 200,
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primary,
@@ -902,7 +992,7 @@ class BuildTeamAnalysisView extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 8.0.h),
                 child: Text(
                   // "${teamPercentage.toStringAsFixed(1)}%",
-                  "${GeneralHelper.formatDoubleAsRoundedInt(teamPercentage)}%",
+                  "${GeneralHelper.formatDoubleAsRoundedInt(teamOrDMPercentage)}%",
 
                   style: theme.textTheme.labelLarge,
                 ),

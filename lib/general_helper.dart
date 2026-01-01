@@ -29,6 +29,10 @@ class GeneralHelper {
     return DateFormat("EEE d-M-yyyy").format(date);
   }
 
+  static String formatDateForDisplay2(DateTime date) {
+    return DateFormat("M-yyyy").format(date);
+  }
+
   static String formatFromApiToDisplay(String date) {
     return formatDateForDisplay1(formatDateFromApi(date));
   }
