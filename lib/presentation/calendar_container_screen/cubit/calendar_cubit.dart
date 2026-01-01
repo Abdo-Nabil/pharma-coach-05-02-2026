@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
-import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
 
 import '../../../data/apiClient/api_client.dart';
 import '../widgets/calendar_widget.dart';
@@ -22,12 +21,12 @@ class CalendarCubit extends Cubit<CalendarState> {
   //   // await apiClient.getLocations();
   //   List<RepModel> reps = await apiClient.getMedicalReps();
   // }
-
-  getMedicalReps() async {
-    // await Future.delayed(const Duration(seconds: 3));
-    // await apiClient.getLocations();
-    List<TinyRepModel> reps = await apiClient.getMedicalReps();
-  }
+  //
+  // getMedicalReps() async {
+  //   // await Future.delayed(const Duration(seconds: 3));
+  //   // await apiClient.getLocations();
+  //   List<TinyRepModel> reps = await apiClient.getMedicalReps(null);
+  // }
 
   ///this gets all visits but requirements changes to only mark these days as
   /// intended visit for only one rep in a day so the new function is [getMonthlyIntendedVisits]

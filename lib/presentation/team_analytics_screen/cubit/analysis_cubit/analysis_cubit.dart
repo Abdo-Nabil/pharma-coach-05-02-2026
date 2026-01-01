@@ -19,7 +19,7 @@ class AnalysisCubit extends SafeCubit<AnalysisState> {
     String dateAsString = GeneralHelper.formatDateForApi(date);
     emit(AnalysisLoading());
     teamAnalysis = await apiClient.getTeamAnalysis(dateAsString, dateScope);
-    reps = await apiClient.getMedicalReps();
+    reps = await apiClient.getMedicalReps(null);
     emit(TeamAnalysisSuccess());
   }
 /*
