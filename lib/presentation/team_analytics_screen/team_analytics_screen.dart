@@ -13,7 +13,6 @@ import 'package:mina_s_application5/widgets/app_bar/appbar_title.dart';
 import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
 import 'package:mina_s_application5/widgets/custom_bottom_bar.dart';
 import 'package:mina_s_application5/widgets/custom_elevated_button.dart';
-import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 import 'cubit/analysis_cubit/analysis_cubit.dart';
 import 'cubit/analysis_cubit/analysis_state.dart';
@@ -212,25 +211,12 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           ),
                         ),
                         onTap: () async {
-                          DateTime? tempDate;
-                          if (GeneralData.isNSM()) {
-                            tempDate = await showMonthPicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2023),
-                              lastDate: DateTime(2100),
-                              selectedMonthBackgroundColor:
-                                  appTheme.amber700.withOpacity(0.70),
-                              selectedMonthTextColor: Colors.white,
-                            );
-                          } else {
-                            tempDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2023),
-                              lastDate: DateTime(2100),
-                            );
-                          }
+                          DateTime? tempDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2023),
+                            lastDate: DateTime(2100),
+                          );
 
                           if (tempDate != null) {
                             //
@@ -489,10 +475,26 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                               label: "${monthsList[index]}",
                               isSelected: selectedMonthIndex == index,
                               onTap: () {
+                                late DateTime selectedMonthAsDateTime;
                                 setState(() {
                                   BlocProvider.of<AnalysisCubit>(context)
                                       .selectedMonthIndex = index;
+                                  selectedMonthAsDateTime =
+                                      pickedDate!.copyWith(month: index + 1);
+                                  dateController.text =
+                                      GeneralHelper.formatDateForDisplay2(
+                                          selectedMonthAsDateTime);
                                 });
+
+                                ///
+
+                                BlocProvider.of<AnalysisCubit>(context)
+                                    .getTeamAnalysis(
+                                  selectedMonthAsDateTime!,
+                                  DateFilter.month.name,
+                                );
+
+                                ///
                               },
                             );
                           }),

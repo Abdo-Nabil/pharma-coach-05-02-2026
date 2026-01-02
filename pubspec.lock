@@ -341,14 +341,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
-  month_picker_dialog:
-    dependency: "direct main"
-    description:
-      name: month_picker_dialog
-      sha256: e3ca4b40121cae046f0d5babc1aec7f6c600b1437f74356ea82274aeb0c34c92
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   nested:
     dependency: transitive
     description:
