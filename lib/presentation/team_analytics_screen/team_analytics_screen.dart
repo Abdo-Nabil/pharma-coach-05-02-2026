@@ -61,6 +61,18 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
         text: GeneralData.isNSM()
             ? GeneralHelper.formatDateForDisplay2(date)
             : GeneralHelper.formatDateForDisplay1(date));
+
+    ///
+    ///  In case of NSM
+    if (GeneralData.isNSM()) {
+      BlocProvider.of<AnalysisCubit>(context).selectedMonthIndex =
+          date.month - 1;
+      BlocProvider.of<AnalysisCubit>(context).selectedQuarter =
+          GeneralHelper.getQuarter(date);
+    }
+
+    ///
+    ///
   }
 
   setSelectedRepIdBasedOnSelectedDate(DateTime date) {
@@ -490,7 +502,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
 
                                 BlocProvider.of<AnalysisCubit>(context)
                                     .getTeamAnalysis(
-                                  selectedMonthAsDateTime!,
+                                  selectedMonthAsDateTime,
                                   DateFilter.month.name,
                                 );
 
