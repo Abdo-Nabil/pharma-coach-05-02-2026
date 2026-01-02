@@ -14,6 +14,8 @@ class AnalysisCubit extends SafeCubit<AnalysisState> {
   List<TeamAnalysisModel> teamAnalysis = [];
   List<RepAnalysisModel> repAnalysis = [];
   List<TinyRepModel> reps = [];
+  late int selectedQuarter;
+  late int selectedMonthIndex;
   //
   getTeamAnalysis(DateTime date, String dateScope) async {
     String dateAsString = GeneralHelper.formatDateForApi(date);

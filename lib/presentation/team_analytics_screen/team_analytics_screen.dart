@@ -90,6 +90,19 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   @override
   void initState() {
     setDateAndDateControllerBasedOnSelectedRep(-1);
+
+    ///
+    ///  In case of NSM
+    if (GeneralData.isNSM()) {
+      BlocProvider.of<AnalysisCubit>(context).selectedMonthIndex =
+          pickedDate!.month - 1;
+      BlocProvider.of<AnalysisCubit>(context).selectedQuarter =
+          GeneralHelper.getQuarter(pickedDate!);
+    }
+
+    ///
+    ///
+    //
     BlocProvider.of<AnalysisCubit>(context)
         .getTeamAnalysis(
       pickedDate!,
@@ -104,6 +117,17 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
   //
   @override
   Widget build(BuildContext context) {
+    /// In case of NSM
+    late int selectedMonthIndex;
+    late int selectedQuarter;
+    if (GeneralData.isNSM()) {
+      selectedMonthIndex = BlocProvider.of<AnalysisCubit>(context, listen: true)
+          .selectedMonthIndex;
+      selectedQuarter =
+          BlocProvider.of<AnalysisCubit>(context, listen: true).selectedQuarter;
+    }
+
+    ///
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
@@ -221,6 +245,13 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                             quarterNumber =
                                 GeneralHelper.getQuarter(pickedDate!);
                             //
+                            if (GeneralData.isNSM()) {
+                              BlocProvider.of<AnalysisCubit>(context)
+                                  .selectedQuarter = quarterNumber;
+                              BlocProvider.of<AnalysisCubit>(context)
+                                  .selectedMonthIndex = pickedDate!.month - 1;
+                            }
+                            //
                             if (isTeamToggled) {
                               BlocProvider.of<AnalysisCubit>(context)
                                   .getTeamAnalysis(
@@ -239,6 +270,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                                 isDayFilter:
                                     dateFilter.name == DateFilter.day.name,
                               );
+
                               BlocProvider.of<RepAnalysisCubit>(context)
                                   .selectedMonthIndex = pickedDate!.month - 1;
                               BlocProvider.of<RepAnalysisCubit>(context)
@@ -416,6 +448,68 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                 ),
               ),
               SizedBox(height: 16.v),
+
+              ///
+              /// In case of NSM
+              ///
+              if (GeneralData.isNSM())
+                Column(
+                  children: [
+                    Visibility(
+                      visible: dateFilter == DateFilter.quarter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: List.generate(4, (index) {
+                          return FilterButton(
+                            label: "Q${index + 1}",
+                            isSelected: selectedQuarter == index + 1,
+                            onTap: () {
+                              setState(() {
+                                BlocProvider.of<AnalysisCubit>(context)
+                                    .selectedQuarter = index + 1;
+                              });
+                              BlocProvider.of<AnalysisCubit>(context)
+                                  .getTeamAnalysis(
+                                pickedDate!,
+                                'q${index + 1}',
+                              );
+                            },
+                          );
+                        }),
+                      ),
+                    ),
+                    Visibility(
+                      visible: dateFilter == DateFilter.month,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: List.generate(monthsList.length, (index) {
+                            return FilterButton(
+                              label: "${monthsList[index]}",
+                              isSelected: selectedMonthIndex == index,
+                              onTap: () {
+                                setState(() {
+                                  BlocProvider.of<AnalysisCubit>(context)
+                                      .selectedMonthIndex = index;
+                                });
+                              },
+                            );
+                          }),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: dateFilter == DateFilter.quarter ||
+                          dateFilter == DateFilter.month,
+                      child: SizedBox(height: 16.v),
+                    ),
+                  ],
+                ),
+
+              ///
+              ///
+              ///
               Expanded(
                 child: BlocBuilder<AnalysisCubit, AnalysisState>(
                     builder: (context, state) {
