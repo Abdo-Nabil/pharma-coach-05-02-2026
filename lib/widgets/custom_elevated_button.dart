@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/app_export.dart';
 import 'base_button.dart';
 
@@ -53,17 +54,19 @@ class CustomElevatedButton extends BaseButton {
         child: ElevatedButton(
           style: buttonStyle,
           onPressed: isDisabled ?? false ? null : onPressed ?? () {},
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              leftIcon ?? const SizedBox.shrink(),
-              Text(
-                text,
-                style: buttonTextStyle ?? theme.textTheme.titleSmall,
-              ),
-              rightIcon ?? const SizedBox.shrink(),
-            ],
+          child: FittedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                leftIcon ?? const SizedBox.shrink(),
+                Text(
+                  text,
+                  style: buttonTextStyle ?? theme.textTheme.titleSmall,
+                ),
+                rightIcon ?? const SizedBox.shrink(),
+              ],
+            ),
           ),
         ),
       );

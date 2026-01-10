@@ -288,17 +288,18 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           child: Container(
                             height: 40.v,
                             // width: MediaQuery.of(context).size.width * 0.17,
-                            padding:
-                                EdgeInsets.fromLTRB(16.h, 14.v, 16.h, 14.v),
+                            padding: EdgeInsets.fromLTRB(16.h, 4.v, 16.h, 4.v),
                             decoration: AppDecoration.fillPurple.copyWith(
                               borderRadius:
                                   BorderRadiusStyle.roundedBorder7 * 2,
                             ),
                             child: Center(
-                              child: Text(
-                                GeneralData.isNSM() ? "NSM" : "Rep",
-                                style: CustomTextStyles
-                                    .labelLargeSFProTextBlack900,
+                              child: FittedBox(
+                                child: Text(
+                                  GeneralData.isNSM() ? "NSM" : "Rep",
+                                  style: CustomTextStyles
+                                      .labelLargeSFProTextBlack900,
+                                ),
                               ),
                             ),
                           ),
@@ -310,17 +311,18 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                           child: Container(
                             height: 40.v,
                             // width: MediaQuery.of(context).size.width * 0.17,
-                            padding:
-                                EdgeInsets.fromLTRB(16.h, 14.v, 16.h, 14.v),
+                            padding: EdgeInsets.fromLTRB(16.h, 4.v, 16.h, 4.v),
                             decoration: AppDecoration.fillBlue100.copyWith(
                               borderRadius:
                                   BorderRadiusStyle.roundedBorder7 * 2,
                             ),
                             child: Center(
-                              child: Text(
-                                GeneralData.isNSM() ? "DM" : "Team",
-                                style: CustomTextStyles
-                                    .labelLargeSFProTextBlack900,
+                              child: FittedBox(
+                                child: Text(
+                                  GeneralData.isNSM() ? "DM" : "Team",
+                                  style: CustomTextStyles
+                                      .labelLargeSFProTextBlack900,
+                                ),
                               ),
                             ),
                           ),
@@ -772,6 +774,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                     height: 40.v,
                     width: MediaQuery.of(context).size.width * 0.33,
                     text: "Comparison",
+                    margin: EdgeInsets.all(2.v),
                     // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
                     buttonStyle: CustomButtonStyles.fillPrimaryTL12,
                     buttonTextStyle: CustomTextStyles.titleSmallSemiBold,
@@ -794,6 +797,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                   CustomElevatedButton(
                     height: 40.v,
                     width: MediaQuery.of(context).size.width * 0.33,
+                    margin: EdgeInsets.all(2.v),
                     // text: isTeamToggled ? "lbl_team".tr : "Medical rep",
                     text: isTeamToggled
                         ? "Compare to self"
