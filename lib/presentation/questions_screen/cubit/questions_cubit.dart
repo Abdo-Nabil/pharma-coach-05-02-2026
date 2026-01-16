@@ -167,7 +167,7 @@ class QuestionsCubit extends Cubit<QuestionsState> {
       lastCategoryQuestionsAnswers.add(lastCategoryAnswers[i].toMap());
     }
     //
-    final visits = await pref.getVisitsInLocalForToday();
+    final visits = await pref.getVisitsInLocalForADate(DateTime.now());
     //
     for (int i = 0; i < visits.length; i++) {
       List<Map<String, dynamic>> allQuestions = [];
@@ -240,7 +240,8 @@ class QuestionsCubit extends Cubit<QuestionsState> {
     await _saveAllQuestionsInLocal();
     await _saveLastVisitDateForThisRep(GeneralData.selectedRepId);
     await _markVisitAsGreenInCalendar(GeneralData.selectedRepId);
-    await generalCubit.executeSubmitQuestionsAndRemoveVisitsFromLocal();
+    await generalCubit
+        .executeSubmitQuestionsAndRemoveVisitsFromLocal(DateTime.now());
   }
 
 /*

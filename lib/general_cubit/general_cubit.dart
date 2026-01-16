@@ -61,18 +61,19 @@ class GeneralCubit extends Cubit<GeneralState> {
     return locations;
   }
 
-  executeSubmitQuestionsAndRemoveVisitsFromLocal() async {
+  executeSubmitQuestionsAndRemoveVisitsFromLocal(DateTime dateTime) async {
     final pref = PrefUtils();
-    if (!pref.isLastQuestionTodayAnswered()) {
+    if (!pref.isLastQuestionAnswered(dateTime)) {
       return;
     }
     //
-    List<VisitInfoModel> visits = pref.getVisitsInLocalForToday();
+    List<VisitInfoModel> visits = pref.getVisitsInLocalForADate(dateTime);
     //
     for (int i = 0; i < visits.length; i++) {
       //
       List<QuestionAnswerModel> answersList =
-          pref.getSingleVisitQuestionsAnswersLocally(visits[i].locationId);
+          pref.getSingleVisitQuestionsAnswersLocally(
+              visits[i].locationId, dateTime);
       //
       if (visits[i].isVisitCreatedInServerAndQuestionSubmittedOnline) {
         continue;
@@ -97,8 +98,10 @@ class GeneralCubit extends Cubit<GeneralState> {
 
         final isSent = await apiClient.submitQuestionAnswers(answerModel);
         if (isSent) {
-          await pref.updateSentVisitInLocalForToday(visits[i].locationId);
-          await pref.saveVisitToFinishedVisitsList(GeneralData.selectedRepId);
+          await pref.updateSentVisitInLocalForADate(
+              visits[i].locationId, dateTime);
+          await pref.saveVisitToFinishedVisitsList(
+              GeneralData.selectedRepId, dateTime);
         }
         //
       } else {

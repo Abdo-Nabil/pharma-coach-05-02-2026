@@ -1,11 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/general_cubit/general_cubit.dart';
-import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/intended_visit_model.dart';
-import 'package:mina_s_application5/presentation/calendar_container_screen/models/vsit_model.dart';
 
 import '../../../data/apiClient/api_client.dart';
 
@@ -72,10 +68,17 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeLoadingState());
     await _saveQuestionCategoriesInLocal();
     await _saveLocationsInLocal();
-    await generalCubit.executeSubmitQuestionsAndRemoveVisitsFromLocal();
+    await _executeFailedOrOfflineVisits(14);
     //
     final pref = PrefUtils();
     intendedVisits = await pref.getThisWeekIntendedVisits();
     emit(HomeGetVisitsSuccess());
+  }
+
+  _executeFailedOrOfflineVisits(int numOfDaysToRecover) async {
+    for (int i = 0; i <= numOfDaysToRecover; i++) {
+      final date = DateTime.now().subtract(Duration(days: i));
+      await generalCubit.executeSubmitQuestionsAndRemoveVisitsFromLocal(date);
+    }
   }
 }

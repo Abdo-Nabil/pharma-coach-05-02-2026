@@ -1,15 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
-import 'package:mina_s_application5/presentation/calendar_container_screen/models/vsit_model.dart';
-import 'package:mina_s_application5/presentation/list_tab_container_screen/cubit/list_tap_container_cubit.dart';
-import 'package:mina_s_application5/widgets/custom_elevated_button.dart';
 
 import '../../../core/utils/progress_dialog_utils.dart';
 import '../../../general_cubit/general_cubit.dart';
-import '../../../general_data.dart';
-import '../../../widgets/custom_search_view.dart';
-import '../models/listone_item_model.dart';
-import 'package:flutter/material.dart';
-import 'package:mina_s_application5/core/app_export.dart';
 
 // ignore: must_be_immutable
 class ListoneItemWidget extends StatefulWidget {
@@ -68,7 +62,7 @@ class _ListoneItemWidgetState extends State<ListoneItemWidget>
           return;
         } else {
           //
-          if (pref.isLastQuestionTodayAnswered()) {
+          if (pref.isLastQuestionAnswered(DateTime.now())) {
             ProgressDialogUtils.showWarningDialog(context, 'Keep Note!',
                 'No visits can be submitted after the end of the day.');
             return;

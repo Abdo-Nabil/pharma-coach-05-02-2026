@@ -1,20 +1,15 @@
-import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
-import 'package:mina_s_application5/data/apiClient/api_client.dart';
-import 'package:mina_s_application5/general_cubit/general_cubit.dart';
-import 'package:mina_s_application5/presentation/home_page/home_page.dart';
-import 'package:mina_s_application5/presentation/list_tab_container_screen/cubit/list_tap_container_cubit.dart';
-import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
-import 'package:mina_s_application5/widgets/app_bar/appbar_title.dart';
-import 'package:mina_s_application5/presentation/list_page/list_page.dart';
-import 'package:mina_s_application5/presentation/list_one_page/list_one_page.dart';
-import 'package:mina_s_application5/widgets/custom_bottom_bar.dart';
-import '../../general_data.dart';
-import '../questions_screen/cubit/questions_cubit.dart';
-import '../questions_screen/last_question/last_question_screen.dart';
-import 'models/list_tab_container_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
-import 'bloc/list_tab_container_bloc.dart';
+import 'package:mina_s_application5/data/apiClient/api_client.dart';
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
+import 'package:mina_s_application5/presentation/list_one_page/list_one_page.dart';
+import 'package:mina_s_application5/presentation/list_page/list_page.dart';
+import 'package:mina_s_application5/presentation/list_tab_container_screen/cubit/list_tap_container_cubit.dart';
+import 'package:mina_s_application5/widgets/app_bar/appbar_title.dart';
+import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
+
+import '../questions_screen/cubit/questions_cubit.dart';
+import '../questions_screen/last_question/last_question_screen.dart';
 
 late ListTabContainerCubit listCubit;
 
@@ -144,7 +139,7 @@ class ListTabContainerScreenState extends State<ListTabContainerScreen>
   bool canGoToLastQuestionScreen() {
     final pref = PrefUtils();
     if ((pref.getFirstCategoryAnswer()) != null &&
-        !pref.isLastQuestionTodayAnswered()) {
+        !pref.isLastQuestionAnswered(DateTime.now())) {
       return true;
     }
     return false;

@@ -447,10 +447,9 @@ class PrefUtils {
     return locations;
   }
 
-  bool isLastQuestionTodayAnswered() {
-    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
-    final result =
-        _sharedPreferences?.getBool("isLastQuestionAnswered$todayDate");
+  bool isLastQuestionAnswered(DateTime dateTime) {
+    String date = GeneralHelper.formatDateForApi(dateTime);
+    final result = _sharedPreferences?.getBool("isLastQuestionAnswered$date");
     if (result == null) {
       return false;
     }
@@ -485,12 +484,12 @@ class PrefUtils {
     }
   }
 
-  List<VisitInfoModel> getVisitsInLocalForToday() {
+  List<VisitInfoModel> getVisitsInLocalForADate(DateTime dateTime) {
     List<VisitInfoModel> visitsInfo = [];
     //
-    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    String date = GeneralHelper.formatDateForApi(dateTime);
     List<String>? encodedVisitsInfo =
-        _sharedPreferences!.getStringList("visitsInfo$todayDate");
+        _sharedPreferences!.getStringList("visitsInfo$date");
     //
     if (encodedVisitsInfo != null) {
       for (int i = 0; i < encodedVisitsInfo.length; i++) {
@@ -501,12 +500,12 @@ class PrefUtils {
     return visitsInfo;
   }
 
-  updateSentVisitInLocalForToday(int locationId) async {
+  updateSentVisitInLocalForADate(int locationId, DateTime dateTime) async {
     List<Map<String, dynamic>> visitsInfo = [];
     //
-    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+    String date = GeneralHelper.formatDateForApi(dateTime);
     List<String>? encodedVisitsInfo =
-        _sharedPreferences!.getStringList("visitsInfo$todayDate");
+        _sharedPreferences!.getStringList("visitsInfo$date");
     //
     if (encodedVisitsInfo != null) {
       //
@@ -524,7 +523,7 @@ class PrefUtils {
       for (int i = 0; i < visitsInfo.length; i++) {
         temp.add(json.encode(visitsInfo[i]));
       }
-      await _sharedPreferences?.setStringList("visitsInfo$todayDate", temp);
+      await _sharedPreferences?.setStringList("visitsInfo$date", temp);
     }
   }
 
@@ -543,10 +542,10 @@ class PrefUtils {
   }
 
   List<QuestionAnswerModel> getSingleVisitQuestionsAnswersLocally(
-      int locationId) {
-    String todayDate = GeneralHelper.formatDateForApi(DateTime.now());
+      int locationId, DateTime dateTime) {
+    String date = GeneralHelper.formatDateForApi(dateTime);
     List<String>? visitAnswersList = _sharedPreferences
-        ?.getStringList("visitQuestionsAnswers$locationId$todayDate");
+        ?.getStringList("visitQuestionsAnswers$locationId$date");
     List<QuestionAnswerModel> answers = [];
     //
     if (visitAnswersList != null) {
@@ -593,8 +592,8 @@ class PrefUtils {
   /// Code to handle the new column added in case of selecting the Day as a filter
   /// to show both the current day visit and the last visit
 
-  saveVisitToFinishedVisitsList(int repId) async {
-    final date = GeneralHelper.formatDateForApi(DateTime.now());
+  saveVisitToFinishedVisitsList(int repId, DateTime dateTime) async {
+    final date = GeneralHelper.formatDateForApi(dateTime);
     final result = _sharedPreferences?.getStringList('$repId-finishedVisits');
     if (result == null) {
       await _sharedPreferences?.setStringList('$repId-finishedVisits', [date]);

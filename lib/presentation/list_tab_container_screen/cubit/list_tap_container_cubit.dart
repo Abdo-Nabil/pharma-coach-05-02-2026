@@ -1,16 +1,9 @@
-import 'dart:developer';
-
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/general_cubit/general_cubit.dart';
-import 'package:mina_s_application5/general_data.dart';
-import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
 
 import '../../../data/apiClient/api_client.dart';
-import '../../calendar_container_screen/models/vsit_model.dart';
 
 part 'list_tap_container_state.dart';
 
@@ -120,7 +113,7 @@ class ListTabContainerCubit extends Cubit<ListTapContainerState> {
 
     /// GET VISITS LOCALLY LOGIC IS HERE
     final pref = PrefUtils();
-    visits = await pref.getVisitsInLocalForToday();
+    visits = await pref.getVisitsInLocalForADate(DateTime.now());
     createdVisitsLocationIds = [];
     for (int i = 0; i < visits.length; i++) {
       createdVisitsLocationIds.add(visits[i].locationId);
