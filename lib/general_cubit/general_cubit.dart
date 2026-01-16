@@ -78,6 +78,7 @@ class GeneralCubit extends Cubit<GeneralState> {
       if (visits[i].isVisitCreatedInServerAndQuestionSubmittedOnline) {
         continue;
       }
+      debugPrint('############# Start working on $dateTime');
       final int? visitId = await apiClient.createVisit(
         GeneralData.selectedRepId,
         visits[i].locationId,
