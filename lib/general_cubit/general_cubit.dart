@@ -71,14 +71,13 @@ class GeneralCubit extends Cubit<GeneralState> {
     //
     for (int i = 0; i < visits.length; i++) {
       //
-      List<QuestionAnswerModel> answersList =
-          pref.getSingleVisitQuestionsAnswersLocally(
-              visits[i].locationId, dateTime);
-      //
       if (visits[i].isVisitCreatedInServerAndQuestionSubmittedOnline) {
         continue;
       }
+      //
       debugPrint('############# Start working on $dateTime');
+      //
+
       final int? visitId = await apiClient.createVisit(
         GeneralData.selectedRepId,
         visits[i].locationId,
@@ -90,6 +89,10 @@ class GeneralCubit extends Cubit<GeneralState> {
       );
 
       if (visitId != null) {
+        //
+        List<QuestionAnswerModel> answersList =
+            pref.getSingleVisitQuestionsAnswersLocally(
+                visits[i].locationId, dateTime);
         //
         final answerModel = AnswerModel(
           visitId: visitId,
