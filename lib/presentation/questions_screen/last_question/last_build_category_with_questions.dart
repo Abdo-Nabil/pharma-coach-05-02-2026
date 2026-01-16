@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 
-import '../../../core/utils/image_constant.dart';
 import '../../../core/utils/progress_dialog_utils.dart';
-import '../../../theme/custom_button_style.dart';
-import '../../../theme/custom_text_style.dart';
 import '../../../widgets/custom_elevated_button.dart';
-import '../../../widgets/custom_image_view.dart';
 import '../cubit/questions_cubit.dart';
-import '../first_question/cubit/first_question_cubit.dart';
 import '../models/category_model.dart';
 import 'last_question_item.dart';
 

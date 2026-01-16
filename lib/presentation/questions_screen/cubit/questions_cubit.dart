@@ -78,6 +78,7 @@ class QuestionsCubit extends Cubit<QuestionsState> {
   getSavedLocallyQuestions(String questionType) async {
     emit(QuestionsLoading());
     answers = [];
+    lastCategoryAnswers = [];
     questionsCategories =
         await generalCubit.getQuestionsCategoriesForToday(questionType);
     questionsCategories.removeAt(0);
