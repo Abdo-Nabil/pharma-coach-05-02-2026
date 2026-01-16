@@ -772,7 +772,7 @@ class _TeamAnalyticsScreenState extends State<TeamAnalyticsScreen> {
                 children: [
                   CustomElevatedButton(
                     height: 40.v,
-                    width: MediaQuery.of(context).size.width * 0.33,
+                    width: MediaQuery.of(context).size.width * 0.28,
                     text: "Comparison",
                     margin: EdgeInsets.all(2.v),
                     // buttonStyle: CustomButtonStyles.fillPrimaryTL12,
