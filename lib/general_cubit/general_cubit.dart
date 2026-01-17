@@ -79,7 +79,8 @@ class GeneralCubit extends Cubit<GeneralState> {
       //
 
       final int? visitId = await apiClient.createVisit(
-        GeneralData.selectedRepId,
+        // GeneralData.selectedRepId,
+        visits[i].repId,
         visits[i].locationId,
         // visits[i].visitTime,
         visits[i].accurateVisitTime,
@@ -96,7 +97,8 @@ class GeneralCubit extends Cubit<GeneralState> {
         //
         final answerModel = AnswerModel(
           visitId: visitId,
-          repId: GeneralData.selectedRepId,
+          // repId: GeneralData.selectedRepId,
+          repId: visits[i].repId,
           answers: answersList,
         );
 
@@ -104,8 +106,7 @@ class GeneralCubit extends Cubit<GeneralState> {
         if (isSent) {
           await pref.updateSentVisitInLocalForADate(
               visits[i].locationId, dateTime);
-          await pref.saveVisitToFinishedVisitsList(
-              GeneralData.selectedRepId, dateTime);
+          await pref.saveVisitToFinishedVisitsList(visits[i].repId, dateTime);
         }
         //
       } else {
