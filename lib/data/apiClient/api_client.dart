@@ -28,7 +28,7 @@ class ApiClient {
   ApiClient._internal();
 
   // var url = "http://37.61.217.36:8090/Pharcoo-master/public/index.php/api/v1";
-  var url = "http://169.239.37.101:8090/Pharcoo-master/public/index.php/api/v1";
+  var url = "https://api.pharmacoach.org/api/v1";
 
   static final ApiClient _apiClient = ApiClient._internal();
 
