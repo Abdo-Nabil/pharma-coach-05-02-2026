@@ -48,7 +48,7 @@ class ImageConstant {
   static String imgArrowdown = '$imagePath/img_arrowdown.svg';
 
   // Common images
-  static String imgPharcoCorpLogo = '$imagePath/img_pharco_corp_logo.png';
+  static String imgPharcoCorpLogo = '$imagePath/img_pharma_coach_logo.png';
 
   static String imgCalendarText = '$imagePath/img_calendar_text.svg';
 

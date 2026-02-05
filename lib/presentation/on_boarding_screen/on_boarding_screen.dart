@@ -1,9 +1,8 @@
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mina_s_application5/widgets/custom_icon_button.dart';
-import 'models/on_boarding_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
+
 import 'bloc/on_boarding_bloc.dart';
+import 'models/on_boarding_model.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({Key? key})
@@ -37,18 +36,18 @@ class OnBoardingScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Spacer(
-                    flex: 34,
-                  ),
+                  // Spacer(
+                  //   flex: 34,
+                  // ),
                   CustomImageView(
                     imagePath: ImageConstant.imgPharcoCorpLogo,
                     height: 97.v,
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.center,
                   ),
-                  Spacer(
-                    flex: 65,
-                  ),
-                  Image.asset(ImageConstant.onboardingFooter),
+                  // Spacer(
+                  //   flex: 65,
+                  // ),
+                  // Image.asset(ImageConstant.onboardingFooter),
 
                   ///I have removed these assets from image folder and replace it with single svg
 /*
