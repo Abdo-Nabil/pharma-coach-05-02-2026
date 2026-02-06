@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "pharco" "\0"
+            VALUE "FileDescription", "pharma_coach" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "pharco" "\0"
+            VALUE "InternalName", "pharma_coach" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "pharco.exe" "\0"
-            VALUE "ProductName", "pharco" "\0"
+            VALUE "OriginalFilename", "pharma_coach.exe" "\0"
+            VALUE "ProductName", "pharma_coach" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
