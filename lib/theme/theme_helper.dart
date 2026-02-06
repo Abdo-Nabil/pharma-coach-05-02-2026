@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/utils/pref_utils.dart';
 import 'package:mina_s_application5/core/utils/size_utils.dart';
@@ -123,57 +122,56 @@ class ColorSchemes {
 
 /// Class containing custom colors for a primary theme.
 class PrimaryColors {
-  // Amber
-  Color get amber700 => Color(0XFFFEA30B);
+  // Amber (now primary green – kept name for compatibility)
+  Color get amber700 => const Color(0xFF1F9B3F);
 
   // Black
-  Color get black900 => Color(0XFF000000);
+  Color get black900 => const Color(0xFF000000);
 
-  // Blue
-  Color get blue100 => Color(0XFFBFDEEE);
-  Color get blue50 => Color(0XFFE3F2F9);
-  Color get blue5001 => Color(0XFFE4F3F9);
+  // Blue (kept as-is for structure / contrast)
+  Color get blue100 => const Color(0xFFBFDEEE);
+  Color get blue50 => const Color(0xFFE3F2F9);
+  Color get blue5001 => const Color(0xFFE4F3F9);
 
   // BlueGray
-  Color get blueGray100 => Color(0XFFD9D9D9);
-  Color get blueGray10023 => Color(0X23D4D4D4);
-  Color get blueGray900 => Color(0XFF2B2B2B);
+  Color get blueGray100 => const Color(0xFFD9D9D9);
+  Color get blueGray10023 => const Color(0x23D4D4D4);
+  Color get blueGray900 => const Color(0xFF2B2B2B);
 
-  // DeepOrange
-  Color get deepOrange50 => Color(0XFFF1E6E6);
+  // DeepOrange (now very light green tint)
+  Color get deepOrange50 => const Color(0xFFEAF6EF);
 
-  // Gray
-  Color get gray100 => Color(0XFFF7F7F7);
-  Color get gray300 => Color(0XFFDCD9D9);
-  Color get gray30001 => Color(0XFFDDDADA);
-  Color get gray400 => Color(0XFFBABABA);
-  Color get gray500 => Color(0XFFB0ABAB);
-  Color get gray50021 => Color(0X21AAAAAA);
-  Color get gray700 => Color(0XFF63656A);
-  Color get gray70001 => Color(0XFF55565B);
-  Color get gray70060 => Color(0X60565656);
-  Color get gray800 => Color(0XFF4A4A4A);
-  Color get gray900 => Color(0XFF2A2A2A);
+  // Gray (kept – good neutral system)
+  Color get gray100 => const Color(0xFFF7F7F7);
+  Color get gray300 => const Color(0xFFDCD9D9);
+  Color get gray30001 => const Color(0xFFDDDADA);
+  Color get gray400 => const Color(0xFFBABABA);
+  Color get gray500 => const Color(0xFFB0ABAB);
+  Color get gray50021 => const Color(0x21AAAAAA);
+  Color get gray700 => const Color(0xFF63656A);
+  Color get gray70001 => const Color(0xFF55565B);
+  Color get gray70060 => const Color(0x60565656);
+  Color get gray800 => const Color(0xFF4A4A4A);
+  Color get gray900 => const Color(0xFF2A2A2A);
 
-  // LightGreen
-  Color get lightGreenA700 => Color(0XFF69E706);
-  Color get lightGreenA70001 => Color(0XFF61C414);
-  Color get lightGreenA70002 => Color(0XFF62C514);
+  // LightGreen (aligned with new logo greens)
+  Color get lightGreenA700 => const Color(0xFF0B852A);
+  Color get lightGreenA70001 => const Color(0xFF137D2E);
+  Color get lightGreenA70002 => const Color(0xFF1D8F35);
 
-  // Orange
-  Color get orange300 => Color(0XFFFEB741);
-  Color get orange50 => Color(0XFFFFF3DF);
+  // Orange (now green accent – name kept)
+  Color get orange300 => const Color(0xFF1F9B3F);
+  Color get orange50 => const Color(0xFFEAF6EF);
 
-  // Purple
-  Color get purple100 => Color(0XFFECCCF2);
-  Color get purple300 => Color(0XFFCA6DD9);
+  // Purple (kept – optional accent)
+  Color get purple100 => const Color(0xFFECCCF2);
+  Color get purple300 => const Color(0xFFCA6DD9);
 
-  // Teal
-  Color get teal50 => Color(0XFFDEEBF2);
+  // Teal (kept as soft background)
+  Color get teal50 => const Color(0xFFDEEBF2);
 
+  // Derived
   Color get totalRowColor => orange300.withOpacity(0.50);
-
-//
 }
 
 PrimaryColors get appTheme => ThemeHelper().themeColor();
