@@ -31,6 +31,7 @@ class ThemeHelper {
     return ThemeData(
       visualDensity: VisualDensity.standard,
       colorScheme: colorScheme,
+      primaryColor: appTheme.darkBlue,
       textTheme: TextThemes.textTheme(colorScheme),
       scaffoldBackgroundColor: appTheme.gray100,
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -111,7 +112,7 @@ class TextThemes {
 class ColorSchemes {
   static final primaryColorScheme = ColorScheme.light(
     // Primary colors
-    primary: Color(0XFF017CBA),
+    primary: Color(0xFF044171),
     secondaryContainer: Color(0XFF4C4C4C),
 
     // On colors(text colors)
@@ -172,6 +173,9 @@ class PrimaryColors {
 
   // Derived
   Color get totalRowColor => orange300.withOpacity(0.50);
+
+  //dark-blue
+  Color get darkBlue => const Color(0xFF044171);
 }
 
 PrimaryColors get appTheme => ThemeHelper().themeColor();

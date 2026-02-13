@@ -153,7 +153,6 @@ import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/cubit/calendar_cubit.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:intl/intl.dart';
 
 class CalendarWidget extends StatelessWidget {
   @override
@@ -329,6 +328,7 @@ class CalendarWidget extends StatelessWidget {
                                   width: 4.h,
                                 ),
                                 CircleAvatar(
+                                  backgroundColor: appTheme.darkBlue,
                                   radius: 10.h,
                                   child: Text(
                                     everyRepIntendedVisits[index]

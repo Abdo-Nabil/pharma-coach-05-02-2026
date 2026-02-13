@@ -2,13 +2,11 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/categories_data.dart';
 import 'package:mina_s_application5/core/app_export.dart';
-import 'package:mina_s_application5/general_data.dart';
 import 'package:mina_s_application5/general_helper.dart';
 
 import '../../general_cubit/general_cubit.dart';
 import '../../presentation/calendar_container_screen/cubit/calendar_cubit.dart';
 import '../../presentation/calendar_container_screen/intended_visit_model.dart';
-import '../../presentation/team_analytics_screen/team_analytics_screen.dart';
 import '../../widgets/custom_elevated_button.dart';
 
 class ProgressDialogUtils {
@@ -443,5 +441,34 @@ class ProgressDialogUtils {
         );
       },
     );
+  }
+
+  static showLogoutDialog(BuildContext context, Function onLogout) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      animType: AnimType.rightSlide,
+      title: 'Logout',
+      desc: 'Are you sure you want to logout?',
+      btnOk: SizedBox(
+        height: 35.v,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          onPressed: () {
+            onLogout();
+          },
+          child: Text("lbl_logout".tr),
+        ),
+      ),
+      btnCancel: SizedBox(
+        height: 35.v,
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("Cancel"),
+        ),
+      ),
+    )..show();
   }
 }

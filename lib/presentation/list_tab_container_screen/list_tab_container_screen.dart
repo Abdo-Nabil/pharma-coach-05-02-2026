@@ -150,7 +150,7 @@ class ListTabContainerScreenState extends State<ListTabContainerScreen>
     return CustomAppBar(
       height: 35.v,
       title: AppbarTitle(
-        text: "msg_medical_rep_list".tr,
+        text: "lbl_locations_list".tr,
         margin: EdgeInsets.only(left: 16.h),
       ),
       actions: [

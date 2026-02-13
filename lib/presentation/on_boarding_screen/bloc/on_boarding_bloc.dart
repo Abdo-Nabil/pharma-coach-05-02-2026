@@ -29,9 +29,11 @@ class OnBoardingBloc extends Bloc<OnBoardingEvent, OnBoardingState> {
         );
       } else {
         final username = pref.getUsername();
+        final firstName = pref.getFirstName();
         final userType = pref.getUserType();
         GeneralData.token = token;
         GeneralData.userName = username;
+        GeneralData.firstName = firstName;
         GeneralData.userType = userType;
         NavigatorService.popAndPushNamed(
           AppRoutes.homeContainerScreen,

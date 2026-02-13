@@ -95,9 +95,9 @@ class CustomTextStyles {
         color: appTheme.blueGray900,
         fontWeight: FontWeight.w600,
       );
-  static get labelLargeSFProTextff017cba =>
+  static get labelLargeSFProTextPrimaryColorScheme =>
       theme.textTheme.labelLarge!.sFProText.copyWith(
-        color: Color(0XFF017CBA),
+        color: appTheme.darkBlue,
       );
   static get labelMediumGray400 => theme.textTheme.labelMedium!.copyWith(
         color: appTheme.gray400,

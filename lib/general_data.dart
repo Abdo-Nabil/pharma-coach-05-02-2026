@@ -4,6 +4,7 @@ import 'data/models/loginUser/post_login_user_resp.dart';
 
 class GeneralData {
   static String? userName;
+  static String? firstName;
   static String? token;
   static UserType? userType;
   static DateTime selectedDate = DateTime.now();

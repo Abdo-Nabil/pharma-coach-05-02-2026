@@ -62,6 +62,8 @@ class ImageConstant {
 
   static String imgNavAnalytics = '$imagePath/img_nav_analytics.svg';
 
+  static String imgNavLogout = '$imagePath/logout.svg';
+
   static String imgSearch = '$imagePath/img_search.svg';
 
   static String imgMapMarker = '$imagePath/img_map_marker.svg';

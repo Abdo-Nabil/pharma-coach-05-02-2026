@@ -29,6 +29,7 @@ final Map<String, String> enUs = {
 
   // List - Tab Container Screen
   "lbl_am": "AM", "lbl_pm": "PM", "msg_medical_rep_list": "Medical Rep List",
+  "lbl_locations_list": "Locations list",
 
   // List One Screen
   "lbl_elgawy_hospital": "Elgawy Hospital",
@@ -109,6 +110,7 @@ final Map<String, String> enUs = {
   "lbl_60": "60%",
   "lbl_ahmed_essam": "Ahmed Essam",
   "lbl_analytics": "Analytics",
+  "lbl_logout": "Logout",
   "lbl_calendar": "Calendar",
   "lbl_flash": "Flash",
   "lbl_home": "Home",

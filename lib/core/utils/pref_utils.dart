@@ -69,6 +69,18 @@ class PrefUtils {
     }
   }
 
+  setFirstName(String firstName) {
+    return _sharedPreferences!.setString("firstName", firstName);
+  }
+
+  String getFirstName() {
+    try {
+      return _sharedPreferences!.getString("firstName")!;
+    } catch (e) {
+      return "My name";
+    }
+  }
+
   setUserType(String userType) {
     return _sharedPreferences!.setString("userType", userType);
   }

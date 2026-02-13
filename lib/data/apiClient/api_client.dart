@@ -141,6 +141,7 @@ class ApiClient {
       if (_isSuccessCall(response)) {
         final temp = PostLoginUserResp.fromJson(response.data);
         GeneralData.userName = temp.data!.email!.split("@").first;
+        GeneralData.firstName = temp.data!.firstName;
         GeneralData.token = temp.data!.authToken;
         GeneralData.userType = temp.data!.userType;
         debugPrint('Auth token @@@ ${temp.data!.authToken}');
@@ -148,6 +149,7 @@ class ApiClient {
         final sharedPref = await PrefUtils();
         await sharedPref.setLoginToken(GeneralData.token!);
         await sharedPref.setUserName(GeneralData.userName!);
+        await sharedPref.setFirstName(GeneralData.firstName!);
         await sharedPref.setUserType(GeneralData.userType!.value);
         //
         ProgressDialogUtils.hideProgressDialog();

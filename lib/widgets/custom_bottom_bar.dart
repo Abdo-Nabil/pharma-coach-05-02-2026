@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 
+import '../core/utils/progress_dialog_utils.dart';
 import '../general_cubit/general_cubit.dart';
 
 class CustomBottomBar extends StatefulWidget {
@@ -38,7 +39,13 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       activeIcon: ImageConstant.imgNavAnalytics,
       title: "lbl_analytics".tr,
       type: BottomBarEnum.Analytics,
-    )
+    ),
+    BottomMenuModel(
+      icon: ImageConstant.imgNavLogout,
+      activeIcon: ImageConstant.imgNavLogout,
+      title: "lbl_logout".tr,
+      type: BottomBarEnum.Logout,
+    ),
   ];
 
   @override
@@ -68,14 +75,18 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                   imagePath: bottomMenuList[index].icon,
                   height: 24.adaptSize,
                   width: 24.adaptSize,
-                  color: appTheme.gray300,
+                  color: index == bottomMenuList.length - 1
+                      ? Colors.red
+                      : appTheme.amber700,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 3.v),
                   child: Text(
                     bottomMenuList[index].title ?? "",
                     style: CustomTextStyles.bodySmallGray300.copyWith(
-                      color: appTheme.gray300,
+                      color: index == bottomMenuList.length - 1
+                          ? Colors.red
+                          : appTheme.amber700,
                     ),
                   ),
                 ),
@@ -89,14 +100,14 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                   imagePath: bottomMenuList[index].activeIcon,
                   height: 24.adaptSize,
                   width: 24.adaptSize,
-                  color: appTheme.amber700,
+                  color: appTheme.darkBlue,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 3.v),
                   child: Text(
                     bottomMenuList[index].title ?? "",
                     style: CustomTextStyles.bodySmallAmber7008.copyWith(
-                      color: appTheme.amber700,
+                      color: appTheme.darkBlue,
                     ),
                   ),
                 ),
@@ -106,6 +117,21 @@ class CustomBottomBarState extends State<CustomBottomBar> {
           );
         }),
         onTap: (index) {
+          /// Logout tab
+          if (index == bottomMenuList.length - 1) {
+            ProgressDialogUtils.showLogoutDialog(
+              context,
+              () async {
+                final shared = PrefUtils();
+                await shared.clearToken();
+                // shared.clearPreferencesData();
+                NavigatorService.popAndPushNamed(
+                  AppRoutes.signInPropsalOneScreen,
+                );
+              },
+            );
+            return;
+          }
           BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(index);
           // widget.onChanged?.call(bottomMenuList[index].type);
           setState(() {});
@@ -120,6 +146,7 @@ enum BottomBarEnum {
   List,
   Calendar,
   Analytics,
+  Logout,
 }
 
 class BottomMenuModel {

@@ -1,19 +1,12 @@
-import 'package:mina_s_application5/core/utils/progress_dialog_utils.dart';
-import 'package:mina_s_application5/data/apiClient/api_client.dart';
-import 'package:mina_s_application5/general_cubit/general_cubit.dart';
-import 'package:mina_s_application5/general_data.dart';
-import 'package:mina_s_application5/presentation/home_page/cubit/home_cubit.dart';
-import 'package:mina_s_application5/widgets/app_bar/custom_app_bar.dart';
-import 'package:mina_s_application5/widgets/app_bar/appbar_title_image.dart';
-import 'package:mina_s_application5/widgets/app_bar/appbar_trailing_iconbutton.dart';
-import '../calendar_container_screen/calendar_container_screen.dart';
-import '../sign_in_propsal_one_screen/bloc/sign_in_propsal_one_bloc.dart';
-import 'widgets/home_item_widget.dart';
-import 'models/home_item_model.dart';
-import 'models/home_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
-import 'bloc/home_bloc.dart'; // ignore_for_file: must_be_immutable
+import 'package:mina_s_application5/data/apiClient/api_client.dart';
+import 'package:mina_s_application5/general_cubit/general_cubit.dart';
+import 'package:mina_s_application5/presentation/home_page/cubit/home_cubit.dart';
+import 'package:mina_s_application5/widgets/app_bar/appbar_title_image.dart';
+
+import '../../general_data.dart';
+import 'widgets/home_item_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key})
@@ -66,8 +59,7 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 13.h,
-                    vertical: 21.v,
+                    horizontal: 16.h,
                   ),
                   child: Column(
                     children: [
@@ -88,82 +80,50 @@ class _HomePageState extends State<HomePage> {
   /// Section Widget
   Widget _buildPharcoCorpLogo(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 16.v),
+      margin: EdgeInsets.symmetric(vertical: 16.v, horizontal: 16.h),
       decoration: AppDecoration.fillOnPrimary.copyWith(
         borderRadius: BorderRadiusStyle.roundedBorder30,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          /*CustomAppBar(
-            title: AppbarTitleImage(
-              imagePath: ImageConstant.imgPharcoCorpLogo,
-              margin: EdgeInsets.only(left: 17.h),
-            ),
-            actions: [
-              AppbarTrailingIconbutton(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return CalendarContainerScreen.builder(context);
-                  }));
-                  // NavigatorService.pushNamed(AppRoutes.calendarCotainerScreen);
-                },
-                imagePath: ImageConstant.imgCalendarText,
-                margin: EdgeInsets.only(
-                  left: 16.h,
-                  right: 16.h,
-                  bottom: 3.v,
-                ),
-              )
-            ],
-          ),*/
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-                onTap: () async {
-                  final shared = PrefUtils();
-                  await shared.clearToken();
-                  // shared.clearPreferencesData();
-                  NavigatorService.popAndPushNamed(
-                    AppRoutes.signInPropsalOneScreen,
-                  );
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(16.v),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.logout,
-                        color: Colors.red,
-                      ),
-                      Text(
-                        "LogOut",
-                      ),
-                    ],
+          /*
+          InkWell(
+            onTap: () async {
+              final shared = PrefUtils();
+              await shared.clearToken();
+              // shared.clearPreferencesData();
+              NavigatorService.popAndPushNamed(
+                AppRoutes.signInPropsalOneScreen,
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.all(16.v),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.logout,
+                    color: Colors.red,
                   ),
-                ),
+                  Text(
+                    "LogOut",
+                  ),
+                ],
               ),
-              AppbarTrailingIconbutton(
-                onTap: () {
-                  BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(2);
-                },
-                imagePath: ImageConstant.imgCalendarText,
-                margin: EdgeInsets.only(
-                  left: 16.h,
-                  right: 16.h,
-                  bottom: 3.v,
-                ),
-              ),
-              AppbarTitleImage(
-                imagePath: ImageConstant.imgPharcoCorpLogo,
-                margin: EdgeInsets.only(right: 16.h),
-              ),
-              // Spacer(),
-            ],
+            ),
           ),
-          SizedBox(height: 11.v),
+          AppbarTrailingIconbutton(
+            onTap: () {
+              BlocProvider.of<GeneralCubit>(context).setBottomNavIndex(2);
+            },
+            imagePath: ImageConstant.imgCalendarText,
+            margin: EdgeInsets.only(
+              left: 16.h,
+              right: 16.h,
+              bottom: 3.v,
+            ),
+          ),
+          */
           Container(
             width: 97.h,
             margin: EdgeInsets.only(left: 17.h),
@@ -177,16 +137,22 @@ class _HomePageState extends State<HomePage> {
                   TextSpan(
                     // text:
                     //     "${BlocProvider.of<SignInPropsalOneBloc>(context).postLoginUserResp.data!.email!.split("@").first}",
-                    text: GeneralData.userName,
+                    text: GeneralData.firstName,
                     // text: "lbl_hasnaa_ahmed".tr,
-                    style: CustomTextStyles.labelLargeSFProTextff017cba,
+                    style:
+                        CustomTextStyles.labelLargeSFProTextPrimaryColorScheme,
                   )
                 ],
               ),
               textAlign: TextAlign.left,
             ),
           ),
-          SizedBox(height: 28.v),
+          AppbarTitleImage(
+            imagePath: ImageConstant.imgPharcoCorpLogo,
+            margin: EdgeInsets.only(right: 16.h),
+          ),
+
+          // Spacer(),
         ],
       ),
     );

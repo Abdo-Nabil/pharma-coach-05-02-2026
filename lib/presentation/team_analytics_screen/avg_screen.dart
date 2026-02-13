@@ -3,19 +3,13 @@ import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/build_avg_analysis_widget.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/checkbox_widget.dart';
-import 'package:mina_s_application5/presentation/team_analytics_screen/table_text.dart';
 import 'package:mina_s_application5/presentation/team_analytics_screen/team_analytics_screen.dart';
 
-import '../../core/utils/pref_utils.dart';
 import '../../general_helper.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import 'build_rep_analysis_widget.dart';
-import 'category_title_container.dart';
 import 'cubit/avg_screen_cubit/avg_screen_cubit.dart';
-import 'cubit/rep_analysis_cubit/rep_analysis_cubit.dart';
-import 'expandable_row_for_month.dart';
-import 'expandable_row_for_other.dart';
 
 class AvgScreen extends StatefulWidget {
   final List<TinyRepModel> reps;
@@ -75,7 +69,7 @@ class _AvgScreenState extends State<AvgScreen> {
             children: [
               // SizedBox(height: 16.v),
               Container(
-                height: MediaQuery.of(context).size.height * 0.070,
+                height: MediaQuery.of(context).size.height * 0.145,
                 width: double.infinity,
                 decoration: AppDecoration.fillBlue50.copyWith(
                   borderRadius: BorderRadiusStyle.roundedBorder17,
