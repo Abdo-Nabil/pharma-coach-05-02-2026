@@ -50,7 +50,7 @@ class DashboardInsightsSection extends StatelessWidget {
           // We'll stack them vertically using Expanded to fill the available space evenly.
 
           return Expanded(
-            flex: 3, // Adjust flex as needed relative to the list below
+            flex: 2, // Adjust flex as needed relative to the list below
             child: Column(
               children: [
                 Expanded(
@@ -205,15 +205,20 @@ class DashboardInsightsSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: _labelStyle()),
+              Text(label,
+                  style: CustomTextStyles.bodySmall12.copyWith(
+                      color: Colors.black87, fontWeight: FontWeight.w400)),
+              SizedBox(
+                height: 4.v,
+              ),
               Text(name,
-                  style: CustomTextStyles.bodySmall_1.copyWith(
+                  style: CustomTextStyles.bodySmall12.copyWith(
                       color: Colors.black87, fontWeight: FontWeight.w600)),
             ],
           ),
         ),
         Text(
-          "${score.toStringAsFixed(1)}%",
+          "${score.toStringAsFixed(1)}",
           style:
               _valueStyle().copyWith(color: isGood ? Colors.green : Colors.red),
         ),
