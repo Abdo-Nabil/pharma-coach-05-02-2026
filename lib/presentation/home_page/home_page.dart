@@ -73,6 +73,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       DashboardInsightsSection(),
+                      SizedBox(height: 8.v),
                       _buildYourPlan(context),
                       SizedBox(height: 8.v),
                       Expanded(child: _buildHome(context))
