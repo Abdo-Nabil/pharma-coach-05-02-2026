@@ -287,7 +287,7 @@ class _AvgScreenState extends State<AvgScreen> {
                               color: appTheme.orange300,
                               size: 50,
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(height: 10.v),
                             Text(
                               'Please, select medical reps.',
                               style: TextStyle(fontSize: 20.fSize),

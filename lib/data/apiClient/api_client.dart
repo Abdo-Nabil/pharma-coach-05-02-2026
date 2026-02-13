@@ -12,6 +12,7 @@ import 'package:mina_s_application5/general_helper.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/district_manager_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/location_model.dart';
 import 'package:mina_s_application5/presentation/calendar_container_screen/models/rep_model.dart';
+import 'package:mina_s_application5/presentation/home_page/models/dashboard_insights_models/dashboard_insights_model.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/answer_model.dart';
 import 'package:mina_s_application5/presentation/questions_screen/models/category_model.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -687,6 +688,37 @@ class ApiClient {
       } else {
         throw response.data != null
             ? DistrictManagerModel.fromMap(response.data)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      // ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<DashboardInsightsModel> getDashboardInsights() async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${GeneralData.token!}',
+    };
+    try {
+      await isNetworkConnected();
+      Response response = await _dio.get(
+        GeneralData.isNSM()
+            ? '$url/insights/dashboard-nsm'
+            : '$url/insights/dashboard',
+        options: Options(headers: headers),
+      );
+      if (_isSuccessCall(response)) {
+        return DashboardInsightsModel.fromMap(response.data["data"]);
+      } else {
+        throw response.data != null
+            ? DashboardInsightsModel.fromMap(response.data)
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {

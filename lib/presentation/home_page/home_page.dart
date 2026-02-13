@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mina_s_application5/core/app_export.dart';
 import 'package:mina_s_application5/data/apiClient/api_client.dart';
 import 'package:mina_s_application5/general_cubit/general_cubit.dart';
+import 'package:mina_s_application5/presentation/home_page/cubit/dashboard_insights_cubit.dart';
 import 'package:mina_s_application5/presentation/home_page/cubit/home_cubit.dart';
+import 'package:mina_s_application5/presentation/home_page/widgets/dashboard_insights_section.dart';
 import 'package:mina_s_application5/widgets/app_bar/appbar_title_image.dart';
 
 import '../../general_data.dart';
@@ -24,11 +26,20 @@ class HomePage extends StatefulWidget {
   //   );
   // }
   static Widget builder(BuildContext context) {
-    return BlocProvider<HomeCubit>(
-      create: (context) => HomeCubit(
-        apiClient: ApiClient(),
-        generalCubit: BlocProvider.of<GeneralCubit>(context),
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<HomeCubit>(
+          create: (context) => HomeCubit(
+            apiClient: ApiClient(),
+            generalCubit: BlocProvider.of<GeneralCubit>(context),
+          ),
+        ),
+        BlocProvider<DashboardInsightsCubit>(
+          create: (context) => DashboardInsightsCubit(
+            apiClient: ApiClient(),
+          ),
+        ),
+      ],
       child: HomePage(),
     );
   }
@@ -43,6 +54,9 @@ class _HomePageState extends State<HomePage> {
     // BlocProvider.of<HomeCubit>(context).getTodayVisits();
     // BlocProvider.of<HomeCubit>(context).getThisWeekVisits();
     BlocProvider.of<HomeCubit>(context).getThisWeekIntendedVisits();
+    context
+        .read<DashboardInsightsCubit>()
+        .getDashboardInsights(isRefresh: false);
     super.initState();
   }
 
@@ -63,6 +77,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Column(
                     children: [
+                      DashboardInsightsSection(),
                       _buildYourPlan(context),
                       SizedBox(height: 8.v),
                       Expanded(child: _buildHome(context))
@@ -198,8 +213,20 @@ class _HomePageState extends State<HomePage> {
           else if (state is HomeGetVisitsSuccess) {
             final intendedVisits =
                 BlocProvider.of<HomeCubit>(context).intendedVisits;
+            // Ensure list is scrollable for RefreshIndicator to work even if empty
+            if (intendedVisits.isEmpty) {
+              return ListView(
+                physics: AlwaysScrollableScrollPhysics(),
+                children: [
+                  SizedBox(
+                      height: 200.v,
+                      child: Center(
+                          child: Text("No visits found for this week."))),
+                ],
+              );
+            }
             return ListView.separated(
-              // physics: NeverScrollableScrollPhysics(),
+              physics: AlwaysScrollableScrollPhysics(),
               // shrinkWrap: true,
               separatorBuilder: (context, index) {
                 return SizedBox(
