@@ -34,11 +34,6 @@ class HomePage extends StatefulWidget {
             generalCubit: BlocProvider.of<GeneralCubit>(context),
           ),
         ),
-        BlocProvider<DashboardInsightsCubit>(
-          create: (context) => DashboardInsightsCubit(
-            apiClient: ApiClient(),
-          ),
-        ),
       ],
       child: HomePage(),
     );

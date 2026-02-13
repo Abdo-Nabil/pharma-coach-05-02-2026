@@ -14,7 +14,7 @@ class DashboardInsightsCubit extends Cubit<DashboardInsightsState> {
       return;
     }
 
-    if (state.insights == null && isRefresh) {
+    if (state.insights == null) {
       emit(state.copyWith(status: DashboardInsightsStatus.loading));
     }
     try {
