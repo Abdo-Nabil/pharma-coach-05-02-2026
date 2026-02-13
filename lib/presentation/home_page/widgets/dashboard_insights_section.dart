@@ -49,25 +49,15 @@ class DashboardInsightsSection extends StatelessWidget {
           // User asked for 3 containers in the blank area, "no scroll".
           // We'll stack them vertically using Expanded to fill the available space evenly.
 
-          return Expanded(
-            flex: 2, // Adjust flex as needed relative to the list below
-            child: Column(
-              children: [
-                Expanded(
-                  child: _buildCategoryInsight(context, data.categories),
-                ),
-                SizedBox(height: 8.v),
-                Expanded(
-                  child: _buildRepInsight(context, data.medicalReps),
-                ),
-                SizedBox(height: 8.v),
-                Expanded(
-                  child: _buildVisitInsight(
-                      context, data.visits, data.yourPosition),
-                ),
-                SizedBox(height: 16.v), // Spacing before "Your Plan"
-              ],
-            ),
+          return Column(
+            children: [
+              _buildCategoryInsight(context, data.categories),
+              SizedBox(height: 8.v),
+              _buildRepInsight(context, data.medicalReps),
+              SizedBox(height: 8.v),
+              _buildVisitInsight(context, data.visits, data.yourPosition),
+              SizedBox(height: 16.v), // Spacing before "Your Plan"
+            ],
           );
         }
 
@@ -137,11 +127,12 @@ class DashboardInsightsSection extends StatelessWidget {
     final bool isUp = visits.trend == 'up';
 
     return _buildContainer(
-      child: Row(
-        children: [
-          // Visits Section
-          Expanded(
-            child: Column(
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            // Visits Section
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -152,47 +143,36 @@ class DashboardInsightsSection extends StatelessWidget {
                     Text("${visits.currentMonth}", style: _valueStyle()),
                     SizedBox(width: 8.h),
                     Icon(
-                      isUp ? Icons.arrow_upward : Icons.arrow_downward,
+                      isUp ? Icons.trending_up : Icons.trending_down,
                       color: isUp ? Colors.green : Colors.red,
                       size: 16.adaptSize,
                     ),
-                    Text(
-                      isUp ? "Up" : "Down",
-                      style: TextStyle(
-                        color: isUp ? Colors.green : Colors.red,
-                        fontSize: 12.fSize,
-                      ),
-                    )
                   ],
                 ),
+                SizedBox(height: 4.v),
                 Text("vs Last Month: ${visits.lastMonth}",
-                    style: CustomTextStyles.bodySmall_1),
+                    style: _labelStyle()),
               ],
             ),
-          ),
-          Container(
-              width: 1.h,
+            Container(
+              width: 2,
+              margin: const EdgeInsets.symmetric(horizontal: 12),
               color: Colors.grey.shade300,
-              margin: EdgeInsets.symmetric(horizontal: 8.h)),
-          // Position Section
-          Expanded(
-            child: Column(
+            ),
+            // Position Section
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("My Position", style: _labelStyle()),
+                Text("My Rank: ${position.rank},", style: _labelStyle()),
                 SizedBox(height: 4.v),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Rank: ${position.rank}/${position.totalManagers}",
-                          style: CustomTextStyles.bodySmall_1),
-                    ]),
-                Text("Score: ${position.score}", style: _valueStyle()),
+                Text("My Score: ${position.score},", style: _labelStyle()),
+                SizedBox(height: 4.v),
+                Text("Top Score: ${position.topScore}", style: _labelStyle()),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
