@@ -8,61 +8,79 @@ class DashboardInsightsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DashboardInsightsCubit, DashboardInsightsState>(
-      builder: (context, state) {
-        if (state.status == DashboardInsightsStatus.loading) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
-
-        if (state.status == DashboardInsightsStatus.error) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.info,
-                    color: Colors.red,
-                    size: 50,
-                  ),
-                  SizedBox(height: 10.v),
-                  Text(
-                    state.errorMessage!,
-                    style: TextStyle(fontSize: 20.fSize),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-
-        if (state.status == DashboardInsightsStatus.success) {
-          final data = state.insights!;
-
-          // We use Flexible/Expanded to let them share space if parent allows,
-          // or just Container with constraints.
-          // User asked for 3 containers in the blank area, "no scroll".
-          // We'll stack them vertically using Expanded to fill the available space evenly.
-
-          return Column(
-            children: [
-              _buildCategoryInsight(context, data.categories),
-              SizedBox(height: 8.v),
-              _buildRepInsight(context, data.medicalReps),
-              SizedBox(height: 8.v),
-              _buildVisitInsight(context, data.visits, data.yourPosition),
-              SizedBox(height: 16.v), // Spacing before "Your Plan"
-            ],
-          );
-        }
-
-        return SizedBox.shrink(); // Initial state or other
+    return RefreshIndicator(
+      onRefresh: () async {
+        context
+            .read<DashboardInsightsCubit>()
+            .getDashboardInsights(isRefresh: true);
       },
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(
+          overscroll: false,
+        ),
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            BlocBuilder<DashboardInsightsCubit, DashboardInsightsState>(
+              builder: (context, state) {
+                if (state.status == DashboardInsightsStatus.loading) {
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                if (state.status == DashboardInsightsStatus.error) {
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.info,
+                            color: Colors.red,
+                            size: 50,
+                          ),
+                          SizedBox(height: 10.v),
+                          Text(
+                            state.errorMessage!,
+                            style: TextStyle(fontSize: 20.fSize),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                if (state.status == DashboardInsightsStatus.success) {
+                  final data = state.insights!;
+
+                  // We use Flexible/Expanded to let them share space if parent allows,
+                  // or just Container with constraints.
+                  // User asked for 3 containers in the blank area, "no scroll".
+                  // We'll stack them vertically using Expanded to fill the available space evenly.
+
+                  return Column(
+                    children: [
+                      _buildVisitInsight(
+                          context, data.visits, data.yourPosition),
+                      SizedBox(height: 8.v),
+                      _buildRepInsight(context, data.medicalReps),
+                      SizedBox(height: 8.v),
+                      _buildCategoryInsight(context, data.categories),
+                      SizedBox(height: 16.v), // Spacing before "Your Plan"
+                    ],
+                  );
+                }
+
+                return SizedBox.shrink(); // Initial state or other
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
