@@ -205,9 +205,10 @@ class DashboardInsightsSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label,
-                  style: CustomTextStyles.bodySmall12.copyWith(
-                      color: Colors.black87, fontWeight: FontWeight.w400)),
+              Text(
+                label,
+                style: _labelStyle(),
+              ),
               SizedBox(
                 height: 4.v,
               ),
@@ -226,8 +227,8 @@ class DashboardInsightsSection extends StatelessWidget {
     );
   }
 
-  TextStyle _labelStyle() =>
-      CustomTextStyles.bodySmall_1.copyWith(color: Colors.grey);
+  TextStyle _labelStyle() => CustomTextStyles.bodySmall12
+      .copyWith(color: Colors.black87, fontWeight: FontWeight.w400);
   TextStyle _valueStyle() =>
       CustomTextStyles.labelLargeSFProTextBluegray900SemiBold
           .copyWith(fontSize: 16.fSize);
